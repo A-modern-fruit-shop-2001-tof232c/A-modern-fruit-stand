@@ -11,7 +11,8 @@ const Fruit = db.define('fruit', {
   },
   imgURL: {
     type: Sequelize.STRING,
-    defaultValue: 'www.findImageOfRottenPear'
+    defaultValue:
+      'https://previews.123rf.com/images/olegdudko/olegdudko1809/olegdudko180907912/108668968-bitten-pear.jpg'
   },
   origin: {
     type: Sequelize.STRING
