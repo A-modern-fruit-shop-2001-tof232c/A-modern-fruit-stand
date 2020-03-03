@@ -18,7 +18,24 @@ const gotAllFruit = info => {
   }
 }
 
+const gotSingleFruit = info => {
+  return {
+    type: GET_ONE,
+    info
+  }
+}
+
 // Thunk Creator
+export const singleFruitThunk = id => {
+  return async dispatch => {
+    try {
+      const {data} = await axios.get('/api/fruit/' + id)
+      dispatch(gotSingleFruit(data))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
 
 export const getAllFruit = () => {
   return async dispatch => {
@@ -36,7 +53,8 @@ const fruitReducer = (state = initialState, action) => {
   switch (action.type) {
     case GOT_ALL:
       return {...state, allFruit: action.info}
-
+    case GET_ONE:
+      return {...state, selectedFruit: action.info}
     default:
       return state
   }
