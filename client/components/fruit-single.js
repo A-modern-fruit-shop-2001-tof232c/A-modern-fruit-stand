@@ -8,13 +8,14 @@ const fruitSingle = props => {
       <h3>{props.selectedFruit.name}</h3>
       <p>{props.selectedFruit.description}</p>
       <p>{props.selectedFruit.origin}</p>
+      <div />
     </div>
   )
 }
 
 const mapStateToProps = state => {
   return {
-    selectedFruit: state.selectedFruit
+    selectedFruit: state.fruit.selectedFruit
   }
 }
 

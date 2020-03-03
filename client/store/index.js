@@ -7,7 +7,7 @@ import fruitReducer from './fruit'
 
 const reducer = combineReducers({
   user,
-  fruitReducer
+  fruit: fruitReducer
 })
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({collapsed: true}))
