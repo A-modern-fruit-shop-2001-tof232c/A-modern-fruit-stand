@@ -6,7 +6,7 @@ const Fruit = db.define('fruit', {
     type: Sequelize.STRING,
     allowNull: false
   },
-  blurb: {
+  description: {
     type: Sequelize.TEXT
   },
   imgURL: {
