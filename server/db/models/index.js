@@ -1,3 +1,4 @@
+const db = require('../db')
 const User = require('./user')
 const Fruit = require('./fruit')
 const Order = require('./order')
@@ -9,11 +10,22 @@ const Order = require('./order')
  *    BlogPost.belongsTo(User)
  */
 
+// Users can have multiple orders
+// Orders can only belong to one user
 User.hasMany(Order)
 Order.belongsTo(User)
-
-Order.hasMany(Fruit)
-Fruit.hasMany(Order)
+// one order has many fruit items
+// one fruit can associate with many order#s
+Order.belongsToMany(Fruit, {through: 'orderFruit'})
+Fruit.belongsToMany(Order, {through: 'orderFruit'})
+// -------- original idea for cart ----------
+//
+// (not using this, keeping for notes)
+// one user associates with many fruits through cart
+// one fruit associates with many users through cart
+// User.belongsToMany(Fruit, {through: 'cart'})
+// Fruit.belongsToMany(User, {through: 'cart'})
+// -------------------------------------------
 
 /**
  * We'll export all of our models here, so that any time a module needs a model,
@@ -22,5 +34,8 @@ Fruit.hasMany(Order)
  * instead of: const User = require('../db/models/user')
  */
 module.exports = {
-  User
+  db,
+  User,
+  Fruit,
+  Order
 }
