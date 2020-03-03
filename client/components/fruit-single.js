@@ -1,14 +1,16 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {ButtonAddToCart} from '../components'
 
-const fruitSingle = props => {
+const FruitSingle = props => {
   return (
     <div>
       <img scr={props.selectedFruit.imgURL} />
       <h3>{props.selectedFruit.name}</h3>
       <p>{props.selectedFruit.description}</p>
-      <p>{props.selectedFruit.origin}</p>
-      <div />
+      <p>Origin: {props.selectedFruit.origin}</p>
+      <div>{props.selectedFruit.price}</div>
+      <ButtonAddToCart />
     </div>
   )
 }
@@ -19,4 +21,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(fruitSingle)
+export default connect(mapStateToProps)(FruitSingle)
