@@ -19,8 +19,7 @@ Order.belongsTo(User)
 Order.belongsToMany(Fruit, {through: 'orderFruit'})
 Fruit.belongsToMany(Order, {through: 'orderFruit'})
 // -------- original idea for cart ----------
-//
-// (not using this, keeping for notes)
+// team agreed to create a field called 'paid' in order model to replace this
 // one user associates with many fruits through cart
 // one fruit associates with many users through cart
 // User.belongsToMany(Fruit, {through: 'cart'})
