@@ -7,22 +7,35 @@ const initialState = {
 }
 
 // Action Types
-const GET_ALL = 'GET_ALL'
+const GOT_ALL = 'GOT_ALL'
 const GET_ONE = 'GET_ONE'
+
 // Action Creator
-const getAllFruit = info => {
+const gotAllFruit = info => {
   return {
-    type: GET_ALL,
+    type: GOT_ALL,
     info
   }
 }
+
 // Thunk Creator
+
+export const getAllFruit = () => {
+  return async dispatch => {
+    try {
+      const {data} = await axios.get('/api/fruit')
+      dispatch(gotAllFruit(data))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
 
 // Fruit Reducer
 const fruitReducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_ALL:
-      return ///////:3
+    case GOT_ALL:
+      return {...state, allFruit: action.info}
 
     default:
       return state
