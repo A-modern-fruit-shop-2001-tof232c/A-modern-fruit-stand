@@ -7,6 +7,9 @@ router.use('/users', require('./users'))
 //ROUTES: /api/fruit
 router.use('/fruit', require('./fruit'))
 
+//ROUTES: /api/order
+router.use('/order', require('./cart'))
+
 router.use((req, res, next) => {
   const error = new Error('Not Found')
   error.status = 404

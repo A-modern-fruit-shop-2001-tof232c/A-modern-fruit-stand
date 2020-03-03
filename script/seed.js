@@ -1,18 +1,116 @@
 'use strict'
 
 const db = require('../server/db')
-const {User} = require('../server/db/models')
+const {User, Order, Fruit, OrderFruit} = require('../server/db/models')
 
 async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
 
   const users = await Promise.all([
-    User.create({email: 'cody@email.com', password: '123'}),
-    User.create({email: 'murphy@email.com', password: '123'})
+    User.create({
+      firstName: 'Cody',
+      lastName: 'Pug',
+      email: 'cody@email.com',
+      password: '123'
+    }),
+    User.create({
+      firstName: 'Murphy',
+      lastName: 'Brown',
+      email: 'murphy@email.com',
+      password: '123'
+    }),
+    User.create({
+      firstName: 'Angela',
+      lastName: 'V',
+      email: 'angela@email.com',
+      password: '123'
+    })
   ])
 
+  const orders = await Promise.all([
+    Order.create({
+      total: 10,
+      paid: false,
+      userId: 1
+    }),
+    Order.create({
+      total: 5,
+      paid: true,
+      userId: 2
+    }),
+    Order.create({
+      total: 7,
+      paid: false,
+      userId: 2
+    })
+  ])
+
+  const fruits = await Promise.all([
+    Fruit.create({
+      name: 'Apple',
+      blurb: 'A delicious tarty apple from New York',
+      imgURL:
+        'hhttps://icons.iconarchive.com/icons/google/noto-emoji-food-drink/512/32349-red-apple-icon.png',
+      origin: 'New York',
+      price: 0.49
+    }),
+    Fruit.create({
+      name: 'Pear',
+      blurb: 'Great for programmers when ordering in pairs',
+      imgURL:
+        'http://t0.gstatic.com/images?q=tbn%3AANd9GcT8AyNUZwWTLisWeZDQVdRgX65uAgsxtYdLrvTgiecg0tfMR9kXOPS_CL2uzC6eWMFHtiQO0ZNR&usqp=CAc',
+      origin: 'Genovia',
+      price: 1.49
+    }),
+    Fruit.create({
+      name: 'Lemons',
+      blurb: 'When life gives you them...',
+      imgURL:
+        'https://cdn4.iconfinder.com/data/icons/vegetables-60/48/Fruits_lemon_food-512.png',
+      origin: 'New York',
+      price: 0.49
+    })
+  ])
+
+  const orderFruitJoinTable = [
+    {
+      orderId: 1,
+      fruitId: 1
+    },
+    {
+      orderId: 1,
+      fruitId: 2
+    },
+    {
+      orderId: 1,
+      fruitId: 3
+    },
+    {
+      orderId: 2,
+      fruitId: 1
+    },
+    {
+      orderId: 2,
+      fruitId: 2
+    },
+    {
+      orderId: 3,
+      fruitId: 2
+    },
+    {
+      orderId: 3,
+      fruitId: 3
+    }
+  ]
+  await Promise.all(
+    orderFruitJoinTable.map(instance => {
+      return OrderFruit.create(instance)
+    })
+  )
   console.log(`seeded ${users.length} users`)
+  console.log(`seeded ${orders.length} orders`)
+  console.log(`seeded ${fruits.length} fruits`)
   console.log(`seeded successfully`)
 }
 

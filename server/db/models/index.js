@@ -2,6 +2,7 @@ const db = require('../db')
 const User = require('./user')
 const Fruit = require('./fruit')
 const Order = require('./order')
+const Sequelize = require('sequelize')
 
 /**
  * If we had any associations to make, this would be a great place to put them!
@@ -9,7 +10,14 @@ const Order = require('./order')
  *
  *    BlogPost.belongsTo(User)
  */
-
+const OrderFruit = db.define('orderFruit', {
+  orderId: {
+    type: Sequelize.INTEGER
+  },
+  userId: {
+    type: Sequelize.INTEGER
+  }
+})
 // Users can have multiple orders
 // Orders can only belong to one user
 User.hasMany(Order)
@@ -36,5 +44,6 @@ module.exports = {
   db,
   User,
   Fruit,
-  Order
+  Order,
+  OrderFruit
 }
