@@ -21,6 +21,9 @@ const OrderFruit = db.define('orderFruit', {
     validate: {
       min: 0.0
     }
+  },
+  fruitId: {
+    type: Sequelize.INTEGER
   }
 })
 

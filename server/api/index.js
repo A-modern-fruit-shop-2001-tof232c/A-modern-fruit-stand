@@ -8,7 +8,7 @@ router.use('/users', require('./users'))
 router.use('/fruit', require('./fruit'))
 
 //ROUTES: /api/order
-router.use('/order', require('./cart'))
+router.use('/cart', require('./cart'))
 
 router.use((req, res, next) => {
   const error = new Error('Not Found')
