@@ -22,7 +22,7 @@ class Routes extends Component {
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route exact path="/fruit" component={AllFruit} />
-        <Route path="/fruit/:id" componenet={FruitSingle} />
+        <Route path="/fruit/:id" component={FruitSingle} />
 
         {isLoggedIn && (
           <Switch>
@@ -33,7 +33,6 @@ class Routes extends Component {
 
         {/* Displays our Login component as a fallback */}
         <Route component={Login} />
-        <Route path="/fruit/:id" component={FruitSingle} />
       </Switch>
     )
   }
