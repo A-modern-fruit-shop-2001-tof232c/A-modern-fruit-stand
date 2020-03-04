@@ -1,6 +1,5 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {getAllFruit} from '../store/fruit'
 
 class AllFruit extends React.Component {
   constructor(props) {
