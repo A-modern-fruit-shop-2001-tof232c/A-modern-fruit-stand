@@ -21,7 +21,6 @@ class FruitSingle extends React.Component {
             height="180"
           />
         </div>
-        {console.log('selected', this.props.selectedFruit.imgURL)}
         <p>{this.props.selectedFruit.description}</p>
         <p>Origin: {this.props.selectedFruit.origin}</p>
         <div>{this.props.selectedFruit.price}</div>
