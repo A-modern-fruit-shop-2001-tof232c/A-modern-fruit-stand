@@ -39,7 +39,7 @@ export const getCart = () => async dispatch => {
 // CART REDUCER
 const initialState = {}
 
-export const cartReducer = (state = initialState, action) => {
+const cartReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_CART: {
       return action.cart
@@ -49,3 +49,5 @@ export const cartReducer = (state = initialState, action) => {
     }
   }
 }
+
+export default cartReducer

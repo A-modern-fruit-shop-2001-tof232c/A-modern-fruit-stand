@@ -11,7 +11,7 @@ router.get('/', async (req, res, next) => {
         userId: req.user.id,
         paid: false
       },
-      include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
+      include: [{model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}]
     })
     if (cart) {
       res.json(cart)
