@@ -5,12 +5,13 @@ const GET_CART = 'GET_CART'
 const GET_GUEST_CART = 'GET_GUEST_CART'
 
 // ACTION CREATORS
-export const getCart = cart => ({
+export const gotCart = cart => ({
   type: GET_CART,
   cart
 })
 
-// change to data.
+// create an object to include subtotal and fruits to
+// be consistant with cart object in getCart.
 export const getGuestCart = (subtotal, fruits) => ({
   type: GET_GUEST_CART,
   subtotal,
@@ -20,10 +21,10 @@ export const getGuestCart = (subtotal, fruits) => ({
 // THUNK CREATORS
 
 // For logged in users. AJAX request to api get route.
-export const gotCart = () => async dispatch => {
+export const getCart = () => async dispatch => {
   try {
-    const {data} = await axios.get('/api/cart/:usderId')
-    dispatch(getCart(data))
+    const {data} = await axios.get('/api/cart/')
+    dispatch(gotCart(data))
   } catch (err) {
     console.log(err)
   }
@@ -36,3 +37,17 @@ export const gotCart = () => async dispatch => {
 // }
 
 // CART REDUCER
+const initialState = {}
+
+const cartReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case GET_CART: {
+      return action.cart
+    }
+    default: {
+      return state
+    }
+  }
+}
+
+export default cartReducer
