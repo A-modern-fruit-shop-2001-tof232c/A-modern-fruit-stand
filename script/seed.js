@@ -24,7 +24,8 @@ async function seed() {
       firstName: 'Angela',
       lastName: 'V',
       email: 'angela@email.com',
-      password: '123'
+      password: '123',
+      isAdmin: true
     })
   ])
 

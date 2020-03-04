@@ -28,7 +28,7 @@ router.get('/:id', async (req, res, next) => {
 //admin route to add a new fruit
 router.post('/', async (req, res, next) => {
   try {
-    if (req.body.name) {
+    if (req.body.name && req.user.isAdmin) {
       const newFruit = await Fruit.create(req.body)
       res.status(201).json(newFruit)
     } else {
@@ -43,7 +43,7 @@ router.post('/', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => {
   try {
     const fruitToDelete = await Fruit.findByPk(req.params.id)
-    if (fruitToDelete) {
+    if (fruitToDelete && req.user.isAdmin) {
       await fruitToDelete.destroy(fruitToDelete)
       res.sendStatus(204)
     }
@@ -56,7 +56,7 @@ router.delete('/:id', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
   try {
     const fruitToUpdate = await Fruit.findByPk(req.params.id)
-    if (fruitToUpdate.name) {
+    if (fruitToUpdate.name && req.user.isAdmin) {
       await fruitToUpdate.update(req.body)
       res.json(fruitToUpdate)
     } else {

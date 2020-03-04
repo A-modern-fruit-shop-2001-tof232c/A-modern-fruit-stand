@@ -48,6 +48,42 @@ export const getAllFruit = () => {
   }
 }
 
+export const addFruitThunk = () => {
+  return async dispatch => {
+    try {
+      await axios.post('/api/fruit')
+      const {data} = await axios.get('/api/fruit')
+      dispatch(gotAllFruit(data))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export const deleteFruitThunk = id => {
+  return async dispatch => {
+    try {
+      await axios.delete(`/api/fruit/${id}`)
+      const {data} = await axios.get('/api/fruit')
+      dispatch(gotAllFruit(data))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export const updateFruitThunk = id => {
+  return async dispatch => {
+    try {
+      await axios.put(`/api/fruit/${id}`)
+      const {data} = await axios.get(`/api/fruit/${id}`)
+      dispatch(gotSingleFruit(data))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
 // Fruit Reducer
 const fruitReducer = (state = initialState, action) => {
   switch (action.type) {
