@@ -53,26 +53,26 @@ describe('REACT COMPONENTS', () => {
     }
   ]
 
-  describe('AllFruit', () => {
-    let allFruit
+  // describe('AllFruit', () => {
+  //   let allFruit
 
-    beforeEach(() => {
-      allFruit = shallow(<AllFruit allFruit={FRUIT} />)
-    })
+  //   beforeEach(() => {
+  //     allFruit = shallow(<AllFruit allFruit={FRUIT} />)
+  //   })
 
-    it('renders the fruit name in an h5', () => {
-      expect(allFruit.find('h1').text()).to.be.equal('All Fruit')
-    })
+  //   it('renders the component name in h1 text', () => {
+  //     expect(allFruit.find('h1').text()).to.be.equal('All Fruit')
+  //   })
 
-    // it("specifies a `key` prop on each <Article />, equal to that article's id", () => {
-    //   articleListWrapper.setState({ articles: articleList });
+  // it("specifies a `key` prop on each <Article />, equal to that article's id", () => {
+  //   articleListWrapper.setState({ articles: articleList });
 
-    //   const firstMessage = articleListWrapper.find(Article).at(0);
-    //   const secondMessage = articleListWrapper.find(Article).at(1);
-    //   expect(Number(firstMessage.key())).to.be.equal(articleList[0].id);
-    //   expect(Number(secondMessage.key())).to.be.equal(articleList[1].id);
-    // });
-  })
+  //   const firstMessage = articleListWrapper.find(Article).at(0);
+  //   const secondMessage = articleListWrapper.find(Article).at(1);
+  //   expect(Number(firstMessage.key())).to.be.equal(articleList[0].id);
+  //   expect(Number(secondMessage.key())).to.be.equal(articleList[1].id);
+  // });
+  // })
 
   /**
    * TESTS FOR: FRUIT-SINGLE.JS COMPONENT ------------------------------------
