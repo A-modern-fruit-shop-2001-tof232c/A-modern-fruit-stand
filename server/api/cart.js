@@ -3,11 +3,12 @@ const {Fruit, User, Order} = require('../db/models')
 module.exports = router
 
 // Get cart belonging to the LoggedIn user only if the order hasn't not been paid.
-router.get('/:userId', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
+    console.log(req.user)
     const cart = await Order.findOne({
       where: {
-        userId: req.params.userId,
+        userId: req.user.id,
         paid: false
       },
       include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
@@ -23,12 +24,12 @@ router.get('/:userId', async (req, res, next) => {
 })
 
 // TODO: POST route for adding fruit to cart for the LoggedIn user.
-router.post('/:userId/:fruitId', async (req, res, next) => {
+router.post('/:fruitId', async (req, res, next) => {
   try {
     const fruitToAdd = await Fruit.findByPk(req.params.fruitId)
     let cart = await Order.findOne({
       where: {
-        userId: req.params.userId,
+        userId: req.user.id,
         paid: false
       },
       include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
