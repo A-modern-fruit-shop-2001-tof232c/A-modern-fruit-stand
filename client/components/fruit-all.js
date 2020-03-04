@@ -1,31 +1,56 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {getAllFruit} from '../store/fruit'
 
 class AllFruit extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+  }
+
+  componentDidMount() {
+    console.log('in comp did mount')
+    this.props.getAllFruit()
   }
 
   render() {
+    let allTheFruities = this.props.allFruit
     //if the fruit has loaded, render the fruit cards
-    if (this.props.allFruit) {
+    if (allTheFruities) {
+      console.log('ALLLLL', allTheFruities)
       return (
         <div id="allFruitContainer">
-          {this.props.AllFruit.map(oneFruit => {
-            return <div key={oneFruit.id}>hi ${oneFruit}</div>
-          })}
+          <div>
+            {/* Map over all available fruit */}
+            {allTheFruities.map(oneFruit => {
+              return (
+                <div key={oneFruit.id}>
+                  <div>
+                    <img
+                      src={oneFruit.imgURL}
+                      alt={oneFruit.name}
+                      height="80"
+                    />
+                  </div>
+                  <div>
+                    <div>{oneFruit.name}</div>
+                    <div>{oneFruit.price}</div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
       )
     }
   }
 }
 
-const mapState = state => ({
+const mapStateToProps = state => ({
   allFruit: state.fruit.allFruit
 })
 
-// const mapDispatch = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
+  getAllFruit: () => dispatch(getAllFruit())
+})
 
-// })
-
-export default connect(mapState, null)(AllFruit)
+export default connect(mapStateToProps, mapDispatchToProps)(AllFruit)
