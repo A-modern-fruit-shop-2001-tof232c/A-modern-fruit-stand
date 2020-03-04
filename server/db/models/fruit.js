@@ -18,8 +18,13 @@ const Fruit = db.define('fruit', {
     type: Sequelize.STRING
   },
   price: {
-    type: Sequelize.FLOAT,
-    allowNull: false
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    get() {
+      return this.getDataValue('price') / 100
+      //IF PRICE IS .90 display # is .9...How can we append a zero?
+      //I BELIEVE WE NEED TO DO THIS IN DISPLAY SETTINGS, SINCE THIS IS TYPE INTEGER
+    }
   }
 })
 
