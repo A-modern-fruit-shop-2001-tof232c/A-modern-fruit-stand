@@ -12,12 +12,15 @@ const OrderFruit = db.define('orderFruit', {
       min: 1
     }
   },
-  price: {
-    type: Sequelize.FLOAT,
+  itemPrice: {
+    type: Sequelize.INTEGER,
     allowNull: false,
     validate: {
       min: 0.0
     }
+  },
+  itemTotal: {
+    type: Sequelize.INTEGER
   },
   fruitId: {
     type: Sequelize.INTEGER
@@ -25,3 +28,8 @@ const OrderFruit = db.define('orderFruit', {
 })
 
 module.exports = OrderFruit
+
+// OrderFruit.prototype.itemsTotal = function() {
+//   this.itemTotal = this.itemPrice * this.quantity;
+//   return this.itemsTotal
+// }

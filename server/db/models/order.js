@@ -1,13 +1,14 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
+const orderFruit = require('./orderFruit')
 
 const Order = db.define('order', {
   date: {
     type: Sequelize.DATEONLY,
     defaultValue: new Date()
   },
-  total: {
-    type: Sequelize.FLOAT,
+  orderTotal: {
+    type: Sequelize.INTEGER,
     defaultValue: 0
   },
   paid: {
@@ -22,4 +23,6 @@ module.exports = Order
 In the amount of time I wasn't sure the best way to handle the total. Whether it's through class/prototype method or a utility function. But left this prototype func here.
 */
 
-Order.prototype.calculateTotal = function() {}
+// Order.prototype.orderTotal = function() {
+//   console.log('orderFruit', orderFruit)
+// }
