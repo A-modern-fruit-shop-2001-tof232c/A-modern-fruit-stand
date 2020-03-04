@@ -30,22 +30,22 @@ async function seed() {
 
   const orders = await Promise.all([
     Order.create({
-      total: 2.47,
+      orderTotal: 247,
       paid: false,
       userId: 1
     }),
     Order.create({
-      total: 2.47,
+      orderTotal: 247,
       paid: true,
       userId: 2
     }),
     Order.create({
-      total: 3.96,
+      orderTotal: 396,
       paid: false,
       userId: 2
     }),
     Order.create({
-      total: 4.9,
+      orderTotal: 490,
       paid: false,
       userId: 3
     })
@@ -84,56 +84,64 @@ async function seed() {
       fruitId: 1,
       userId: 1,
       quantity: 1,
-      price: 0.49
+      itemPrice: 49,
+      itemTotal: 0
     },
     {
       orderId: 1,
       fruitId: 2,
       userId: 1,
       quantity: 1,
-      price: 1.49
+      itemPrice: 149,
+      itemTotal: 0
     },
     {
       orderId: 1,
       fruitId: 3,
       userId: 1,
       quantity: 1,
-      price: 0.49
+      itemPrice: 49,
+      itemTotal: 0
     },
     {
       orderId: 2,
       fruitId: 1,
       userId: 2,
       quantity: 2,
-      price: 0.49
+      itemPrice: 49,
+      itemTotal: 0
     },
     {
       orderId: 2,
       fruitId: 2,
       userId: 2,
       quantity: 1,
-      price: 1.49
+      itemPrice: 149,
+      itemTotal: 0
     },
     {
       orderId: 3,
       fruitId: 2,
       userId: 2,
       quantity: 2,
-      price: 1.49
+      itemPrice: 149,
+      itemTotal: 0
     },
     {
       orderId: 3,
       fruitId: 3,
       userId: 2,
       quantity: 2,
-      price: 0.49
+      itemPrice: 49,
+      itemTotal: 0
     },
     {
       orderId: 4,
       fruitId: 3,
       userId: 3,
       quantity: 10,
-      price: 4.9
+      itemPrice: 490,
+      itemTotal: 0
     }
   ]
   await Promise.all(
