@@ -1,6 +1,5 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import FruitAllSingleBox from './fruit-all-singlebox'
 
 class AllFruit extends React.Component {
   constructor() {
