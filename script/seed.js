@@ -56,7 +56,7 @@ async function seed() {
       name: 'Apple',
       description: 'A delicious tarty apple from New York',
       imgURL:
-        'hhttps://icons.iconarchive.com/icons/google/noto-emoji-food-drink/512/32349-red-apple-icon.png',
+        'https://icons.iconarchive.com/icons/google/noto-emoji-food-drink/512/32349-red-apple-icon.png',
       origin: 'New York',
       price: 0.49
     }),
