@@ -5,9 +5,6 @@ const OrderFruit = db.define('orderFruit', {
   orderId: {
     type: Sequelize.INTEGER
   },
-  userId: {
-    type: Sequelize.INTEGER
-  },
   quantity: {
     type: Sequelize.INTEGER,
     allowNull: false,
