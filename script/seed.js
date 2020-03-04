@@ -30,34 +30,39 @@ async function seed() {
 
   const orders = await Promise.all([
     Order.create({
-      total: 10,
+      total: 2.47,
       paid: false,
       userId: 1
     }),
     Order.create({
-      total: 5,
+      total: 2.47,
       paid: true,
       userId: 2
     }),
     Order.create({
-      total: 7,
+      total: 3.96,
       paid: false,
       userId: 2
+    }),
+    Order.create({
+      total: 4.9,
+      paid: false,
+      userId: 3
     })
   ])
 
   const fruits = await Promise.all([
     Fruit.create({
       name: 'Apple',
-      blurb: 'A delicious tarty apple from New York',
+      description: 'A delicious tarty apple from New York',
       imgURL:
-        'hhttps://icons.iconarchive.com/icons/google/noto-emoji-food-drink/512/32349-red-apple-icon.png',
+        'https://icons.iconarchive.com/icons/google/noto-emoji-food-drink/512/32349-red-apple-icon.png',
       origin: 'New York',
       price: 0.49
     }),
     Fruit.create({
       name: 'Pear',
-      blurb: 'Great for programmers when ordering in pairs',
+      description: 'Great for programmers when ordering in pairs',
       imgURL:
         'http://t0.gstatic.com/images?q=tbn%3AANd9GcT8AyNUZwWTLisWeZDQVdRgX65uAgsxtYdLrvTgiecg0tfMR9kXOPS_CL2uzC6eWMFHtiQO0ZNR&usqp=CAc',
       origin: 'Genovia',
@@ -65,7 +70,7 @@ async function seed() {
     }),
     Fruit.create({
       name: 'Lemons',
-      blurb: 'When life gives you them...',
+      description: 'When life gives you them...',
       imgURL:
         'https://cdn4.iconfinder.com/data/icons/vegetables-60/48/Fruits_lemon_food-512.png',
       origin: 'New York',
@@ -76,31 +81,59 @@ async function seed() {
   const orderFruitJoinTable = [
     {
       orderId: 1,
-      fruitId: 1
+      fruitId: 1,
+      userId: 1,
+      quantity: 1,
+      price: 0.49
     },
     {
       orderId: 1,
-      fruitId: 2
+      fruitId: 2,
+      userId: 1,
+      quantity: 1,
+      price: 1.49
     },
     {
       orderId: 1,
-      fruitId: 3
+      fruitId: 3,
+      userId: 1,
+      quantity: 1,
+      price: 0.49
     },
     {
       orderId: 2,
-      fruitId: 1
+      fruitId: 1,
+      userId: 2,
+      quantity: 2,
+      price: 0.49
     },
     {
       orderId: 2,
-      fruitId: 2
+      fruitId: 2,
+      userId: 2,
+      quantity: 1,
+      price: 1.49
     },
     {
       orderId: 3,
-      fruitId: 2
+      fruitId: 2,
+      userId: 2,
+      quantity: 2,
+      price: 1.49
     },
     {
       orderId: 3,
-      fruitId: 3
+      fruitId: 3,
+      userId: 2,
+      quantity: 2,
+      price: 0.49
+    },
+    {
+      orderId: 4,
+      fruitId: 3,
+      userId: 3,
+      quantity: 10,
+      price: 4.9
     }
   ]
   await Promise.all(
