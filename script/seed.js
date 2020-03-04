@@ -58,7 +58,7 @@ async function seed() {
       imgURL:
         'https://icons.iconarchive.com/icons/google/noto-emoji-food-drink/512/32349-red-apple-icon.png',
       origin: 'New York',
-      price: 0.49
+      price: 49
     }),
     Fruit.create({
       name: 'Pear',
@@ -66,7 +66,7 @@ async function seed() {
       imgURL:
         'http://t0.gstatic.com/images?q=tbn%3AANd9GcT8AyNUZwWTLisWeZDQVdRgX65uAgsxtYdLrvTgiecg0tfMR9kXOPS_CL2uzC6eWMFHtiQO0ZNR&usqp=CAc',
       origin: 'Genovia',
-      price: 1.49
+      price: 149
     }),
     Fruit.create({
       name: 'Lemons',
@@ -74,7 +74,7 @@ async function seed() {
       imgURL:
         'https://cdn4.iconfinder.com/data/icons/vegetables-60/48/Fruits_lemon_food-512.png',
       origin: 'New York',
-      price: 0.49
+      price: 49
     })
   ])
 
