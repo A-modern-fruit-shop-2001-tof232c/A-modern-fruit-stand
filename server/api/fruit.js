@@ -21,3 +21,47 @@ router.get('/:id', async (req, res, next) => {
     next(error)
   }
 })
+
+//FOR ALL ADMIN ROUTES...CHECK SESSION REQ.USER DATA AND SEE IF ISADMIN IS TRUE BEFORE RESOLVING
+
+//admin route to add a new fruit
+router.post('/', async (req, res, next) => {
+  try {
+    if (req.body.name) {
+      const newFruit = await Fruit.create(req.body)
+      res.status(201).json(newFruit)
+    } else {
+      //look up what status to send for failed post
+      res.json('Added Fruit does not match database model params.')
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+//admin route to delete a fruit
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const fruitToDelete = await Fruit.findByPk(req.params.id)
+    if (fruitToDelete) {
+      await fruitToDelete.destroy(fruitToDelete)
+      res.sendStatus(204)
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
+//admin route to update an existing fruit
+router.put('/:id', async (req, res, next) => {
+  try {
+    const fruitToUpdate = await Fruit.findByPk(req.params.id)
+    if (fruitToUpdate.name) {
+      await fruitToUpdate.update(req.body)
+      res.json(fruitToUpdate)
+    } else {
+      res.json('That Fruit does not Exist!')
+    }
+  } catch (error) {
+    next(error)
+  }
+})

@@ -3,6 +3,13 @@ const {User} = require('../db/models')
 module.exports = router
 
 //ROUTE: '/api/users/'
+
+//THESE API ROUTES ARE FOR ALL USERS:
+
+//
+
+//SENDING BACK ALL USERS AND ALL BELOW SHOULD ONLY BE VIEWABLE BY ADMIN, CHECK SESSION DATA
+
 //SEND BACK: id and email of all users
 router.get('/', async (req, res, next) => {
   try {
