@@ -10,6 +10,7 @@ export const getCart = cart => ({
   cart
 })
 
+// change to data.
 export const getGuestCart = (subtotal, fruits) => ({
   type: GET_GUEST_CART,
   subtotal,
