@@ -8,7 +8,6 @@ class AllFruit extends React.Component {
   }
 
   componentDidMount() {
-    console.log('in comp did mount')
     this.props.getAllFruit()
   }
 
@@ -16,9 +15,9 @@ class AllFruit extends React.Component {
     let allTheFruities = this.props.allFruit
     //if the fruit has loaded, render the fruit cards
     if (allTheFruities) {
-      console.log('ALLLLL', allTheFruities)
       return (
         <div id="allFruitContainer">
+          <h1>All Fruit</h1>
           <div>
             {/* Map over all available fruit */}
             {allTheFruities.map(oneFruit => {
@@ -32,8 +31,8 @@ class AllFruit extends React.Component {
                     />
                   </div>
                   <div>
-                    <div>{oneFruit.name}</div>
-                    <div>{oneFruit.price}</div>
+                    <h5>{oneFruit.name}</h5>
+                    <h5>${oneFruit.price}</h5>
                   </div>
                 </div>
               )
@@ -53,4 +52,7 @@ const mapDispatchToProps = dispatch => ({
   getAllFruit: () => dispatch(getAllFruit())
 })
 
+//the bare component is exported for testing
+export {AllFruit}
+//the connected component is exported for actual deployment
 export default connect(mapStateToProps, mapDispatchToProps)(AllFruit)
