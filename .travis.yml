@@ -13,16 +13,18 @@ notifications:
 install:
   - npm ci # faster, goes only from package-lock
 before_script:
-  - psql -c 'create database "boilermaker-test";' -U postgres # remember to change this name if you change it elsewhere (e.g. package.json)
+  - psql -c 'create database "modern-fruit-test";' -U postgres # remember to change this name if you change it elsewhere (e.g. package.json)
 script:
-  - npm test             # test the code
+  - npm test # test the code
   - npm run build-client # make the bundle
-
-# before_deploy:
-#   - rm -rf node_modules # omit from the tarball, since we skip cleanup
-# deploy:
-#   skip_cleanup: true # prevents travis from deleting the build
-#   provider: heroku
-#   app: YOUR-HEROKU-APP-NAME-HERE # see README
-#   api_key:
-#     secure: YOUR-***ENCRYPTED***-API-KEY-HERE # see README
+before_deploy: # omit node_modules, since we set skip_cleanup below
+  - rm -rf node_modules
+deploy: # see README for details on these keys
+  # prevents travis from deleting the build
+  skip_cleanup: true
+  provider: heroku
+  # app should be your heroku app name; see README
+  app: modern-fruit-stand
+  # the secure key indicates an encrypted value; see README
+  api_key:
+    secure: jH7+F6Uyql0LDEBYuZjWn0ObCNrXQ2UD3DnvdlgKhvIKWpMjeNcifLqxASfd8jCczvpINdAjelEtiovF8Yy0uuYXhTdn7yt5W+hlkkBk4k7UsErkJSkrt6Bc4PHj52z3icJ3+6whVzNfkKkIY3SwmwbcIyvqxJDsCNvb6hdaXI+/Nzwj8p3ore923P9HFzxU978sUFCRb6SQ8Gcc9qE5NmtNDI8SUE7fwp8QAf9z2aI3aLEFPHRByXMwIlabnMIGQYeV7f/ML1JI2FuPW55CGN+SXzyyFqnNU5dnYgg5G5Jb9ry/z/zSvJXzfuGPXJSn8fpBSWab66al19r8BEQITKT+g00wlsfQXqm5jKoBeF8ohteUbMPwMuLyvIakAdyNRcMumCUzIpOSl3bC15+0aDzp7xbaPiBcnLTfq95Z6R3P5PTs8Zwd0UeieyYyPU3CxYFeBTyGOtp1G08B9ssS5K5TyR5oQNUw+kovnxmAJ8MinoCnwGdjyzMDctVbYIfvEd0XgjPUCTeb3YtzpMMFDQBGoAq1CHeikmPY/xlmNLm+bZpa7k/DVOLGBHOxGAiK4vLWsoOBhQSJ9hijULvFm9UwDPhEzbxbNcceUdHTRcO0Q4mXweonXtfWz1psh7WXMbwFcY2Q4N88nJSXqK8bTEA/pAlJ3FcBk9dItziyUZw=
