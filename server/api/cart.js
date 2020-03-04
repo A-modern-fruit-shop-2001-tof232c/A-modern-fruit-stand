@@ -44,6 +44,7 @@ router.post('/:userId/:fruitId', async (req, res, next) => {
     // respond with cart.
 
     // if the user does not have a cart.
+    // Make a cart for the user.
     // }
   } catch (err) {
     next(err)
