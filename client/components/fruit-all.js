@@ -17,6 +17,7 @@ class AllFruit extends React.Component {
     if (allTheFruities) {
       return (
         <div id="allFruitContainer">
+          <h1>All Fruit</h1>
           <div>
             {/* Map over all available fruit */}
             {allTheFruities.map(oneFruit => {
@@ -31,7 +32,7 @@ class AllFruit extends React.Component {
                   </div>
                   <div>
                     <h5>{oneFruit.name}</h5>
-                    <h5>{oneFruit.price}</h5>
+                    <h5>${oneFruit.price}</h5>
                   </div>
                 </div>
               )
