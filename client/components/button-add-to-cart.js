@@ -1,24 +1,35 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {getUpdateCart} from '../store/cart'
+
+const defaultState = {
+  QTY: 0
+}
 
 class ButtonAddToCart extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = defaultState
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleChange = this.handleChange.bind(this)
   }
 
   handleSubmit(event) {
     event.preventDefault()
-    // fruit should associate with order(cart)
-    // Order.addFruit(fruit)
-    // Fruit.addOrder(order)
-    // event.target.value
+    // setting up object to be passed to dispatch
+    const fruitData = {
+      fruitId: this.props.selectedFruit.id,
+      quantity: this.state.QTY
+    }
+    // dispatch
+    this.props.updateCart(fruitData)
+    this.setState(defaultState)
+  }
 
-    //dispatch
-    //return
-    // if user is logged in, add to
-    // if not logged in add to local storage
+  handleChange(event) {
+    this.setState({
+      [event.target.name]: event.target.value
+    })
   }
 
   render() {
@@ -26,7 +37,13 @@ class ButtonAddToCart extends React.Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <label htmlFor="QTY">Quantity: </label>
-          <input id="inputQTY" type="text" name="QTY" required="required" />
+          <input
+            name="QTY"
+            type="text"
+            onChange={this.handleChange}
+            id="inputQTY"
+            required="required"
+          />
           <button type="submit">Add To Cart</button>
         </form>
       </div>
@@ -42,8 +59,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    // work in progress
+    updateCart: data => dispatch(getUpdateCart(data))
   }
 }
 
-export default connect(mapStateToProps)(ButtonAddToCart)
+export default connect(mapStateToProps, mapDispatchToProps)(ButtonAddToCart)
