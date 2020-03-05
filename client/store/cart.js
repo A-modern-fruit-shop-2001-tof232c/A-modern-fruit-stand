@@ -78,11 +78,11 @@ export const getUpdateCart = fruit => async dispatch => {
 
 // CART REDUCER
 const initialState = {
-  id: 'guest',
-  orderTotal: 0,
-  paid: false,
-  userId: null,
-  fruits: []
+  // id: 'guest',
+  // orderTotal: 0,
+  // paid: false,
+  // userId: null,
+  // fruits: []
 }
 
 const cartReducer = (state = initialState, action) => {

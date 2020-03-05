@@ -7,8 +7,7 @@ class Cart extends React.Component {
     super(props)
   }
   componentDidMount() {
-    this.props.isLoggedIn && this.props.getCart()
-    !this.props.isLoggedIn && this.props.getGuestCart()
+    this.props.getCart()
   }
 
   render() {
@@ -26,8 +25,9 @@ class Cart extends React.Component {
                 <div key={fruit.id}>
                   <div>{fruit.name}</div>
                   <img src={fruit.imgURL} />
-                  <div>OTY: {fruit.orderFruit.quantity}</div>
-                  <div>Price: {fruit.orderFruit.itemTotal}</div>
+                  <div>QTY: {fruit.orderFruit.quantity}</div>
+                  <div>Price Per Item: {fruit.orderFruit.itemPrice} </div>
+                  <div>Item Total: {fruit.orderFruit.itemTotal}</div>
                 </div>
               )
             })}
