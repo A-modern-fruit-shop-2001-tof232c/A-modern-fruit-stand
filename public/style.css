@@ -62,8 +62,20 @@ form div {
   left: 0;
 }
 
-#sidebarNav > div > h6 {
-  padding: 20px;
+#sidebarNavHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+#sidebarNavHeader > h6 {
+  margin: 20px;
+  align-self: center;
+  font-size: medium;
+}
+
+#sidebarNavHeader > div {
+  margin: 20px;
+  cursor: pointer;
 }
 
 /*

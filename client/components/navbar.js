@@ -11,6 +11,13 @@ class Navbar extends React.Component {
     this.state = {
       openDrawer: false
     }
+    this.toggleSidebarNav = this.toggleSidebarNav.bind(this)
+  }
+
+  toggleSidebarNav() {
+    this.setState({
+      openDrawer: !this.state.openDrawer
+    })
   }
 
   render() {
@@ -19,13 +26,17 @@ class Navbar extends React.Component {
 
     return (
       <div>
-        <SidebarNav />
+        <SidebarNav
+          openDrawer={this.state.openDrawer}
+          toggleDrawer={this.toggleSidebarNav}
+        />
         <div>
           {/* Sidebar Navigation Hamburger*/}
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1200px-Hamburger_icon.svg.png"
-            alt="navigation"
+            alt="open navigation"
             height="20px"
+            onClick={this.toggleSidebarNav}
           />
         </div>
 
