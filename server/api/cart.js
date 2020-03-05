@@ -18,10 +18,10 @@ router.get('/', async (req, res, next) => {
           orderId: cart.id
         }
       })
-      console.log('orderfruit instance', orderFruitInstance)
-      const itemTotal = orderFruitInstance.calculateItemsTotal()
-      console.log('itemTotal', itemTotal)
-      console.log('HI MEEE')
+      // console.log('orderfruit instance', orderFruitInstance)
+      // const itemTotal = orderFruitInstance.calculateItemsTotal()
+      // console.log('itemTotal', itemTotal)
+      // console.log('HI MEEE')
       // console.log('the method', cart.calculateOrderTotal())
       // 1. need to do orderFruit.calculateItemTotal()
       // 2. need to do cart.calculateOrderTotal()
@@ -38,6 +38,7 @@ router.get('/', async (req, res, next) => {
 router.post('/:fruitId', async (req, res, next) => {
   try {
     const fruitToAdd = await Fruit.findByPk(req.params.fruitId)
+
     let cart = await Order.findOne({
       where: {
         userId: req.user.id,
@@ -46,18 +47,59 @@ router.post('/:fruitId', async (req, res, next) => {
       include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
     })
     // Does the user have a cart?
-    // if(cart){
-    // Does the user already have the fruit in the cart?
-    // If the fruit is already in the cart.
-    // Increment the quantity of the fruit in the cart.
-    // If the fruit is not in the cart.
-    // Add the fruit.
-    // Update the total of the order.
-    // respond with cart.
-
-    // if the user does not have a cart.
-    // Make a cart for the user.
-    // }
+    if (cart) {
+      // Does the user already have the fruit in the cart?
+      const fruit = cart.fruits.find(fruit => {
+        return fruit.id === req.params.fruitId
+      })
+      // If the fruit is already in the cart.
+      if (fruit) {
+        // Increment the quantity of the fruit in the cart.
+        const fruitItem = fruit.orderFruit
+        fruitItem.quantity += Number(req.body.quantity)
+        // Reflect the itemTotal base on the quantity of item.
+        fruitItem.itemTotal = fruitItem.quantity * fruitItem.itemPrice
+        // Reflect the orderTotal.
+        cart.orderTotal += fruit.price * Number(req.body.quantity)
+        await fruitItem.save()
+        await cart.save()
+        res.json(cart)
+      } else {
+        // If the fruit is not in the cart.
+        // Add the fruit.
+        await cart.addFruit(fruitToAdd, {
+          through: {
+            quantity: Number(req.body.quantity),
+            itemPrice: fruitToAdd.price
+          }
+        })
+        // Reflect the orderTotal.
+        cart.orderTotal += fruitToAdd.price * Number(req.body.quantity)
+        await cart.save()
+        // respond with cart.
+        res.json(cart)
+      }
+      // if the user does not have a cart.
+    } else {
+      // Make a cart for the user.
+      cart = await Order.create(
+        {
+          orderTotal: fruitToAdd.price * req.body.quantity,
+          userId: req.user.id
+        },
+        {
+          include: [{model: Fruit}]
+        }
+      )
+      // Add the fruit into the cart.
+      await cart.addFruit(fruitToAdd, {
+        through: {
+          quantity: Number(req.body.quantity),
+          itemPrice: fruitToAdd.price
+        }
+      })
+      res.json(cart)
+    }
   } catch (err) {
     next(err)
   }

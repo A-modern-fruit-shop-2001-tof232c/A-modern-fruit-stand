@@ -12,9 +12,9 @@ export const gotCart = cart => ({
 
 // create an object to include subtotal and fruits to
 // be consistant with cart object in getCart.
-export const getGuestCart = (subtotal, fruits) => ({
+export const gotGuestCart = (orderTotal, fruits) => ({
   type: GET_GUEST_CART,
-  subtotal,
+  orderTotal,
   fruits
 })
 
@@ -30,19 +30,36 @@ export const getCart = () => async dispatch => {
   }
 }
 
-// export const gotGuestCart = () => async dispatch => {
-//     try{
-//         const gusetCart = ...
-//     }
-// }
+export const getGuestCart = () => async dispatch => {
+  try {
+    // get localStorage object.
+    // const guestCart = JSON.parse(localStorage.getItem('cart'))
+    let orderTotal = 0
+    let fruits = []
+    // reassign state fields base on key/value properities placed in the localstorage.
+    // Depends on the eventhandlers in the singleFruit component.
+    dispatch(gotGuestCart(orderTotal, fruits))
+  } catch (err) {
+    console.log(err)
+  }
+}
 
 // CART REDUCER
-const initialState = {}
+const initialState = {
+  id: 'guest',
+  orderTotal: 0,
+  paid: false,
+  userId: null,
+  fruits: []
+}
 
 const cartReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_CART: {
       return action.cart
+    }
+    case GET_GUEST_CART: {
+      return {...state, orderTotal: action.orderTotal, fruits: action.fruits}
     }
     default: {
       return state
