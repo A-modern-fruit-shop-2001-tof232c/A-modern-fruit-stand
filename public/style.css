@@ -19,3 +19,13 @@ form div {
   margin: 1em;
   display: inline-block;
 }
+
+/* below styles are for adminFruitEditForm */
+
+.fruitFormTable {
+  display: table;
+}
+
+.fruitFormTr {
+  display: table-row;
+}
