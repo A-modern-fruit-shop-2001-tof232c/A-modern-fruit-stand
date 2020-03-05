@@ -3,44 +3,56 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {logout} from '../store'
+import {SidebarNav} from '../components'
 
-const Navbar = ({handleClick, isLoggedIn}) => {
-  return (
-    <div>
+class Navbar extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      openDrawer: false
+    }
+  }
+
+  render() {
+    const isLoggedIn = this.props.isLoggedIn
+    const handleClick = this.props.handleClick
+
+    return (
       <div>
-        {/* Sidebar Navigation Hamburger*/}
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1200px-Hamburger_icon.svg.png"
-          alt="navigation"
-          height="20px"
-        />
+        <SidebarNav />
+        <div>
+          {/* Sidebar Navigation Hamburger*/}
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1200px-Hamburger_icon.svg.png"
+            alt="navigation"
+            height="20px"
+          />
+        </div>
+
+        <Link to="/" className="navBarHeader">
+          a modern fruit stand
+        </Link>
+
+        <nav>
+          {isLoggedIn ? (
+            <div>
+              {/* The navbar will show these links after you log in */}
+              <Link to="/home">Home</Link>
+              <a href="#" onClick={handleClick}>
+                Logout
+              </a>
+            </div>
+          ) : (
+            <div>
+              {/* The navbar will show these links before you log in */}
+              <Link to="/login">Login</Link>
+              <Link to="/signup">Sign Up</Link>
+            </div>
+          )}
+        </nav>
       </div>
-
-      <Link to="/" className="navBarHeader">
-        a modern fruit stand
-      </Link>
-
-      <nav>
-        {isLoggedIn ? (
-          <div>
-            {/* The navbar will show these links after you log in */}
-            <Link to="/home">Home</Link>
-            <a href="#" onClick={handleClick}>
-              Logout
-            </a>
-          </div>
-        ) : (
-          <div>
-            {/* The navbar will show these links before you log in */}
-            <Link to="/login">Login</Link>
-            <Link to="/signup">Sign Up</Link>
-          </div>
-        )}
-      </nav>
-
-      <hr />
-    </div>
-  )
+    )
+  }
 }
 
 /**
