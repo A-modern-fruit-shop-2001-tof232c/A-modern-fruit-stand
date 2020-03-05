@@ -22,8 +22,8 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-// TODO: POST route for adding fruit to cart for the LoggedIn user.
-router.post('/:fruitId', async (req, res, next) => {
+// TODO: PUT route for adding fruit to cart for the LoggedIn user.
+router.put('/:fruitId', async (req, res, next) => {
   try {
     // The fruit we wamt to add.
     const fruitToAdd = await Fruit.findByPk(req.params.fruitId)

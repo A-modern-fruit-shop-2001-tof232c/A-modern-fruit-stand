@@ -3,6 +3,8 @@ import axios from 'axios'
 // ACTION TYPES
 const GET_CART = 'GET_CART'
 const GET_GUEST_CART = 'GET_GUEST_CART'
+const UPDATE_CART = 'UPDATE_CART'
+const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART '
 
 // ACTION CREATORS
 export const gotCart = cart => ({
@@ -16,6 +18,11 @@ export const gotGuestCart = (orderTotal, fruits) => ({
   type: GET_GUEST_CART,
   orderTotal,
   fruits
+})
+
+export const updatedCart = fruit => ({
+  type: UPDATE_CART,
+  fruit
 })
 
 // THUNK CREATORS
@@ -44,6 +51,18 @@ export const getGuestCart = () => async dispatch => {
   }
 }
 
+export const getUpdateCart = fruit => async dispatch => {
+  try {
+    const {data} = await axios.put(`/api/cart/${fruit.fruitId}`, {
+      id: fruit.fruitId,
+      quantity: fruit.quantity
+    })
+    dispatch(updatedCart(data))
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 // CART REDUCER
 const initialState = {
   id: 'guest',
@@ -60,6 +79,9 @@ const cartReducer = (state = initialState, action) => {
     }
     case GET_GUEST_CART: {
       return {...state, orderTotal: action.orderTotal, fruits: action.fruits}
+    }
+    case UPDATE_CART: {
+      return {...state, fruits: [...state.fruits, action.fruit]}
     }
     default: {
       return state

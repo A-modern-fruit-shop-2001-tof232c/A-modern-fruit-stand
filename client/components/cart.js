@@ -8,7 +8,7 @@ class Cart extends React.Component {
   }
   componentDidMount() {
     this.props.isLoggedIn && this.props.getCart()
-    !this.props.isLoggedIn && this.props.getCart()
+    !this.props.isLoggedIn && this.props.getGuestCart()
   }
 
   render() {
