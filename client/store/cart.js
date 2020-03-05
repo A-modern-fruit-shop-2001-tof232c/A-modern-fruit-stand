@@ -14,16 +14,22 @@ export const gotCart = cart => ({
 
 // create an object to include subtotal and fruits to
 // be consistant with cart object in getCart.
-export const gotGuestCart = (orderTotal, fruits) => ({
-  type: GET_GUEST_CART,
-  orderTotal,
-  fruits
-})
+// export const gotGuestCart = (orderTotal, fruits) => ({
+//   type: GET_GUEST_CART,
+//   orderTotal,
+//   fruits
+// })
 
 export const updatedCart = fruit => ({
   type: UPDATE_CART,
   fruit
 })
+
+// export const updatedGuestCart = (fruitId, quantity) => ({
+//   type: UPDATE_GUEST_CART,
+//   fruitId,
+//   quantity
+// })
 
 // THUNK CREATORS
 
@@ -50,6 +56,13 @@ export const getGuestCart = () => async dispatch => {
     console.log(err)
   }
 }
+
+// export const updateGuestCart = () => async dispatch => {
+//   try {
+//   } catch (err) {
+//     console.log(err)
+//   }
+// }
 
 export const getUpdateCart = fruit => async dispatch => {
   try {
@@ -81,6 +94,7 @@ const cartReducer = (state = initialState, action) => {
       return {...state, orderTotal: action.orderTotal, fruits: action.fruits}
     }
     case UPDATE_CART: {
+      // might need to change to action.cart
       return {...state, fruits: [...state.fruits, action.fruit]}
     }
     default: {
