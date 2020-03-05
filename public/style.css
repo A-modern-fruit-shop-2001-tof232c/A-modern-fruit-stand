@@ -43,9 +43,25 @@ form div {
 --------------------------------- NAV BAR -----------------------------
 */
 
-.navBarHeader {
+#navbarContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.navBarHeaderLeft {
+  display: flex;
+  /* justify-content: center; */
   font-style: italic;
   color: black;
+}
+
+.navBarHeaderLeft > img {
+  margin: 10px;
+  cursor: pointer;
+}
+
+.navBarHeaderLeft > a {
+  margin: 12px;
 }
 
 /*

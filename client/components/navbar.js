@@ -25,12 +25,12 @@ class Navbar extends React.Component {
     const handleClick = this.props.handleClick
 
     return (
-      <div>
+      <div id="navbarContainer">
         <SidebarNav
           openDrawer={this.state.openDrawer}
           toggleDrawer={this.toggleSidebarNav}
         />
-        <div>
+        <div className="navBarHeaderLeft">
           {/* Sidebar Navigation Hamburger*/}
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1200px-Hamburger_icon.svg.png"
@@ -38,11 +38,8 @@ class Navbar extends React.Component {
             height="20px"
             onClick={this.toggleSidebarNav}
           />
+          <Link to="/">a modern fruit stand</Link>
         </div>
-
-        <Link to="/" className="navBarHeader">
-          a modern fruit stand
-        </Link>
 
         <nav>
           {isLoggedIn ? (
