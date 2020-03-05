@@ -5,7 +5,6 @@ module.exports = router
 // Get cart belonging to the LoggedIn user only if the order hasn't not been paid.
 router.get('/', async (req, res, next) => {
   try {
-    console.log(req.user)
     const cart = await Order.findOne({
       where: {
         userId: req.user.id,

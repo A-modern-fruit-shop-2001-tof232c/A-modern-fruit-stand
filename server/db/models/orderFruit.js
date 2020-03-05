@@ -29,7 +29,7 @@ const OrderFruit = db.define('orderFruit', {
 
 module.exports = OrderFruit
 
-// OrderFruit.prototype.itemsTotal = function() {
-//   this.itemTotal = this.itemPrice * this.quantity;
-//   return this.itemsTotal
-// }
+OrderFruit.prototype.itemsTotal = function() {
+  this.itemTotal = this.itemPrice * this.quantity
+  return this.itemsTotal
+}

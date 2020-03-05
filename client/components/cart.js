@@ -7,13 +7,11 @@ class Cart extends React.Component {
     super(props)
   }
   componentDidMount() {
-    console.log('in comp did mount for cart')
     this.props.getCart()
   }
 
   render() {
     let cart = this.props.cart
-    console.log(cart)
     if (cart.fruits) {
       return (
         <div id="cart">
