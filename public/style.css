@@ -29,6 +29,12 @@ form div {
 .fruitFormTr {
   display: table-row;
 }
+
+.AllUsers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
 /*
 ----------------------------------BUTTONS------------------------------
 */

@@ -10,11 +10,11 @@ class AdminAllFruit extends React.Component {
   constructor() {
     super()
     this.state = {
+      fruitSearch: '',
       currFruitName: '',
       currFruitOrigin: '',
       currFruitPrice: '',
-      currFruitDescription: '',
-      selectedFruitId: -1
+      currFruitDescription: ''
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -27,48 +27,35 @@ class AdminAllFruit extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    const updatedFruit = {
+    let updatedFruit = {
       name: this.state.currFruitName,
       origin: this.state.currFruitOrigin
     }
+    if (updatedFruit.name.length <= 0) {
+      updatedFruit.name = 'pear'
+    }
+    if (updatedFruit.origin.length <= 0) {
+      updatedFruit.origin = 'Genovia'
+    }
     console.log(updatedFruit)
     this.props.updateFruitThunk(this.state.selectedFruitId, updatedFruit)
+    this.setState({currFruitName: '', currFruitOrigin: ''})
   }
 
   render() {
     return (
       <div className="fruitFormTable">
-        <span className="fruitFormTd">Name</span>
-        <span className="fruitFormTd">Origin</span>
-        {this.props.allFruit.map(element => {
-          return (
-            <div key={element.id}>
-              <form className="fruitFormTr" onSubmit={this.handleSubmit}>
-                <span className="fruitFormTd">
-                  <input
-                    type="text"
-                    data-div_id={element.id}
-                    defaultValue={element.name}
-                    name="currFruitName"
-                    onChange={this.handleChange}
-                  />
-                </span>
-                <span className="fruitFormTd">
-                  <input
-                    type="text"
-                    data-div_id={element.id}
-                    name="currFruitOrigin"
-                    defaultValue={element.origin}
-                    onChange={this.handleChange}
-                  />
-                </span>
-                <span className="fruitFormTd">
-                  <input type="submit" />
-                </span>
-              </form>
-            </div>
-          )
-        })}
+        <form>
+          <label>
+            Search
+            <input
+              type="text"
+              value={this.state.fruitSearch}
+              onChange={this.handleChange}
+            />
+          </label>
+          <input type="submit" value="Search for Fruit!" />
+        </form>
       </div>
     )
   }

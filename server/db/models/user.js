@@ -21,6 +21,11 @@ const User = db.define('user', {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
+  imgURL: {
+    type: Sequelize.STRING,
+    defaultValue:
+      'https://utahsweetsavings.com/wp-content/uploads/2012/11/annalee-elf.png'
+  },
   password: {
     type: Sequelize.STRING,
     // Making `.password` act like a func hides it when serializing to JSON.

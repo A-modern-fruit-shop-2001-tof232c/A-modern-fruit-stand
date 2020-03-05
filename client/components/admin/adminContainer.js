@@ -1,7 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {AdminAllFruit} from '../../components/index'
+import {AdminAllFruit, AdminAllUsers} from '../../components/index'
 import {getAllFruit} from '../../store/fruit'
+import {gotAllUsersThunk} from '../../store/user'
 
 class AdminContainer extends React.Component {
   constructor() {
@@ -9,6 +10,7 @@ class AdminContainer extends React.Component {
   }
   componentDidMount() {
     this.props.getAllFruit()
+    this.props.getAllUsers()
   }
   render() {
     //ADMIN CONTAINER NEEDS:
@@ -20,16 +22,23 @@ class AdminContainer extends React.Component {
     //ADMIN ALL ORDER DISPLAY
     //ADMIN SINGLE ORDER DISPLAY
     console.log('Made it to container!')
-    return <AdminAllFruit />
+    return (
+      <div>
+        <AdminAllFruit />
+        <AdminAllUsers />
+      </div>
+    )
   }
 }
 
 const mapState = state => ({
-  allFruit: state.fruit.allFruit
+  allFruit: state.fruit.allFruit,
+  allUsers: state.user
 })
 
 const mapDispatch = dispatch => ({
-  getAllFruit: () => dispatch(getAllFruit())
+  getAllFruit: () => dispatch(getAllFruit()),
+  getAllUsers: () => dispatch(gotAllUsersThunk())
 })
 
 // export const AdminContainer = connect(mapState, null)(
