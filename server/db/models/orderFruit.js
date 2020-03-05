@@ -32,4 +32,8 @@ module.exports = OrderFruit
 OrderFruit.prototype.itemsTotal = function() {
   this.itemTotal = this.itemPrice * this.quantity
   return this.itemsTotal
+  // OrderFruit.prototype.calculateItemsTotal = function() {
+  //   console.log('DID IT WORK???????')
+  //   this.itemTotal = this.itemPrice * this.quantity
+  //   return this.itemTotal
 }

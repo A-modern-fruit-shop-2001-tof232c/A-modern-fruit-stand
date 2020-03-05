@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {Fruit, User, Order} = require('../db/models')
+const {Fruit, User, Order, OrderFruit} = require('../db/models')
 module.exports = router
 
 // Get cart belonging to the LoggedIn user only if the order hasn't not been paid.
@@ -13,6 +13,18 @@ router.get('/', async (req, res, next) => {
       include: [{model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}]
     })
     if (cart) {
+      const orderFruitInstance = await OrderFruit.findOne({
+        where: {
+          orderId: cart.id
+        }
+      })
+      console.log('orderfruit instance', orderFruitInstance)
+      const itemTotal = orderFruitInstance.calculateItemsTotal()
+      console.log('itemTotal', itemTotal)
+      console.log('HI MEEE')
+      // console.log('the method', cart.calculateOrderTotal())
+      // 1. need to do orderFruit.calculateItemTotal()
+      // 2. need to do cart.calculateOrderTotal()
       res.json(cart)
     } else {
       res.json('No items in cart')
