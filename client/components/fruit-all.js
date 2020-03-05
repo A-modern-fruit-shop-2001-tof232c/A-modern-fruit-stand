@@ -5,6 +5,11 @@ import {getAllFruit} from '../store/fruit'
 class AllFruit extends React.Component {
   constructor(props) {
     super(props)
+    this.navToSingleFruitPage = this.navToSingleFruitPage.bind(this)
+  }
+
+  navToSingleFruitPage(fruitId) {
+    this.props.history.push(`/fruit/${fruitId}`)
   }
 
   componentDidMount() {
@@ -22,7 +27,11 @@ class AllFruit extends React.Component {
             {/* Map over all available fruit */}
             {allTheFruities.map(oneFruit => {
               return (
-                <div key={oneFruit.id}>
+                <div
+                  key={oneFruit.id}
+                  className="FruitCard"
+                  onClick={() => this.navToSingleFruitPage(oneFruit.id)}
+                >
                   <div>
                     <img
                       src={oneFruit.imgURL}

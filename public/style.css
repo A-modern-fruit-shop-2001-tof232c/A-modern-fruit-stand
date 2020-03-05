@@ -19,3 +19,52 @@ form div {
   margin: 1em;
   display: inline-block;
 }
+
+/*
+----------------------------------BUTTONS------------------------------
+*/
+
+#HomePageShopNow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: rgb(255, 255, 255);
+  font-size: 16px;
+  font-style: italic;
+  padding: 12px 40px;
+  cursor: pointer;
+  border: none;
+}
+
+/*
+--------------------------------- NAV BAR -----------------------------
+*/
+
+.navBarHeader {
+  font-style: italic;
+  color: black;
+}
+
+/*
+--------------------------------- HOMEPAGE ----------------------------
+*/
+
+#HomePageImageContainer {
+  position: relative;
+  width: 50%;
+}
+
+#HomePageImageContainer > img {
+  width: auto;
+  height: auto;
+}
+
+/*
+------------------------------ALL FRUIT PAGE----------------------------
+*/
+
+.FruitCard {
+  cursor: pointer;
+}
