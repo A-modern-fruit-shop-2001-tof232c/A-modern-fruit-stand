@@ -25,7 +25,6 @@ router.get('/', async (req, res, next) => {
 // TODO: PUT route for adding fruit to cart for the LoggedIn user.
 router.put('/:fruitId', async (req, res, next) => {
   try {
-    console.log('HI MEEEEEE!!!!!!!!!!!')
     // The fruit we want to add.
     const fruitToAdd = await Fruit.findByPk(req.params.fruitId)
     // Find the cart for the logged in user.
@@ -54,25 +53,25 @@ router.put('/:fruitId', async (req, res, next) => {
           }
         })
         // Increment the quantity of the fruit in the cart.
-        console.log(
-          'orderFruitInstance.quantity !!!!!!!!!!!!!!!',
-          orderFruitInstance.quantity
-        )
-        // console.log('fruit.from .find !!!!!!!!!!!!!!!', fruit)
-        console.log(
-          'req.body.quantityy!!',
-          req.body.quantity,
-          typeof req.body.quantity
-        )
-        orderFruitInstance.quantity += Number(req.body.quantity)
-        // above operation outputs correct sum but does not update database
-        console.log('orderFruit NEW', orderFruitInstance.quantity)
-        console.log('fruitfruitfruit', fruit.orderFruit.quantity)
         // // Reflect the itemTotal base on the quantity of item.
-        fruit.orderFruit.quantity =
-          fruit.orderFruit.quantity + Number(req.body.quantity)
-        console.log('fruitfruitfruit2', fruit.orderFruit.quantity)
         orderFruitInstance.calculateItemsTotal()
+        const newthing = await OrderFruit.update(
+          {
+            quantity: (orderFruitInstance.quantity += Number(
+              req.body.quantity
+            )),
+            itemTotal: orderFruitInstance.itemTotal
+          },
+          {
+            where: {
+              orderId: cart.id,
+              fruitId: req.params.fruitId
+            },
+            returning: true,
+            plain: true
+          }
+        )
+        console.log('JWAIHOESGBNEW THING!!!!!', newthing)
         // // Reflect the orderTotal.
       } else {
         // If the fruit is not in the cart.
