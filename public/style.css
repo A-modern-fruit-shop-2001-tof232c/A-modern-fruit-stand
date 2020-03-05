@@ -1,5 +1,6 @@
 body {
   font-family: sans-serif;
+  background-color: rgb(201, 238, 215);
 }
 
 a {
@@ -45,6 +46,24 @@ form div {
 .navBarHeader {
   font-style: italic;
   color: black;
+}
+
+/*
+------------------- SIDE BAR / OPEN HAMBURGER NAVIGATION -------------------
+*/
+
+#sidebarNav {
+  position: fixed;
+  background-color: white;
+  height: 100vh;
+  width: 250px;
+  z-index: 1;
+  top: 0;
+  left: 0;
+}
+
+#sidebarNav > div > h6 {
+  padding: 20px;
 }
 
 /*

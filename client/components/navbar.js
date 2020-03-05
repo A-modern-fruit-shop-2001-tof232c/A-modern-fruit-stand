@@ -7,9 +7,19 @@ import {logout} from '../store'
 const Navbar = ({handleClick, isLoggedIn}) => {
   return (
     <div>
+      <div>
+        {/* Sidebar Navigation Hamburger*/}
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1200px-Hamburger_icon.svg.png"
+          alt="navigation"
+          height="20px"
+        />
+      </div>
+
       <Link to="/" className="navBarHeader">
         a modern fruit stand
       </Link>
+
       <nav>
         {isLoggedIn ? (
           <div>
@@ -27,6 +37,7 @@ const Navbar = ({handleClick, isLoggedIn}) => {
           </div>
         )}
       </nav>
+
       <hr />
     </div>
   )
