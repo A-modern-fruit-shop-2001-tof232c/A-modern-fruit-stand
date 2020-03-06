@@ -20,6 +20,21 @@ form div {
   display: inline-block;
 }
 
+/* below styles are for adminFruitEditForm */
+
+.fruitFormTable {
+  display: table;
+}
+
+.fruitFormTr {
+  display: table-row;
+}
+
+.AllUsers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
 /*
 ----------------------------------BUTTONS------------------------------
 */
