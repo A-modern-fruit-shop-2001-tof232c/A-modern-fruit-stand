@@ -10,8 +10,19 @@ faker.array = function(structure, count = 1) {
 
   while (n < count) {
     const item = {...structure}
-
-    Object.keys(item).forEach(property => (item[property] = item[property]()))
+    console.log('item ', item)
+    Object.keys(item).forEach(property => {
+      //this if statement checks if value is fruitname and passes an array
+      if (property === 'name')
+        item[property] = item[property]([
+          'A Tasty Generic Fruit',
+          'Wonder Fruit',
+          'Incredible Berry',
+          'Refreshing Lime',
+          'Goji Berry'
+        ])
+      else item[property] = item[property]()
+    })
 
     results.push(item)
 
@@ -23,40 +34,52 @@ faker.array = function(structure, count = 1) {
 
 let people = faker.array(
   {
-    email: faker.internet.exampleEmail,
+    email: faker.internet.email,
     password: faker.internet.password
   },
-  10
+  100
 )
 
-console.log(people)
+let fruit = faker.array(
+  {
+    name: faker.random.arrayElement,
+    price: faker.commerce.price
+  },
+  100
+)
 
 async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
 
-  const users = await Promise.all([
-    User.create({
+  const users = [
+    {
       firstName: 'Cody',
       lastName: 'Pug',
       email: 'cody@email.com',
       password: '123'
-    }),
-    User.create({
+    },
+    {
       firstName: 'Murphy',
       lastName: 'Brown',
       email: 'murphy@email.com',
       password: '123'
-    }),
-    User.create({
+    },
+    {
       firstName: 'Angela',
       lastName: 'V',
       email: 'angela@email.com',
       password: '123',
       isAdmin: true
-    }),
-    people.forEach(element => User.create({element}))
-  ])
+    },
+    ...people
+  ]
+
+  await Promise.all(
+    people.map(element => {
+      return User.create(element)
+    })
+  )
 
   const orders = await Promise.all([
     Order.create({
@@ -174,11 +197,13 @@ async function seed() {
       itemTotal: 0
     }
   ]
+
   await Promise.all(
     orderFruitJoinTable.map(instance => {
       return OrderFruit.create(instance)
     })
   )
+
   console.log(`seeded ${users.length} users`)
   console.log(`seeded ${orders.length} orders`)
   console.log(`seeded ${fruits.length} fruits`)
