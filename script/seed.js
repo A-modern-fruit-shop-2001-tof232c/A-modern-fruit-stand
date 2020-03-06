@@ -65,7 +65,7 @@ async function seed() {
       name: 'Pear',
       description: 'Great for programmers when ordering in pairs',
       imgURL:
-        'http://t0.gstatic.com/images?q=tbn%3AANd9GcT8AyNUZwWTLisWeZDQVdRgX65uAgsxtYdLrvTgiecg0tfMR9kXOPS_CL2uzC6eWMFHtiQO0ZNR&usqp=CAc',
+        'https://cdn.pixabay.com/photo/2019/05/28/15/21/pear-4235369_960_720.png',
       origin: 'Genovia',
       price: 149
     }),
