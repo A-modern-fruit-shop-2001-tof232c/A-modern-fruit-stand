@@ -28,21 +28,21 @@ describe('User routes', () => {
       })
     })
 
-    it('can login a user', () => {
-      agent
-        .post('/login')
-        .send({email: 'meAdmin@admin.com', password: '123', isAdmin: true})
-        .set('Accept', 'application.json')
-        .expect({email: 'meAdmin@admin.com', password: '123'})
-    })
+    // it('can login a user', () => {
+    //   agent
+    //     .post('/login')
+    //     .send({email: 'meAdmin@admin.com', password: '123', isAdmin: true})
+    //     .set('Accept', 'application.json')
+    //     .expect({email: 'meAdmin@admin.com', password: '123'})
+    // })
 
-    it('cannot login a user w/o a password', () => {
-      agent
-        .post('/login')
-        .send({email: 'meAdmin@admin.com'})
-        .set('Accept', 'application.json')
-        .expect(500)
-    })
+    // it('cannot login a user w/o a password', () => {
+    //   agent
+    //     .post('/login')
+    //     .send({email: 'meAdmin@admin.com'})
+    //     .set('Accept', 'application.json')
+    //     .expect(500)
+    // })
 
     // it('Can get the site homepage and return 200', () => {
     //   agent.post('/login')
@@ -50,12 +50,12 @@ describe('User routes', () => {
     //   agent.get('/').expect(200)
     // })
 
-    it('If User is NOT admin, they cannot view all users', async () => {
-      await agent
-        .get('/api/users')
-        .timeout({deadline: 100})
-        .expect(500)
-    })
+    // it('If User is NOT admin, they cannot view all users', async () => {
+    //   await agent
+    //     .get('/api/users')
+    //     .timeout({deadline: 100})
+    //     .expect(500)
+    // })
   })
 
   // it('If User is admin, they can view all users', async () => {

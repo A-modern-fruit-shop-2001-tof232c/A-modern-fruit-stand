@@ -55,7 +55,7 @@ async function seed() {
       password: '123',
       isAdmin: true
     }),
-    User.bulkCreate(people)
+    people.forEach(element => User.create({element}))
   ])
 
   const orders = await Promise.all([
