@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 const SidebarNav = props => {
   if (props.openDrawer) {
@@ -14,20 +15,47 @@ const SidebarNav = props => {
             />
           </div>
         </div>
-        <div>
-          <ul>
-            <li>shop fruit</li>
-            <ul>
-              <li>stone fruit</li>
-              <li>tropical fruit</li>
-              <li>berries</li>
-              <li>melons</li>
-              <li>citrus</li>
-            </ul>
-            <li>checkout</li>
-            <li>log in</li>
-            <li>create account</li>
-          </ul>
+        <div id="sidebarNavLinks">
+          <Link to="/fruit" className="NavBulletPoint">
+            shop fruit
+          </Link>
+          <br />
+          <Link to="/fruit" className="NavSubBulletPoint">
+            stone fruit
+          </Link>
+          <br />
+          <Link to="/fruit" className="NavSubBulletPoint">
+            tropical fruit
+          </Link>
+          <br />
+          <Link to="/fruit" className="NavSubBulletPoint">
+            berries
+          </Link>
+          <br />
+          <Link to="/fruit" className="NavSubBulletPoint">
+            melons
+          </Link>
+          <br />
+          <Link to="/fruit" className="NavSubBulletPoint">
+            citrus
+          </Link>
+          <br />
+          <Link to="/fruit" className="NavBulletPoint">
+            checkout
+          </Link>
+          <br />
+          <Link to="/login" className="NavBulletPoint">
+            log in
+          </Link>
+          <br />
+          <Link to="/signup" className="NavBulletPoint">
+            create account
+          </Link>
+          <br />
+          <Link to="/fruit" className="NavBulletPoint">
+            admin tools
+          </Link>
+          <br />
         </div>
       </div>
     )
