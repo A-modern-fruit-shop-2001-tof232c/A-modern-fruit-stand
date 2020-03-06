@@ -5,6 +5,7 @@ const GET_CART = 'GET_CART'
 const GET_GUEST_CART = 'GET_GUEST_CART'
 const UPDATE_CART = 'UPDATE_CART'
 const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART '
+const REMOVE_ITEM = 'REMOVE_ITEM'
 
 // ACTION CREATORS
 export const gotCart = cart => ({
@@ -14,15 +15,26 @@ export const gotCart = cart => ({
 
 // create an object to include subtotal and fruits to
 // be consistant with cart object in getCart.
-export const gotGuestCart = (orderTotal, fruits) => ({
-  type: GET_GUEST_CART,
-  orderTotal,
-  fruits
-})
+// export const gotGuestCart = (orderTotal, fruits) => ({
+//   type: GET_GUEST_CART,
+//   orderTotal,
+//   fruits
+// })
 
 export const updatedCart = fruit => ({
   type: UPDATE_CART,
   fruit
+})
+
+// export const updatedGuestCart = (fruitId, quantity) => ({
+//   type: UPDATE_GUEST_CART,
+//   fruitId,
+//   quantity
+// })
+
+export const removedItem = cart => ({
+  type: REMOVE_ITEM,
+  cart
 })
 
 // THUNK CREATORS
@@ -37,19 +49,26 @@ export const getCart = () => async dispatch => {
   }
 }
 
-export const getGuestCart = () => async dispatch => {
-  try {
-    // get localStorage object.
-    // const guestCart = JSON.parse(localStorage.getItem('cart'))
-    let orderTotal = 0
-    let fruits = []
-    // reassign state fields base on key/value properities placed in the localstorage.
-    // Depends on the eventhandlers in the singleFruit component.
-    dispatch(gotGuestCart(orderTotal, fruits))
-  } catch (err) {
-    console.log(err)
-  }
-}
+// export const getGuestCart = () => async dispatch => {
+//   try {
+//     // get localStorage object.
+//     // const guestCart = JSON.parse(localStorage.getItem('cart'))
+//     let orderTotal = 0
+//     let fruits = []
+//     // reassign state fields base on key/value properities placed in the localstorage.
+//     // Depends on the eventhandlers in the singleFruit component.
+//     dispatch(gotGuestCart(orderTotal, fruits))
+//   } catch (err) {
+//     console.log(err)
+//   }
+// }
+
+// export const updateGuestCart = () => async dispatch => {
+//   try {
+//   } catch (err) {
+//     console.log(err)
+//   }
+// }
 
 export const getUpdateCart = fruit => async dispatch => {
   try {
@@ -63,13 +82,22 @@ export const getUpdateCart = fruit => async dispatch => {
   }
 }
 
+export const removeItem = fruitId => async dispatch => {
+  try {
+    const {data} = await axios.delete(`/api/cart/${fruitId}`)
+    dispatch(removedItem(data))
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 // CART REDUCER
 const initialState = {
-  id: 'guest',
-  orderTotal: 0,
-  paid: false,
-  userId: null,
-  fruits: []
+  // id: 'guest',
+  // orderTotal: 0,
+  // paid: false,
+  // userId: null,
+  // fruits: []
 }
 
 const cartReducer = (state = initialState, action) => {
@@ -81,7 +109,11 @@ const cartReducer = (state = initialState, action) => {
       return {...state, orderTotal: action.orderTotal, fruits: action.fruits}
     }
     case UPDATE_CART: {
+      // might need to change to action.cart
       return {...state, fruits: [...state.fruits, action.fruit]}
+    }
+    case REMOVE_ITEM: {
+      return action.cart
     }
     default: {
       return state
