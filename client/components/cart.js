@@ -1,13 +1,33 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {getCart, getGuestCart} from '../store/cart'
+import {Link} from 'react-router-dom'
 
 class Cart extends React.Component {
   constructor(props) {
     super(props)
+    this.componentDidMount = this.componentDidMount.bind(this)
+    this.deleteItemHandler = this.deleteItemHandler.bind(this)
+    this.incrementQuantityHandler = this.incrementQuantityHandler.bind(this)
+    this.decrementQuantityHandler = this.deleteItemHandler.bind(this)
   }
   componentDidMount() {
     this.props.getCart()
+  }
+
+  deleteItemHandler(event) {
+    event.preventDefault()
+    // When click will remove the item from the cart
+  }
+
+  incrementQuantityHandler(event) {
+    event.preventDefault()
+    // When click will increment the quantity of the cart by one
+  }
+
+  decrementQuantityHandler(event) {
+    event.preventDefault()
+    // When click will decrement the quantity of the item by one.
   }
 
   render() {
@@ -23,9 +43,15 @@ class Cart extends React.Component {
             {cart.fruits.map(fruit => {
               return (
                 <div key={fruit.id}>
-                  <div>{fruit.name}</div>
+                  <h4>{fruit.name}</h4>
+                  <button onClick={this.deleteItemHandler}>Remove Item</button>
                   <img src={fruit.imgURL} />
-                  <div>QTY: {fruit.orderFruit.quantity}</div>
+
+                  <div>
+                    <button onClick={this.incrementQuantityHandler}>+</button>
+                    <div>QTY: {fruit.orderFruit.quantity}</div>
+                    <button onClick={this.decrementQuantityHandler}>-</button>
+                  </div>
                   <div>Price Per Item: {fruit.orderFruit.itemPrice} </div>
                   <div>Item Total: {fruit.orderFruit.itemTotal}</div>
                 </div>
@@ -34,6 +60,12 @@ class Cart extends React.Component {
           </div>
           <div>
             <h3>Subtotal: {cart.orderTotal}</h3>
+          </div>
+          <div>
+            <button>PROCEED TO CHECK OUT</button>
+            <Link to="/fruit">
+              <button>CONTINUE SHOPPING</button>
+            </Link>
           </div>
         </div>
       )
