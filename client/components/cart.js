@@ -21,7 +21,6 @@ class Cart extends React.Component {
     // When click will remove the item from the cart
     const fruitId = event.target.dataset.fruitid
     this.props.removeItem(fruitId)
-    return false
   }
 
   incrementQuantityHandler(event) {
@@ -47,7 +46,9 @@ class Cart extends React.Component {
             {cart.fruits.map(fruit => {
               return (
                 <div key={fruit.id}>
-                  <h4>{fruit.name}</h4>
+                  <Link to={`/fruit/${fruit.id}`}>
+                    <h4>{fruit.name}</h4>
+                  </Link>
                   <button
                     onClick={this.deleteItemHandler}
                     data-fruitid={fruit.id}

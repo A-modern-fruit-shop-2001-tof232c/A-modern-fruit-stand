@@ -110,7 +110,7 @@ async function seed() {
       userId: 2,
       quantity: 1,
       itemPrice: 49,
-      itemTotal: 0
+      itemTotal: 49
     },
     {
       orderId: 2,
@@ -118,7 +118,7 @@ async function seed() {
       userId: 2,
       quantity: 1,
       itemPrice: 149,
-      itemTotal: 0
+      itemTotal: 49
     },
     {
       orderId: 3,
@@ -126,7 +126,7 @@ async function seed() {
       userId: 2,
       quantity: 1,
       itemPrice: 149,
-      itemTotal: 0
+      itemTotal: 49
     },
     {
       orderId: 3,
@@ -134,15 +134,15 @@ async function seed() {
       userId: 2,
       quantity: 1,
       itemPrice: 49,
-      itemTotal: 0
+      itemTotal: 49
     },
     {
       orderId: 4,
       fruitId: 3,
       userId: 3,
       quantity: 1,
-      itemPrice: 490,
-      itemTotal: 0
+      itemPrice: 49,
+      itemTotal: 49
     }
   ]
   await Promise.all(

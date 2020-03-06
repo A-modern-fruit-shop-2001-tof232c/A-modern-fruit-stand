@@ -47,6 +47,7 @@ router.put('/:fruitId', async (req, res, next) => {
       const fruit = cart.fruits.find(
         fruitEl => fruitEl.name === fruitToAdd.name
       )
+      console.log('fruit:', fruit)
       // If the fruit is already in the cart.
       if (fruit) {
         const orderFruitInstance = await OrderFruit.findOne({
@@ -113,7 +114,7 @@ router.put('/:fruitId', async (req, res, next) => {
       (accumlator = 0, el) => accumlator + el.orderFruit.itemTotal
     )
     cart.orderTotal = orderTotal
-    // await cart.save() ---> this creates internal server error
+    console.log(cart.orderTotal)
     res.json(cart)
   } catch (err) {
     next(err)
@@ -126,7 +127,8 @@ router.put('/:fruitId', async (req, res, next) => {
 router.delete('/:fruitId', async (req, res, next) => {
   try {
     const fruitToDelete = await Fruit.findByPk(req.params.fruitId)
-    console.log('fruitTodelet:', fruitToDelete.id)
+    const nameOfFruitToDelete = fruitToDelete.name
+
     let cart = await Order.findOne({
       where: {
         userId: req.user.id,
@@ -135,18 +137,32 @@ router.delete('/:fruitId', async (req, res, next) => {
       include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
     })
     if (cart) {
-      // console.log('fruit:', cart.fruits)
-      const fruit = cart.fruits.find(fruitEl => fruitEl.id === fruitToDelete)
-
+      const fruit = cart.fruits.find(
+        fruitEl => fruitEl.name === nameOfFruitToDelete
+      )
       if (fruit) {
         const fruitItem = fruit.orderFruit
-        const removeQuantity = fruit.orderFruit.quantity
-        await fruitItem.destory()
+        // console.log('FRUIT:', fruitItem)
+        const removeQuantity = fruitItem.quantity
+        // console.log('FRUIT QUANTITY:', removeQuantity)
+        const orderFruitInstance = await OrderFruit.findOne({
+          where: {
+            orderId: cart.id,
+            fruitId: req.params.fruitId
+          }
+        })
+        // console.log('instance:', orderFruitInstance)
+        await orderFruitInstance.calculateItemsTotal()
+        await orderFruitInstance.destroy()
         const newOrderTotal = cart.orderTotal - fruit.price * removeQuantity
+        // console.log('orderTotal:', cart.orderTotal)
+        // console.log('fruit price:', fruit.price)
+        console.log(Object.keys(Order.prototype))
         await cart.update({orderTotal: newOrderTotal})
         const updatedOrder = await Order.findByPk(cart.id, {
           include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
         })
+
         res.json(updatedOrder)
       } else {
         res.status(404).send('This fruit is not in the basket')
