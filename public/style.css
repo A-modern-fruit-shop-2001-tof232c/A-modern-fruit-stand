@@ -20,6 +20,21 @@ form div {
   display: inline-block;
 }
 
+/* below styles are for adminFruitEditForm */
+
+.fruitFormTable {
+  display: table;
+}
+
+.fruitFormTr {
+  display: table-row;
+}
+
+.AllUsers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
 /*
 ----------------------------------BUTTONS------------------------------
 */
@@ -29,36 +44,102 @@ form div {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  background-color: rgb(255, 255, 255);
+  background-color: rgba(255, 255, 255, 0.7);
   font-size: 16px;
   font-style: italic;
-  padding: 12px 40px;
+  padding: 12px 50px;
   cursor: pointer;
   border: none;
+  font-weight: bolder;
 }
 
 /*
 --------------------------------- NAV BAR -----------------------------
 */
 
-.navBarHeader {
+#navbarContainer {
+  display: flex;
+  justify-content: space-between;
+  background-color: #ffeeb2;
+  margin: 0px;
+}
+
+.navBarHeaderLeft {
+  display: flex;
+}
+
+.navBarHeaderLeft > img {
+  margin: 10px;
+  cursor: pointer;
+  align-self: center;
+}
+
+.navBarHeaderLeft > a {
+  margin: 12px;
   font-style: italic;
   color: black;
+  align-self: center;
+}
+
+/*
+------------------- SIDE BAR / OPEN HAMBURGER NAVIGATION -------------------
+*/
+
+#sidebarNav {
+  position: fixed;
+  background-color: rgb(252, 243, 210);
+  height: 100vh;
+  width: 300px;
+  z-index: 1;
+  top: 0;
+  left: 0;
+}
+
+#sidebarNavHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+#sidebarNavHeader > h6 {
+  margin: 20px;
+  align-self: center;
+  font-size: medium;
+}
+
+#sidebarNavHeader > div {
+  margin: 20px;
+  cursor: pointer;
 }
 
 /*
 --------------------------------- HOMEPAGE ----------------------------
 */
 
+#HomePageHeader {
+  padding: 40px;
+}
+
+#HomePageHeader > h1 {
+  font-size: 50px;
+  font-weight: 60;
+  margin: 0;
+}
+
+#HomePageHeader > h2 {
+  font-size: 20px;
+  font-weight: 60;
+  margin: 0;
+  font-style: italic;
+}
+
 #HomePageImageContainer {
   position: relative;
-  width: 50%;
 }
 
 #HomePageImageContainer > img {
-  width: auto;
-  height: auto;
+  position: relative;
+  margin: 0 auto;
+  display: block;
 }
 
 /*

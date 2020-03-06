@@ -4,12 +4,10 @@ const db = require('../db')
 
 const User = db.define('user', {
   firstName: {
-    type: Sequelize.STRING,
-    allowNull: false
+    type: Sequelize.STRING
   },
   lastName: {
-    type: Sequelize.STRING,
-    allowNull: false
+    type: Sequelize.STRING
   },
   email: {
     type: Sequelize.STRING,
@@ -22,6 +20,11 @@ const User = db.define('user', {
   isAdmin: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
+  },
+  imgURL: {
+    type: Sequelize.STRING,
+    defaultValue:
+      'https://utahsweetsavings.com/wp-content/uploads/2012/11/annalee-elf.png'
   },
   password: {
     type: Sequelize.STRING,
