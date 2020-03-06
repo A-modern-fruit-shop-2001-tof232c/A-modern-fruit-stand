@@ -1,9 +1,16 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {AdminAllFruit, AdminAllUsers} from '../../components/index'
+import {getAllFruit} from '../../store/fruit'
+import {gotAllUsersThunk} from '../../store/user'
 
-class DisconnectedAdminContainer extends React.Component {
+class AdminContainer extends React.Component {
   constructor() {
     super()
+  }
+  componentDidMount() {
+    this.props.getAllFruit()
+    this.props.getAllUsers()
   }
   render() {
     //ADMIN CONTAINER NEEDS:
@@ -14,10 +21,30 @@ class DisconnectedAdminContainer extends React.Component {
     //ADMIN SINGLE USER DISPLAY (Just view, can delete not edit)
     //ADMIN ALL ORDER DISPLAY
     //ADMIN SINGLE ORDER DISPLAY
-    return <p>hi</p>
+    console.log('Made it to container!')
+    return (
+      <div>
+        <AdminAllFruit />
+        <AdminAllUsers />
+      </div>
+    )
   }
 }
 
-export const AdminContainer = connect(mapState, null)(
-  DisconnectedAdminContainer
-)
+const mapState = state => ({
+  allFruit: state.fruit.allFruit,
+  allUsers: state.user
+})
+
+const mapDispatch = dispatch => ({
+  getAllFruit: () => dispatch(getAllFruit()),
+  getAllUsers: () => dispatch(gotAllUsersThunk())
+})
+
+// export const AdminContainer = connect(mapState, null)(
+//   DisconnectedAdminContainer
+// )
+//the bare component is exported for testing
+export {AdminContainer}
+//the connected component is exported for actual deployment
+export default connect(mapState, mapDispatch)(AdminContainer)

@@ -2,6 +2,34 @@
 
 const db = require('../server/db')
 const {User, Order, Fruit, OrderFruit} = require('../server/db/models')
+const faker = require('faker')
+
+faker.array = function(structure, count = 1) {
+  let n = 0
+  const results = []
+
+  while (n < count) {
+    const item = {...structure}
+
+    Object.keys(item).forEach(property => (item[property] = item[property]()))
+
+    results.push(item)
+
+    n++
+  }
+
+  return count === 1 ? results[0] : results
+}
+
+let people = faker.array(
+  {
+    email: faker.internet.exampleEmail,
+    password: faker.internet.password
+  },
+  10
+)
+
+console.log(people)
 
 async function seed() {
   await db.sync({force: true})
@@ -26,7 +54,8 @@ async function seed() {
       email: 'angela@email.com',
       password: '123',
       isAdmin: true
-    })
+    }),
+    people.forEach(element => User.create({element}))
   ])
 
   const orders = await Promise.all([
