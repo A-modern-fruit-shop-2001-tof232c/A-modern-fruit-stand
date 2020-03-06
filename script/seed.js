@@ -10,7 +10,6 @@ faker.array = function(structure, count = 1) {
 
   while (n < count) {
     const item = {...structure}
-    console.log('item ', item)
     Object.keys(item).forEach(property => {
       //this if statement checks if value is fruitname and passes an array
       if (property === 'name')
@@ -43,7 +42,7 @@ let people = faker.array(
 let fruit = faker.array(
   {
     name: faker.random.arrayElement,
-    price: faker.commerce.price
+    price: faker.random.number
   },
   100
 )
@@ -104,32 +103,35 @@ async function seed() {
     })
   ])
 
-  const fruits = await Promise.all([
-    Fruit.create({
+  const fruits = [
+    {
       name: 'Apple',
       description: 'A delicious tarty apple from New York',
       imgURL:
         'https://icons.iconarchive.com/icons/google/noto-emoji-food-drink/512/32349-red-apple-icon.png',
       origin: 'New York',
       price: 49
-    }),
-    Fruit.create({
+    },
+    {
       name: 'Pear',
       description: 'Great for programmers when ordering in pairs',
       imgURL:
         'http://t0.gstatic.com/images?q=tbn%3AANd9GcT8AyNUZwWTLisWeZDQVdRgX65uAgsxtYdLrvTgiecg0tfMR9kXOPS_CL2uzC6eWMFHtiQO0ZNR&usqp=CAc',
       origin: 'Genovia',
       price: 149
-    }),
-    Fruit.create({
+    },
+    {
       name: 'Lemons',
       description: 'When life gives you them...',
       imgURL:
         'https://cdn4.iconfinder.com/data/icons/vegetables-60/48/Fruits_lemon_food-512.png',
       origin: 'New York',
       price: 49
-    })
-  ])
+    },
+    ...fruit
+  ]
+
+  await Promise.all(fruits.map(element => Fruit.create(element)))
 
   const orderFruitJoinTable = [
     {
