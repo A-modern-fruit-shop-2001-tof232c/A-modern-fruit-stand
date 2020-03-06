@@ -116,3 +116,39 @@ router.put('/:fruitId', async (req, res, next) => {
     next(err)
   }
 })
+
+// Need route to delete item in cart.
+router.delete('/:fruitId', async (req, res, next) => {
+  try {
+    let fruitToDelete = req.params.fruitId
+    let cart = await Order.findOne({
+      where: {
+        userId: req.user.id,
+        paid: false
+      },
+      include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
+    })
+    if (cart) {
+      const fruit = cart.fruits.find(
+        fruitEl => fruitEl.name === fruitToDelete.name
+      )
+      if (fruit) {
+        const fruitItem = fruit.orderFruit
+        const removeQuantity = fruit.orderFruit.quantity
+        await fruitItem.destory()
+        const newOrderTotal = cart.orderTotal - fruit.price * removeQuantity
+        await cart.update({orderTotal: newOrderTotal})
+        const updatedOrder = await Order.findByPk(cart.id, {
+          include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
+        })
+        res.json(updatedOrder)
+      } else {
+        res.status(404).send('This fruit is not in the basket')
+      }
+    } else {
+      res.status(404).send('Error 404: No fruit in the basket to remove')
+    }
+  } catch (err) {
+    next(err)
+  }
+})

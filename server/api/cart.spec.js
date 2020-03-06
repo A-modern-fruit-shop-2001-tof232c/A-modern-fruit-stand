@@ -9,10 +9,10 @@ const Fruit = db.model('fruit')
 describe('Cart routes', () => {
   const userFirstName = 'Cody'
   const userLastName = 'Pug'
-  const userEmail = 'cody@emai.com'
+  const userEmail = 'cody@email.com'
   const userPassword = '123'
 
-  const orderTotal = 2.47
+  const testTotal = 247
   const orderPaid = false
 
   const fruitName = 'Apple'
@@ -22,14 +22,35 @@ describe('Cart routes', () => {
   const fruitOrigin = 'New York'
   const fruitDescription = 'It is an apple'
 
-  beforeEach(() => {
-    return db.sync({force: true})
+  beforeEach(async () => {
+    await db.sync({force: true})
+    const user = await User.create({
+      firstName: userFirstName,
+      lastName: userLastName,
+      email: userEmail,
+      password: userPassword
+    })
+    await Fruit.create({
+      name: fruitName,
+      imgURL: fruitImgURL,
+      price: fruitPrice
+    })
+    return Order.create({
+      orderTotal: testTotal,
+      userId: user.id
+    })
   })
 
-  describe('/api/cart/:userId', () => {
-    // TODO: Continue with additional fields.
-    beforeEach(() => {
-      return Order.create({})
+  describe('api/cart', () => {
+    it('GET /api/cart', async () => {
+      const authenticatedUser = request.agent(app)
+      await authenticatedUser
+        .post('/auth/login')
+        .send({email: userEmail, password: userPassword})
+        .expect(200)
+      const res = await authenticatedUser.get('api/cart').expect(200)
+      expect(res.body).to.be.an('object')
+      expect(res.body.orderTotal).to.be.equal(testTotal)
     })
   })
 })

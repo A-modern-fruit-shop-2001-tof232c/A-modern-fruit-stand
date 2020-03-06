@@ -85,7 +85,7 @@ async function seed() {
       fruitId: 1,
       userId: 1,
       quantity: 1,
-      itemPrice: 49,
+      itemPrice: 149,
       itemTotal: 0
     },
     {
@@ -93,7 +93,7 @@ async function seed() {
       fruitId: 2,
       userId: 1,
       quantity: 1,
-      itemPrice: 149,
+      itemPrice: 49,
       itemTotal: 0
     },
     {
