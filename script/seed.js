@@ -2,6 +2,34 @@
 
 const db = require('../server/db')
 const {User, Order, Fruit, OrderFruit} = require('../server/db/models')
+const faker = require('faker')
+
+faker.array = function(structure, count = 1) {
+  let n = 0
+  const results = []
+
+  while (n < count) {
+    const item = {...structure}
+
+    Object.keys(item).forEach(property => (item[property] = item[property]()))
+
+    results.push(item)
+
+    n++
+  }
+
+  return count === 1 ? results[0] : results
+}
+
+let people = faker.array(
+  {
+    email: faker.internet.exampleEmail,
+    password: faker.internet.password
+  },
+  10
+)
+
+console.log(people)
 
 async function seed() {
   await db.sync({force: true})
@@ -26,7 +54,8 @@ async function seed() {
       email: 'angela@email.com',
       password: '123',
       isAdmin: true
-    })
+    }),
+    User.bulkCreate(people)
   ])
 
   const orders = await Promise.all([
@@ -76,39 +105,6 @@ async function seed() {
         'https://cdn4.iconfinder.com/data/icons/vegetables-60/48/Fruits_lemon_food-512.png',
       origin: 'New York',
       price: 49
-    }),
-    Fruit.create({
-      name: 'Apricots',
-      description: `They're good dry, but even better fresh!`,
-      imgURL:
-        'https://www.beautylabthestore.gr/media/catalog/product/cache/1/thumbnail/800x800/9df78eab33525d08d6e5fb8d27136e95/b/e/beautylabthestore-protes-yles-kokoi-gia-scrub-apricot-150gr.jpg',
-      origin: 'California',
-      price: 104
-    }),
-    Fruit.create({
-      name: 'Blueberries',
-      description:
-        'Try them in your morning cereal. You will get approximately 57 in one order.',
-      imgURL:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTugYT47ITbaL3L6WdZxZnL_H-m7TQUZ-tArz39_2N6Nqb1-b5C',
-      origin: 'New Jersey',
-      price: 300
-    }),
-    Fruit.create({
-      name: 'Plum',
-      description: 'I have a good plum torte recipe.',
-      imgURL:
-        'https://cdn.shopify.com/s/files/1/1488/2350/products/All_Red.png?v=1475153056',
-      origin: 'California',
-      price: 128
-    }),
-    Fruit.create({
-      name: 'Persimmon',
-      description: 'Very yummy.',
-      imgURL:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSGnunH9cCpNXMW6w-BAfrxsf6m6edl_DYDRCJ8kYRLOwLJ3B0R',
-      origin: 'Florida',
-      price: 175
     })
   ])
 
