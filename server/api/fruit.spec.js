@@ -16,8 +16,8 @@ describe('/api/fruit URI', function() {
       .get('/api/fruit')
       .expect(200)
       .expect('Content-Type', /json/)
-    // .expect((res) => {
-    //   expect(res.body).to.eql([])
-    // })
+      .expect(res => {
+        expect(res.body).to.eql([])
+      })
   })
 })

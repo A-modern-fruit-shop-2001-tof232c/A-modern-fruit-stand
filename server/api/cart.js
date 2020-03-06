@@ -55,7 +55,7 @@ router.put('/:fruitId', async (req, res, next) => {
         // Increment the quantity of the fruit in the cart.
         // // Reflect the itemTotal base on the quantity of item.
         orderFruitInstance.calculateItemsTotal()
-        const newthing = await OrderFruit.update(
+        await OrderFruit.update(
           {
             quantity: (orderFruitInstance.quantity += Number(
               req.body.quantity
@@ -71,8 +71,6 @@ router.put('/:fruitId', async (req, res, next) => {
             plain: true
           }
         )
-        console.log('JWAIHOESGBNEW THING!!!!!', newthing)
-        // // Reflect the orderTotal.
       } else {
         // If the fruit is not in the cart.
         // Add the fruit.
@@ -87,9 +85,9 @@ router.put('/:fruitId', async (req, res, next) => {
       // if the user does not have a cart.
     } else {
       // Make a cart for the user.
-      // let newCart
       cart = await Order.create(
         {
+          //
           orderTotal: fruitToAddPriceInPennies * Number(req.body.quantity),
           userId: req.user.id
         },
@@ -98,7 +96,6 @@ router.put('/:fruitId', async (req, res, next) => {
         }
       )
       // Add the fruit into the cart.
-      // newCart
       await cart.addFruit(fruitToAdd, {
         through: {
           quantity: Number(req.body.quantity),
@@ -106,11 +103,32 @@ router.put('/:fruitId', async (req, res, next) => {
         }
       })
     }
-    const orderTotal = cart.fruits.reduce(
-      (accumlator = 0, el) => accumlator + el.orderFruit.itemTotal
+    // database call for cart again because of .update(), database calls make copies, not pass by ref.
+    const updatedCart = await Order.findOne({
+      where: {
+        userId: req.user.id,
+        paid: false
+      },
+      include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
+    })
+    const orderTotal = updatedCart.fruits.reduce((accumlator, el) => {
+      return accumlator + el.orderFruit.itemTotal
+    }, 0)
+    // must make database call .update() to update database, cannot simply assign value to object, again not pass by ref.
+    await Order.update(
+      {
+        orderTotal: orderTotal
+      },
+      {
+        where: {
+          id: cart.id,
+          userId: req.user.id,
+          paid: false
+        },
+        returning: true,
+        plain: true
+      }
     )
-    cart.orderTotal = orderTotal
-    // await cart.save() ---> this creates internal server error
     res.json(cart)
   } catch (err) {
     next(err)
