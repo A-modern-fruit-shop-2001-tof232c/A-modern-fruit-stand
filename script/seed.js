@@ -94,7 +94,7 @@ async function seed() {
       name: 'Pear',
       description: 'Great for programmers when ordering in pairs',
       imgURL:
-        'http://t0.gstatic.com/images?q=tbn%3AANd9GcT8AyNUZwWTLisWeZDQVdRgX65uAgsxtYdLrvTgiecg0tfMR9kXOPS_CL2uzC6eWMFHtiQO0ZNR&usqp=CAc',
+        'https://cdn.pixabay.com/photo/2019/05/28/15/21/pear-4235369_960_720.png',
       origin: 'Genovia',
       price: 149
     }),
@@ -114,7 +114,7 @@ async function seed() {
       fruitId: 1,
       userId: 1,
       quantity: 1,
-      itemPrice: 49,
+      itemPrice: 149,
       itemTotal: 0
     },
     {
@@ -122,7 +122,7 @@ async function seed() {
       fruitId: 2,
       userId: 1,
       quantity: 1,
-      itemPrice: 149,
+      itemPrice: 49,
       itemTotal: 0
     },
     {
@@ -139,7 +139,7 @@ async function seed() {
       userId: 2,
       quantity: 1,
       itemPrice: 49,
-      itemTotal: 0
+      itemTotal: 49
     },
     {
       orderId: 2,
@@ -147,7 +147,7 @@ async function seed() {
       userId: 2,
       quantity: 1,
       itemPrice: 149,
-      itemTotal: 0
+      itemTotal: 49
     },
     {
       orderId: 3,
@@ -155,7 +155,7 @@ async function seed() {
       userId: 2,
       quantity: 1,
       itemPrice: 149,
-      itemTotal: 0
+      itemTotal: 49
     },
     {
       orderId: 3,
@@ -163,15 +163,15 @@ async function seed() {
       userId: 2,
       quantity: 1,
       itemPrice: 49,
-      itemTotal: 0
+      itemTotal: 49
     },
     {
       orderId: 4,
       fruitId: 3,
       userId: 3,
       quantity: 1,
-      itemPrice: 490,
-      itemTotal: 0
+      itemPrice: 49,
+      itemTotal: 49
     }
   ]
   await Promise.all(
