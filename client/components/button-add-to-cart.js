@@ -1,7 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {getUpdateCart} from '../store/cart'
-import e from 'express'
 
 const defaultState = {
   QTY: 0
