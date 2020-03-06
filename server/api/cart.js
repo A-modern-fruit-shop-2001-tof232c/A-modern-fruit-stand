@@ -22,6 +22,9 @@ router.get('/', async (req, res, next) => {
   }
 })
 
+// Think about: A route to add an item to the cart from the singleFruit page <-- This is a POST
+// vs
+// changing the quantity of the item from the cart component. <-- This is a PUT
 // TODO: PUT route for adding fruit to cart for the LoggedIn user.
 router.put('/:fruitId', async (req, res, next) => {
   try {
@@ -117,7 +120,9 @@ router.put('/:fruitId', async (req, res, next) => {
   }
 })
 
-// Need route to delete item in cart.
+// A PUT request???
+
+// Need route to delete item in cart. This is deleting the entire item from the cart component.
 router.delete('/:fruitId', async (req, res, next) => {
   try {
     let fruitToDelete = req.params.fruitId
