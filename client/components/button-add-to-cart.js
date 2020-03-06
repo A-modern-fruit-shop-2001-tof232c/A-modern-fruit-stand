@@ -23,6 +23,7 @@ class ButtonAddToCart extends React.Component {
     }
     // dispatch
     this.props.updateCart(fruitData)
+    console.log('IN THE BUTTON COMPONENT', this.state)
     this.setState(defaultState)
   }
 
@@ -39,10 +40,11 @@ class ButtonAddToCart extends React.Component {
           <label htmlFor="QTY">Quantity: </label>
           <input
             name="QTY"
-            type="text"
+            type="number"
             onChange={this.handleChange}
             id="inputQTY"
-            required="required"
+            value={this.state.QTY}
+            min="1"
           />
           <button type="submit">Add To Cart</button>
         </form>
