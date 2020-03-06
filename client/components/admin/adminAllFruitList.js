@@ -11,6 +11,7 @@ class AdminAllFruit extends React.Component {
     super()
     this.state = {
       fruitSearch: '',
+      selectedFruit: '',
       currFruitName: '',
       currFruitOrigin: '',
       currFruitPrice: '',
@@ -31,13 +32,7 @@ class AdminAllFruit extends React.Component {
       name: this.state.currFruitName,
       origin: this.state.currFruitOrigin
     }
-    if (updatedFruit.name.length <= 0) {
-      updatedFruit.name = 'pear'
-    }
-    if (updatedFruit.origin.length <= 0) {
-      updatedFruit.origin = 'Genovia'
-    }
-    console.log(updatedFruit)
+    //console.log(updatedFruit)
     this.props.updateFruitThunk(this.state.selectedFruitId, updatedFruit)
     this.setState({currFruitName: '', currFruitOrigin: ''})
   }
