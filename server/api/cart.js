@@ -145,15 +145,15 @@ router.delete('/:fruitId', async (req, res, next) => {
         // console.log('FRUIT:', fruitItem)
         const removeQuantity = fruitItem.quantity
         // console.log('FRUIT QUANTITY:', removeQuantity)
-        const orderFruitInstance = await OrderFruit.findOne({
-          where: {
-            orderId: cart.id,
-            fruitId: req.params.fruitId
-          }
-        })
+        // const orderFruitInstance = await OrderFruit.findOne({
+        //   where: {
+        //     orderId: cart.id,
+        //     fruitId: req.params.fruitId
+        //   }
+        // })
         // console.log('instance:', orderFruitInstance)
-        await orderFruitInstance.calculateItemsTotal()
-        await orderFruitInstance.destroy()
+        // await orderFruitInstance.calculateItemsTotal()
+        await fruitItem.destroy()
         const newOrderTotal = cart.orderTotal - fruit.price * removeQuantity
         // console.log('orderTotal:', cart.orderTotal)
         // console.log('fruit price:', fruit.price)
