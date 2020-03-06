@@ -30,7 +30,7 @@ export const updatedCart = fruit => ({
 // For logged in users. AJAX request to api get route.
 export const getCart = () => async dispatch => {
   try {
-    const {data} = await axios.get('/api/cart/')
+    const {data} = await axios.get('/api/cart')
     dispatch(gotCart(data))
   } catch (err) {
     console.log(err)
