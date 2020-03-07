@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom'
 class Cart extends React.Component {
   constructor(props) {
     super(props)
-    this.state = this.props.cart
+    // this.state = this.props.cart
     this.componentDidMount = this.componentDidMount.bind(this)
     this.deleteItemHandler = this.deleteItemHandler.bind(this)
     this.incrementQuantityHandler = this.incrementQuantityHandler.bind(this)
@@ -21,6 +21,7 @@ class Cart extends React.Component {
     // When click will remove the item from the cart
     const fruitId = event.target.dataset.fruitid
     this.props.removeItem(fruitId)
+    // return false
   }
 
   incrementQuantityHandler(event) {
@@ -66,7 +67,10 @@ class Cart extends React.Component {
                     <button onClick={this.decrementQuantityHandler}>-</button>
                   </div>
                   <div>Price Per Item: {fruit.orderFruit.itemPrice} </div>
-                  <div>Item Total: {fruit.orderFruit.itemTotal}</div>
+                  <div>
+                    Item Total:{' '}
+                    {fruit.orderFruit.quantity * fruit.orderFruit.itemPrice}
+                  </div>
                 </div>
               )
             })}

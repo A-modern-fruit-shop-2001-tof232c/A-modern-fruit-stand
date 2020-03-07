@@ -2,34 +2,34 @@
 
 const db = require('../server/db')
 const {User, Order, Fruit, OrderFruit} = require('../server/db/models')
-const faker = require('faker')
+// const faker = require('faker')
 
-faker.array = function(structure, count = 1) {
-  let n = 0
-  const results = []
+// faker.array = function(structure, count = 1) {
+//   let n = 0
+//   const results = []
 
-  while (n < count) {
-    const item = {...structure}
+//   while (n < count) {
+//     const item = {...structure}
 
-    Object.keys(item).forEach(property => (item[property] = item[property]()))
+//     Object.keys(item).forEach(property => (item[property] = item[property]()))
 
-    results.push(item)
+//     results.push(item)
 
-    n++
-  }
+//     n++
+//   }
 
-  return count === 1 ? results[0] : results
-}
+//   return count === 1 ? results[0] : results
+// }
 
-let people = faker.array(
-  {
-    email: faker.internet.exampleEmail,
-    password: faker.internet.password
-  },
-  10
-)
+// let people = faker.array(
+//   {
+//     email: faker.internet.exampleEmail,
+//     password: faker.internet.password
+//   },
+//   10
+// )
 
-console.log(people)
+// console.log(people)
 
 async function seed() {
   await db.sync({force: true})
@@ -54,13 +54,13 @@ async function seed() {
       email: 'angela@email.com',
       password: '123',
       isAdmin: true
-    }),
-    people.forEach(element => User.create({element}))
+    })
+    // people.forEach(element => User.create({element}))
   ])
 
   const orders = await Promise.all([
     Order.create({
-      orderTotal: 0,
+      orderTotal: 494,
       paid: false,
       userId: 1
     }),
@@ -114,22 +114,22 @@ async function seed() {
       fruitId: 1,
       userId: 1,
       quantity: 1,
-      itemPrice: 149,
+      itemPrice: 49,
       itemTotal: 0
     },
     {
       orderId: 1,
       fruitId: 2,
       userId: 1,
-      quantity: 1,
-      itemPrice: 49,
+      quantity: 2,
+      itemPrice: 149,
       itemTotal: 0
     },
     {
       orderId: 1,
       fruitId: 3,
       userId: 1,
-      quantity: 1,
+      quantity: 3,
       itemPrice: 49,
       itemTotal: 0
     },

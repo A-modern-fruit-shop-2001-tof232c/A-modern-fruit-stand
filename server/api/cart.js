@@ -12,6 +12,7 @@ router.get('/', async (req, res, next) => {
       },
       include: [{model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}]
     })
+    console.log(Object.keys(Order.prototype))
     if (cart) {
       res.json(cart)
     } else {
@@ -26,7 +27,7 @@ router.get('/', async (req, res, next) => {
 // vs
 // changing the quantity of the item from the cart component. <-- This is a PUT
 // TODO: PUT route for adding fruit to cart for the LoggedIn user.
-router.put('/:fruitId', async (req, res, next) => {
+router.post('/:fruitId', async (req, res, next) => {
   try {
     // The fruit we want to add.
     const fruitToAdd = await Fruit.findByPk(req.params.fruitId)
@@ -145,6 +146,7 @@ router.put('/:fruitId', async (req, res, next) => {
 // Need route to delete item in cart. This is deleting the entire item from the cart component.
 router.delete('/:fruitId', async (req, res, next) => {
   try {
+    // TODO: Refactor the cart to include id of the fruit to delete.
     const fruitToDelete = await Fruit.findByPk(req.params.fruitId)
     const nameOfFruitToDelete = fruitToDelete.name
 
@@ -153,7 +155,7 @@ router.delete('/:fruitId', async (req, res, next) => {
         userId: req.user.id,
         paid: false
       },
-      include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
+      include: [{model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}]
     })
     if (cart) {
       const fruit = cart.fruits.find(
@@ -161,28 +163,18 @@ router.delete('/:fruitId', async (req, res, next) => {
       )
       if (fruit) {
         const fruitItem = fruit.orderFruit
-        // console.log('FRUIT:', fruitItem)
-        const removeQuantity = fruitItem.quantity
-        // console.log('FRUIT QUANTITY:', removeQuantity)
-        // const orderFruitInstance = await OrderFruit.findOne({
-        //   where: {
-        //     orderId: cart.id,
-        //     fruitId: req.params.fruitId
-        //   }
-        // })
-        // console.log('instance:', orderFruitInstance)
-        // await orderFruitInstance.calculateItemsTotal()
+        const priceToSubtract = fruitItem.itemPrice * fruitItem.quantity
         await fruitItem.destroy()
-        const newOrderTotal = cart.orderTotal - fruit.price * removeQuantity
-        // console.log('orderTotal:', cart.orderTotal)
-        // console.log('fruit price:', fruit.price)
-        console.log(Object.keys(Order.prototype))
+        const newOrderTotal = cart.orderTotal - priceToSubtract
         await cart.update({orderTotal: newOrderTotal})
+        // TODO: confrim updatedOrder === cart
         const updatedOrder = await Order.findByPk(cart.id, {
-          include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
+          include: [
+            {model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}
+          ]
         })
 
-        res.json(updatedOrder)
+        res.json(updatedOrder).end()
       } else {
         res.status(404).send('This fruit is not in the basket')
       }
