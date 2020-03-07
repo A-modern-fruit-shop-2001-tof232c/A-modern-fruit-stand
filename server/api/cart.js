@@ -12,7 +12,6 @@ router.get('/', async (req, res, next) => {
       },
       include: [{model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}]
     })
-    console.log(Object.keys(Order.prototype))
     if (cart) {
       res.json(cart)
     } else {
@@ -146,10 +145,6 @@ router.post('/:fruitId', async (req, res, next) => {
 // Need route to delete item in cart. This is deleting the entire item from the cart component.
 router.delete('/:fruitId', async (req, res, next) => {
   try {
-    // TODO: Refactor the cart to include id of the fruit to delete.
-    const fruitToDelete = await Fruit.findByPk(req.params.fruitId)
-    const nameOfFruitToDelete = fruitToDelete.name
-
     let cart = await Order.findOne({
       where: {
         userId: req.user.id,
@@ -159,7 +154,7 @@ router.delete('/:fruitId', async (req, res, next) => {
     })
     if (cart) {
       const fruit = cart.fruits.find(
-        fruitEl => fruitEl.name === nameOfFruitToDelete
+        fruitEl => fruitEl.id === Number(req.params.fruitId)
       )
       if (fruit) {
         const fruitItem = fruit.orderFruit
