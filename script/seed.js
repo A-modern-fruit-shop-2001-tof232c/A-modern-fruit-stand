@@ -70,12 +70,11 @@ async function seed() {
       email: 'angela@email.com',
       password: '123',
       isAdmin: true
-    },
-    ...people
+    }
   ]
 
   await Promise.all(
-    people.map(element => {
+    users.map(element => {
       return User.create(element)
     })
   )

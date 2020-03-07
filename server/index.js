@@ -62,6 +62,11 @@ const createApp = () => {
   )
   app.use(passport.initialize())
   app.use(passport.session())
+  //Included middleware to see what is logged in middleware
+  app.use((req, res, next) => {
+    console.log('SESSION: ', req.session, req.sessionID)
+    next()
+  })
 
   // auth and api routes
   app.use('/auth', require('./auth'))
