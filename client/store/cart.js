@@ -11,6 +11,7 @@ const GET_CART = 'GET_CART'
 // const GET_GUEST_CART = 'GET_GUEST_CART'
 const UPDATE_CART = 'UPDATE_CART'
 const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART '
+const REMOVE_ITEM = 'REMOVE_ITEM'
 
 // ACTION CREATORS
 export const gotCart = cart => ({
@@ -100,6 +101,11 @@ export const updateGuestCart = fruitToAdd => {
 }
 //------------------------END OF UPDATE GUEST CART------------------------------
 
+export const removedItem = cart => ({
+  type: REMOVE_ITEM,
+  cart
+})
+
 // THUNK CREATORS
 
 // For logged in users. AJAX request to api get route.
@@ -124,6 +130,15 @@ export const getUpdateCart = fruit => async dispatch => {
   }
 }
 
+export const removeItem = fruitId => async dispatch => {
+  try {
+    const {data} = await axios.delete(`/api/cart/${fruitId}`)
+    dispatch(removedItem(data))
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 // CART REDUCER
 
 const cartReducer = (state = initialState, action) => {
@@ -135,7 +150,11 @@ const cartReducer = (state = initialState, action) => {
       return {orderTotal: action.fruit.orderTotal, fruits: action.fruit.fruits}
     }
     case UPDATE_CART: {
+      // might need to change to action.cart
       return {...state, fruits: [...state.fruits, action.fruit]}
+    }
+    case REMOVE_ITEM: {
+      return action.cart
     }
     default: {
       return state
