@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {getUpdateCart, updateGuestCart} from '../store/cart'
 
 const defaultState = {
-  QTY: 0
+  QTY: 1
 }
 
 class ButtonAddToCart extends React.Component {
@@ -16,23 +16,19 @@ class ButtonAddToCart extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault()
-
     // setting up object to be passed to dispatch
     const fruitData = {
       fruitId: this.props.selectedFruit.id,
       quantity: this.state.QTY
     }
-
-    // For a guest user: update the redux store with cart item
-    //JASMIN'S CODE
+    // For a logged in user: dispatch update cart to talk with database
     if (this.props.isLoggedIn) {
-      this.props.updateGuestCart(fruitData)
-    } else {
-      // For a logged in user: dispatch update cart to talk with database
       this.props.updateCart(fruitData)
+    } else {
+      // For a guest user: update the redux store with cart item
+      this.props.updateGuestCart(fruitData)
+      // console.log('buttonComp: ',JSON.parse(window.localStorage.getItem('guestCart')))
     }
-
-    // console.log('IN THE BUTTON COMPONENT', this.state)
     this.setState(defaultState)
   }
 
@@ -64,7 +60,8 @@ class ButtonAddToCart extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    selectedFruit: state.fruit.selectedFruit
+    selectedFruit: state.fruit.selectedFruit,
+    isLoggedIn: !!state.user.selectedUser.id
   }
 }
 

@@ -35,16 +35,64 @@ export const getGuestCart = () => {
     )
   }
   const cart = JSON.parse(window.localStorage.getItem('guestCart'))
-
-  // console.log('I am the local storage cart for a guest', guestFruits)
-  // console.log(window.localStorage.guestCart)
   return {
     type: GET_CART,
     cart
   }
 }
 
-// export const updateGuestCart = (item)
+//---------------------------UPDATE GUEST CART------------------------------
+//this receives a fruit in the format: {fruitId, quantity}
+export const updateGuestCart = fruitToAdd => {
+  //If guest is new, add an empty cart on local storage
+  if (!window.localStorage.guestCart) {
+    window.localStorage.setItem(
+      'guestCart',
+      JSON.stringify({
+        orderTotal: 0,
+        fruits: []
+      })
+    )
+  }
+  const oldCart = JSON.parse(window.localStorage.getItem('guestCart')).fruits
+  let newCart = []
+  //if item is new to cart
+  if (!oldCart.map(el => el.id).includes(fruitToAdd.fruitId)) {
+    console.log('new to cart')
+    let newFruit = {
+      price: 99,
+      id: fruitToAdd.fruitId,
+      name: 'lala',
+      imgUrl: 'tbd',
+      orderFruit: {
+        quantity: fruitToAdd.quantity,
+        itemPrice: 99,
+        itemTotal: 99,
+        fruitId: 'xxx'
+      }
+    }
+    newCart = [...oldCart, newFruit]
+  } else {
+    //if cart already has a qty of fruit to add
+    console.log('not new to cart')
+    newCart = oldCart.map(el => {
+      if (el.id === fruitToAdd.fruitId) {
+        el.orderFruit.quantity += fruitToAdd.quantity
+        el.itemTotal += fruitToAdd.quantity * el.orderFruit.itemPrice
+      }
+      return el
+    })
+  }
+  //create object to send back to reducer and reset local storage
+  const fruit = {orderTotal: 0, fruits: newCart}
+  window.localStorage.setItem('guestCart', JSON.stringify(fruit))
+  console.log(JSON.parse(window.localStorage.guestCart))
+  return {
+    type: UPDATE_CART,
+    fruit
+  }
+}
+//------------------------END OF UPDATE GUEST CART------------------------------
 
 // THUNK CREATORS
 
