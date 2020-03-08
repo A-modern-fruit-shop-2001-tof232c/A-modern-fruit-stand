@@ -3,8 +3,8 @@ import {connect} from 'react-redux'
 import {deleteUserForeverThunk} from '../../store/user'
 
 class AdminAllUsers extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
     this.handleClickDelete = this.handleClickDelete.bind(this)
   }
@@ -14,7 +14,7 @@ class AdminAllUsers extends React.Component {
   }
 
   render() {
-    let usersCollection = this.props.allUsers.allUsers
+    let usersCollection = this.props.matchedUsers
     if (usersCollection) {
       return (
         <div className="AllUsers">
@@ -30,7 +30,12 @@ class AdminAllUsers extends React.Component {
                 >
                   Delete
                 </button>
+
                 <p>{element.email}</p>
+                <span>
+                  <p>Is Admin?</p>
+                  <input type="checkbox" />
+                </span>
               </div>
             )
           })}

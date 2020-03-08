@@ -1,10 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {
-  AdminAllFruit,
-  AdminAllUsers,
-  SearchFruits
-} from '../../components/index'
+import {SearchBar} from '../../components/index'
 import {getAllFruit} from '../../store/fruit'
 import {gotAllUsersThunk} from '../../store/user'
 
@@ -28,8 +24,7 @@ class AdminContainer extends React.Component {
     console.log('Made it to container!')
     return (
       <div>
-        <SearchFruits />
-        <AdminAllUsers />
+        <SearchBar typeSearch="user" />
       </div>
     )
   }
