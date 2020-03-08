@@ -6,12 +6,18 @@ class Cart extends React.Component {
   constructor(props) {
     super(props)
   }
+
   componentDidMount() {
-    this.props.isLoggedIn && this.props.getCart()
-    !this.props.isLoggedIn && this.props.getGuestCart()
+    if (this.props.isLoggedIn) {
+      this.props.getCart()
+    }
+    if (!this.props.isLoggedIn) {
+      this.props.getGuestCart()
+    }
   }
 
   render() {
+    console.log('am I logged in', this.props.isLoggedIn)
     let cart = this.props.cart
     if (cart.fruits) {
       return (
@@ -25,8 +31,8 @@ class Cart extends React.Component {
               return (
                 <div key={fruit.id}>
                   <div>{fruit.name}</div>
-                  <img src={fruit.imgURL} />
-                  <div>OTY: {fruit.orderFruit.quantity}</div>
+                  <img src={fruit.imgURL} height="80px" />
+                  <div>QTY: {fruit.orderFruit.quantity}</div>
                   <div>Price: {fruit.orderFruit.itemTotal}</div>
                 </div>
               )
@@ -44,7 +50,8 @@ class Cart extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  cart: state.cart
+  cart: state.cart,
+  isLoggedIn: !!state.user.selectedUser.id
 })
 
 const mapDispatchToProps = dispatch => ({

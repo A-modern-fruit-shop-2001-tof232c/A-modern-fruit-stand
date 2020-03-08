@@ -11,11 +11,11 @@ class AdminAllFruit extends React.Component {
     super()
     this.state = {
       fruitSearch: '',
-      selectedFruit: '',
+      // selectedFruit: '',
       currFruitName: '',
-      currFruitOrigin: '',
-      currFruitPrice: '',
-      currFruitDescription: ''
+      currFruitOrigin: ''
+      // currFruitPrice: '',
+      // currFruitDescription: ''
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)

@@ -1,7 +1,8 @@
 const router = require('express').Router()
-const {Fruit, User, Order, OrderFruit} = require('../db/models')
+const {Fruit, Order, OrderFruit} = require('../db/models')
 module.exports = router
 
+//ROUTE: '/api/cart/'
 // Get cart belonging to the LoggedIn user only if the order hasn't not been paid.
 router.get('/', async (req, res, next) => {
   try {
@@ -22,7 +23,8 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-// TODO: PUT route for adding fruit to cart for the LoggedIn user.
+//ROUTE: '/api/cart/:fruitId'
+// TO DO: PUT route for adding fruit to cart for the LoggedIn user.
 router.put('/:fruitId', async (req, res, next) => {
   try {
     // The fruit we want to add.

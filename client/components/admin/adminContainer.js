@@ -5,9 +5,9 @@ import {getAllFruit} from '../../store/fruit'
 import {gotAllUsersThunk} from '../../store/user'
 
 class AdminContainer extends React.Component {
-  constructor() {
-    super()
-  }
+  // constructor() {
+  //   super()
+  // }
   componentDidMount() {
     this.props.getAllFruit()
     this.props.getAllUsers()

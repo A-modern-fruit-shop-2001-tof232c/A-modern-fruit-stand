@@ -1,5 +1,6 @@
 body {
   font-family: sans-serif;
+  margin: 0px;
 }
 
 a {
@@ -69,7 +70,7 @@ form div {
 }
 
 .navBarHeaderLeft > img {
-  margin: 10px;
+  margin: 0px 20px;
   cursor: pointer;
   align-self: center;
 }
@@ -79,6 +80,22 @@ form div {
   font-style: italic;
   color: black;
   align-self: center;
+}
+
+nav > div {
+  display: flex;
+}
+
+nav > div > img {
+  margin: 0px 20px;
+  align-self: center;
+  cursor: pointer;
+}
+
+nav > div > a {
+  margin: 12px;
+  font-style: italic;
+  color: black;
 }
 
 /*
@@ -109,6 +126,22 @@ form div {
 #sidebarNavHeader > div {
   margin: 20px;
   cursor: pointer;
+}
+
+.NavBulletPoint {
+  margin: 40px;
+  font-size: 15px;
+  font-style: italic;
+  color: black;
+  line-height: 40px;
+}
+
+.NavSubBulletPoint {
+  margin: 60px;
+  font-size: 15px;
+  font-style: italic;
+  color: black;
+  line-height: 20px;
 }
 
 /*

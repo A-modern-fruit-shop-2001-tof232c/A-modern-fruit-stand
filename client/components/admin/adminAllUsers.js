@@ -2,11 +2,11 @@ import React from 'react'
 import {connect} from 'react-redux'
 
 class AdminAllUsers extends React.Component {
-  constructor() {
-    super()
+  // constructor() {
+  //   super()
 
-    //this.handleClick = this.handleClick.bind(this)
-  }
+  //   //this.handleClick = this.handleClick.bind(this)
+  // }
   render() {
     let usersCollection = this.props.allUsers.allUsers
     if (usersCollection) {

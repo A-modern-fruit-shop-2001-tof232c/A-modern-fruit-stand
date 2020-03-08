@@ -7,9 +7,11 @@ class FruitSingle extends React.Component {
   constructor(props) {
     super(props)
   }
+
   componentDidMount() {
     this.props.getSingleFruit(this.props.match.params.id)
   }
+
   render() {
     return (
       <div>
