@@ -5,24 +5,30 @@ const GET_CART = 'GET_CART'
 const GET_GUEST_CART = 'GET_GUEST_CART'
 const UPDATE_CART = 'UPDATE_CART'
 const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART '
+const CHECKOUT_CART = 'CHECKOUT_CART'
 
 // ACTION CREATORS
-export const gotCart = cart => ({
+const gotCart = cart => ({
   type: GET_CART,
   cart
 })
 
 // create an object to include subtotal and fruits to
 // be consistant with cart object in getCart.
-export const gotGuestCart = (orderTotal, fruits) => ({
+const gotGuestCart = (orderTotal, fruits) => ({
   type: GET_GUEST_CART,
   orderTotal,
   fruits
 })
 
-export const updatedCart = fruit => ({
+const updatedCart = fruit => ({
   type: UPDATE_CART,
   fruit
+})
+
+const gotCheckoutCart = cartid => ({
+  type: CHECKOUT_CART,
+  cartid
 })
 
 // THUNK CREATORS
@@ -33,7 +39,7 @@ export const getCart = () => async dispatch => {
     const {data} = await axios.get('/api/cart')
     dispatch(gotCart(data))
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
 }
 
@@ -47,7 +53,7 @@ export const getGuestCart = () => async dispatch => {
     // Depends on the eventhandlers in the singleFruit component.
     dispatch(gotGuestCart(orderTotal, fruits))
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
 }
 
@@ -59,13 +65,22 @@ export const getUpdateCart = fruit => async dispatch => {
     })
     dispatch(updatedCart(data))
   } catch (err) {
-    console.log(err)
+    console.error(err)
+  }
+}
+
+export const checkoutCart = id => async dispatch => {
+  try {
+    const {data} = await axios.put('/api/cart/checkout/' + id)
+    dispatch(gotCheckoutCart(data))
+  } catch (err) {
+    console.error(err)
   }
 }
 
 // CART REDUCER
 const initialState = {
-  id: 'guest',
+  id: 0,
   orderTotal: 0,
   paid: false,
   userId: null,
@@ -82,6 +97,9 @@ const cartReducer = (state = initialState, action) => {
     }
     case UPDATE_CART: {
       return {...state, fruits: [...state.fruits, action.fruit]}
+    }
+    case CHECKOUT_CART: {
+      return initialState
     }
     default: {
       return state

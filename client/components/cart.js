@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {getCart, getGuestCart} from '../store/cart'
+import {ButtonCheckout} from '../components'
 
 class Cart extends React.Component {
   constructor(props) {
@@ -13,6 +14,7 @@ class Cart extends React.Component {
 
   render() {
     let cart = this.props.cart
+    console.log("why isn't it loading", cart)
     if (cart.fruits) {
       return (
         <div id="cart">
@@ -26,7 +28,7 @@ class Cart extends React.Component {
                 <div key={fruit.id}>
                   <div>{fruit.name}</div>
                   <img src={fruit.imgURL} />
-                  <div>OTY: {fruit.orderFruit.quantity}</div>
+                  <div>QTY: {fruit.orderFruit.quantity}</div>
                   <div>Price: {fruit.orderFruit.itemTotal}</div>
                 </div>
               )
@@ -35,6 +37,7 @@ class Cart extends React.Component {
           <div>
             <h3>Subtotal: {cart.orderTotal}</h3>
           </div>
+          <ButtonCheckout cartId={cart.id}>Checkout</ButtonCheckout>
         </div>
       )
     } else {

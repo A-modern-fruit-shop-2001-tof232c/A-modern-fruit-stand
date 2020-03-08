@@ -23,7 +23,6 @@ class ButtonAddToCart extends React.Component {
     }
     // dispatch
     this.props.updateCart(fruitData)
-    console.log('IN THE BUTTON COMPONENT', this.state)
     this.setState(defaultState)
   }
 

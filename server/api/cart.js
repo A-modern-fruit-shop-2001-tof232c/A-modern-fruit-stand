@@ -134,3 +134,21 @@ router.put('/:fruitId', async (req, res, next) => {
     next(err)
   }
 })
+
+router.put('/checkout/:cartId', async (req, res, next) => {
+  try {
+    const cart = await Order.update(
+      {
+        paid: true
+      },
+      {
+        where: {
+          id: req.params.cartId
+        }
+      }
+    )
+    res.json(cart)
+  } catch (error) {
+    next(error)
+  }
+})
