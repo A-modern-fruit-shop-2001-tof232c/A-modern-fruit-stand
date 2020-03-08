@@ -26,7 +26,10 @@ class ButtonAddToCart extends React.Component {
       this.props.updateCart(fruitData)
     } else {
       // For a guest user: update the redux store with cart item
-      this.props.updateGuestCart(fruitData)
+      this.props.updateGuestCart({
+        quantity: fruitData.quantity,
+        selectedFruit: this.props.selectedFruit
+      })
       // console.log('buttonComp: ',JSON.parse(window.localStorage.getItem('guestCart')))
     }
     this.setState(defaultState)

@@ -10,7 +10,7 @@ const initialState = {
 const GET_CART = 'GET_CART'
 // const GET_GUEST_CART = 'GET_GUEST_CART'
 const UPDATE_CART = 'UPDATE_CART'
-// const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART '
+const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART '
 
 // ACTION CREATORS
 export const gotCart = cart => ({
@@ -42,7 +42,7 @@ export const getGuestCart = () => {
 }
 
 //---------------------------UPDATE GUEST CART------------------------------
-//this receives a fruit in the format: {fruitId, quantity}
+//this receives a fruit in the format: {quantity, selectedFruit}
 export const updateGuestCart = fruitToAdd => {
   //If guest is new, add an empty cart on local storage
   if (!window.localStorage.guestCart) {
@@ -54,41 +54,47 @@ export const updateGuestCart = fruitToAdd => {
       })
     )
   }
-  const oldCart = JSON.parse(window.localStorage.getItem('guestCart')).fruits
+  const oldStorage = JSON.parse(window.localStorage.getItem('guestCart'))
+  const oldCart = oldStorage.fruits
   let newCart = []
   //if item is new to cart
-  if (!oldCart.map(el => el.id).includes(fruitToAdd.fruitId)) {
-    console.log('new to cart')
+  if (!oldCart.map(el => el.id).includes(fruitToAdd.selectedFruit.id)) {
     let newFruit = {
-      price: 99,
-      id: fruitToAdd.fruitId,
-      name: 'lala',
-      imgUrl: 'tbd',
+      price: fruitToAdd.selectedFruit.price,
+      id: fruitToAdd.selectedFruit.id,
+      name: fruitToAdd.selectedFruit.name,
+      imgUrl: fruitToAdd.selectedFruit.imgURL,
       orderFruit: {
+        itemPrice: fruitToAdd.selectedFruit.price, //localStorage stores in DOLLARS
         quantity: fruitToAdd.quantity,
-        itemPrice: 99,
-        itemTotal: 99,
-        fruitId: 'xxx'
+        itemTotal: fruitToAdd.selectedFruit.price * fruitToAdd.quantity,
+        fruitId: fruitToAdd.selectedFruit.id
       }
     }
     newCart = [...oldCart, newFruit]
   } else {
     //if cart already has a qty of fruit to add
-    console.log('not new to cart')
     newCart = oldCart.map(el => {
-      if (el.id === fruitToAdd.fruitId) {
+      if (el.id === fruitToAdd.selectedFruit.id) {
         el.orderFruit.quantity += fruitToAdd.quantity
-        el.itemTotal += fruitToAdd.quantity * el.orderFruit.itemPrice
+        el.orderFruit.itemTotal =
+          (el.orderFruit.itemTotal * 100 +
+            fruitToAdd.quantity * el.orderFruit.itemPrice * 100) /
+          100
       }
       return el
     })
   }
+  //create a new cart total
+  const newTotal =
+    (oldStorage.orderTotal * 100 +
+      fruitToAdd.quantity * fruitToAdd.selectedFruit.price * 100) /
+    100
   //create object to send back to reducer and reset local storage
-  const fruit = {orderTotal: 0, fruits: newCart}
+  const fruit = {orderTotal: newTotal, fruits: newCart}
   window.localStorage.setItem('guestCart', JSON.stringify(fruit))
-  console.log(JSON.parse(window.localStorage.guestCart))
   return {
-    type: UPDATE_CART,
+    type: UPDATE_GUEST_CART,
     fruit
   }
 }
@@ -125,9 +131,9 @@ const cartReducer = (state = initialState, action) => {
     case GET_CART: {
       return {orderTotal: action.cart.orderTotal, fruits: action.cart.fruits}
     }
-    // case GET_GUEST_CART: {
-    //   return {orderTotal: action.orderTotal, fruits: action.guestFruits}
-    // }
+    case UPDATE_GUEST_CART: {
+      return {orderTotal: action.fruit.orderTotal, fruits: action.fruit.fruits}
+    }
     case UPDATE_CART: {
       return {...state, fruits: [...state.fruits, action.fruit]}
     }
