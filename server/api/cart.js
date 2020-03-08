@@ -152,30 +152,33 @@ router.delete('/:fruitId', async (req, res, next) => {
       },
       include: [{model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}]
     })
-    if (cart) {
-      const fruit = cart.fruits.find(
-        fruitEl => fruitEl.id === Number(req.params.fruitId)
-      )
-      if (fruit) {
-        const fruitItem = fruit.orderFruit
-        const priceToSubtract = fruitItem.itemPrice * fruitItem.quantity
-        await fruitItem.destroy()
-        const newOrderTotal = cart.orderTotal - priceToSubtract
-        await cart.update({orderTotal: newOrderTotal})
-        // TODO: confrim updatedOrder === cart
-        const updatedOrder = await Order.findByPk(cart.id, {
-          include: [
-            {model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}
-          ]
-        })
 
-        res.json(updatedOrder).end()
-      } else {
-        res.status(404).send('This fruit is not in the basket')
-      }
-    } else {
+    if (!cart) {
       res.status(404).send('Error 404: No fruit in the basket to remove')
+      return
     }
+
+    const fruit = cart.fruits.find(
+      fruitEl => fruitEl.id === Number(req.params.fruitId)
+    )
+    if (!fruit) {
+      res.status(404).send('This fruit is not in the basket')
+      return
+    }
+
+    const fruitItem = fruit.orderFruit
+    const priceToSubtract = fruitItem.itemPrice * fruitItem.quantity
+    await fruitItem.destroy()
+    const newOrderTotal = cart.orderTotal - priceToSubtract
+    await cart.update({orderTotal: newOrderTotal})
+    // TODO: Figure out whether it is necessary to query the database again
+    // for the cart. Why can't the previous cart instance be returned in
+    // the client?
+    const updatedOrder = await Order.findByPk(cart.id, {
+      include: [{model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}]
+    })
+
+    res.json(updatedOrder).end()
   } catch (err) {
     next(err)
   }
