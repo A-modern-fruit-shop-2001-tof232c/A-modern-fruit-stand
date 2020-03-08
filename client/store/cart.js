@@ -3,8 +3,9 @@ import axios from 'axios'
 // ACTION TYPES
 const GET_CART = 'GET_CART'
 const GET_GUEST_CART = 'GET_GUEST_CART'
-const UPDATE_CART = 'UPDATE_CART'
+const ADD_ITEM = 'ADD_ITEM'
 const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART '
+const UPDATE_QUANTITY = 'UPDATE_QUANTITY'
 const REMOVE_ITEM = 'REMOVE_ITEM'
 
 // ACTION CREATORS
@@ -22,8 +23,13 @@ export const gotCart = cart => ({
 // })
 
 export const updatedCart = fruit => ({
-  type: UPDATE_CART,
+  type: ADD_ITEM,
   fruit
+})
+
+export const updatedQuantity = cart => ({
+  type: UPDATE_QUANTITY,
+  cart
 })
 
 // export const updatedGuestCart = (fruitId, quantity) => ({
@@ -82,6 +88,15 @@ export const getUpdateCart = fruit => async dispatch => {
   }
 }
 
+export const getUpdateQuantity = (fruitId, isIncrement) => async dispatch => {
+  try {
+    const {data} = await axios.put(`/api/cart/${fruitId}/${isIncrement}`)
+    dispatch(updatedQuantity(data))
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 export const removeItem = fruitId => async dispatch => {
   try {
     const {data} = await axios.delete(`/api/cart/${fruitId}`)
@@ -108,9 +123,12 @@ const cartReducer = (state = initialState, action) => {
     case GET_GUEST_CART: {
       return {...state, orderTotal: action.orderTotal, fruits: action.fruits}
     }
-    case UPDATE_CART: {
+    case ADD_ITEM: {
       // might need to change to action.cart
       return {...state, fruits: [...state.fruits, action.fruit]}
+    }
+    case UPDATE_QUANTITY: {
+      return action.cart
     }
     case REMOVE_ITEM: {
       return action.cart

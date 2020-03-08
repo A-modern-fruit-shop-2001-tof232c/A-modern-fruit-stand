@@ -5,13 +5,7 @@ module.exports = router
 // Get cart belonging to the LoggedIn user only if the order hasn't not been paid.
 router.get('/', async (req, res, next) => {
   try {
-    const cart = await Order.findOne({
-      where: {
-        userId: req.user.id,
-        paid: false
-      },
-      include: [{model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}]
-    })
+    const cart = await getCart(req.user.id)
     if (cart) {
       res.json(cart)
     } else {
@@ -22,22 +16,13 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-// Think about: A route to add an item to the cart from the singleFruit page <-- This is a POST
-// vs
-// changing the quantity of the item from the cart component. <-- This is a PUT
-// TODO: PUT route for adding fruit to cart for the LoggedIn user.
+// A POST route for adding fruit to cart for the LoggedIn user.
 router.post('/:fruitId', async (req, res, next) => {
   try {
     // The fruit we want to add.
     const fruitToAdd = await Fruit.findByPk(req.params.fruitId)
     // Find the cart for the logged in user.
-    let cart = await Order.findOne({
-      where: {
-        userId: req.user.id,
-        paid: false
-      },
-      include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
-    })
+    let cart = await getCart(req.user.id)
     // converting fruitInstance Price back to pennies
     const fruitToAddPriceInPennies = fruitToAdd.price * 100
     // Does the user have a cart?
@@ -140,21 +125,50 @@ router.post('/:fruitId', async (req, res, next) => {
   }
 })
 
-// A PUT request???
+// A PUT route to update the quantity of the item from the cart component.
+router.put('/:fruitId/:isIncrement', async (req, res, next) => {
+  try {
+    let cart = await getCart(req.user.id)
+
+    if (!cart) {
+      res.status(404).send('Error 404: No Basket')
+      return
+    }
+
+    const fruit = cart.fruits.find(
+      fruitEl => fruitEl.id === Number(req.params.fruitId)
+    )
+    if (!fruit) {
+      res.status(404).send('This fruit is not in the basket')
+      return
+    }
+    const fruitItem = fruit.orderFruit
+    let orderTotal = cart.orderTotal
+
+    // determine the method base on the button press.
+    if (req.params.isIncrement) {
+      fruitItem.quantity++
+      orderTotal = orderTotal + fruitItem.itemPrice
+    } else {
+      fruitItem.quantity--
+      orderTotal = orderTotal - fruitItem.itemPrice
+    }
+    cart.update({orderTotal: orderTotal})
+    const updatedOrder = await getUpdatedOrder(cart.id)
+
+    res.json(updatedOrder)
+  } catch (err) {
+    next(err)
+  }
+})
 
 // Need route to delete item in cart. This is deleting the entire item from the cart component.
 router.delete('/:fruitId', async (req, res, next) => {
   try {
-    let cart = await Order.findOne({
-      where: {
-        userId: req.user.id,
-        paid: false
-      },
-      include: [{model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}]
-    })
+    let cart = await getCart(req.user.id)
 
     if (!cart) {
-      res.status(404).send('Error 404: No fruit in the basket to remove')
+      res.status(404).send('Error 404: No Basket')
       return
     }
 
@@ -174,12 +188,26 @@ router.delete('/:fruitId', async (req, res, next) => {
     // TODO: Figure out whether it is necessary to query the database again
     // for the cart. Why can't the previous cart instance be returned in
     // the client?
-    const updatedOrder = await Order.findByPk(cart.id, {
-      include: [{model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}]
-    })
+    const updatedOrder = await getUpdatedOrder(cart.id)
 
     res.json(updatedOrder).end()
   } catch (err) {
     next(err)
   }
 })
+
+function getCart(userId) {
+  return Order.findOne({
+    where: {
+      userId: userId,
+      paid: false
+    },
+    include: [{model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}]
+  })
+}
+
+function getUpdatedOrder(cartId) {
+  return Order.findByPk(cartId, {
+    include: [{model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}]
+  })
+}

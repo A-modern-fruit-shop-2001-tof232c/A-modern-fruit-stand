@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {getCart, getGuestCart, removeItem} from '../store/cart'
+import {getCart, getGuestCart, removeItem, updateQuantity} from '../store/cart'
 import {Link} from 'react-router-dom'
 
 class Cart extends React.Component {
@@ -21,17 +21,22 @@ class Cart extends React.Component {
     // When click will remove the item from the cart
     const fruitId = event.target.dataset.fruitid
     this.props.removeItem(fruitId)
-    // return false
   }
 
   incrementQuantityHandler(event) {
     event.preventDefault()
     // When click will increment the quantity of the cart by one
+    const fruitId = event.target.dataset.fruitid
+    const isIncrement = true
+    this.props.updateQuantity(fruitId, isIncrement)
   }
 
   decrementQuantityHandler(event) {
     event.preventDefault()
     // When click will decrement the quantity of the item by one.
+    const fruitId = event.target.dataset.fruitid
+    const isIncrement = false
+    this.props.updateQuantity(fruitId, isIncrement)
   }
 
   render() {
@@ -62,9 +67,19 @@ class Cart extends React.Component {
                   />
 
                   <div>
-                    <button onClick={this.incrementQuantityHandler}>+</button>
+                    <button
+                      onClick={this.incrementQuantityHandler}
+                      data-fruitid={fruit.id}
+                    >
+                      +
+                    </button>
                     <div>QTY: {fruit.orderFruit.quantity}</div>
-                    <button onClick={this.decrementQuantityHandler}>-</button>
+                    <button
+                      onClick={this.decrementQuantityHandler}
+                      data-fruitid={fruit.id}
+                    >
+                      -
+                    </button>
                   </div>
                   <div>Price Per Item: {fruit.orderFruit.itemPrice} </div>
                   <div>
@@ -99,7 +114,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getCart: () => dispatch(getCart()),
   getGuestCart: () => dispatch(getGuestCart()),
-  removeItem: fruitId => dispatch(removeItem(fruitId))
+  removeItem: fruitId => dispatch(removeItem(fruitId)),
+  updateQuantity: (fruitId, isIncrement) =>
+    dispatch(updateQuantity(fruitId, isIncrement))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cart)
