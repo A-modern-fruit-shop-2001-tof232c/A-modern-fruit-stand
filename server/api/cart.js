@@ -6,11 +6,17 @@ module.exports = router
 // Get cart belonging to the LoggedIn user only if the order hasn't not been paid.
 router.get('/', async (req, res, next) => {
   try {
-    const cart = await getCart(req.user.id)
-    if (cart) {
-      res.json(cart)
-    } else {
-      res.json('No items in cart')
+    if (req.user.id !== req.session.passport.user) {
+      res.send('Not your basket!')
+      return
+    }
+    if (req.user.id === req.session.passport.user) {
+      const cart = await getCart(req.user.id)
+      if (cart) {
+        res.json(cart)
+      } else {
+        res.json('No items in cart')
+      }
     }
   } catch (err) {
     next(err)
