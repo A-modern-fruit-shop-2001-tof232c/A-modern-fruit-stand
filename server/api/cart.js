@@ -28,13 +28,7 @@ router.put('/:fruitId', async (req, res, next) => {
     const fruitToAdd = await Fruit.findByPk(req.params.fruitId)
     const addToCart = async () => {
       // get cart we're adding to || create new cart
-      const cart = await Order.findOne({
-        where: {
-          userId: req.user.id,
-          paid: false
-        },
-        include: [{model: Fruit, attributes: ['name', 'price']}]
-      })
+      const cart = await getCart(req.user.id)
       if (cart) {
         // is fruitToAdd in cart?
         const OrderFruitInstance = await OrderFruit.findOne({
@@ -67,14 +61,7 @@ router.put('/:fruitId', async (req, res, next) => {
               plain: true
             }
           )
-          const updatedCart = await Order.findOne({
-            where: {
-              userId: req.user.id,
-              paid: false
-            },
-            include: [{model: Fruit, attributes: ['name', 'price']}]
-          })
-          console.log('updatedCart in final stage', updatedCart)
+          const updatedCart = await getCart(req.user.id)
           return updatedCart
         } else {
           // associate fruit to cart
@@ -99,14 +86,7 @@ router.put('/:fruitId', async (req, res, next) => {
               plain: true
             }
           )
-          const updatedCart = await Order.findOne({
-            where: {
-              userId: req.user.id,
-              paid: false
-            },
-            include: [{model: Fruit, attributes: ['name', 'price']}]
-          })
-          console.log('updatedCart in final stage', updatedCart)
+          const updatedCart = await getCart(req.user.id)
           return updatedCart
         }
       } else {

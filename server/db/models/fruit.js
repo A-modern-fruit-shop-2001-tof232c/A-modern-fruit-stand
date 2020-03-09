@@ -20,12 +20,6 @@ const Fruit = db.define('fruit', {
   price: {
     type: Sequelize.INTEGER,
     allowNull: false
-    // get() {
-    //   return this.getDataValue('price') / 100
-    //   // .toFixed() method converts a number into a string to hold the decimal places
-    //   //IF PRICE IS .90 display # is .9...How can we append a zero?
-    //   //I BELIEVE WE NEED TO DO THIS IN DISPLAY SETTINGS, SINCE THIS IS TYPE INTEGER
-    // }
   }
 })
 
