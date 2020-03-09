@@ -29,7 +29,29 @@ const OrderFruit = db.define('orderFruit', {
 
 module.exports = OrderFruit
 
-OrderFruit.prototype.calculateItemsTotal = function() {
-  this.itemTotal = this.itemPrice * this.quantity
-  return this.itemsTotal
-}
+// OrderFruit.prototype.calculateItemsTotal = function() {
+//   this.itemTotal = this.itemPrice * this.quantity
+//   return this.itemTotal
+// }
+
+// OrderFruit.beforeUpdate(function(orderFruit) {
+//   console.log('before updatehook !!!!!!')
+//   orderFruit.itemTotal = orderFruit.itemPrice * orderFruit.quantity
+//   console.log('new ? itemTotal', orderFruit.itemTotal)
+// })
+
+// User.beforeCreate((userInstance, optionsObject) => {
+//   userInstance.password = hash(userInstance.password)
+// })
+
+// OrderFruit.beforeUpdate((instance, optionsObject) => {
+//   console.log('before updatehook !!!!!!')
+//   instance.itemTotal = instance.quantity * instance.itemPrice
+//   console.log('new ? itemTotal', instance.itemTotal)
+// })
+
+OrderFruit.addHook('afterUpdate', (instance, options) => {
+  console.log('before updatehook !!!!!!')
+  instance.itemTotal = instance.quantity * instance.itemPrice
+  console.log('new ? itemTotal', instance.itemTotal)
+})

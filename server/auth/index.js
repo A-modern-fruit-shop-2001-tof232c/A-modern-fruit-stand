@@ -2,6 +2,7 @@ const router = require('express').Router()
 const User = require('../db/models/user')
 module.exports = router
 
+// auth/login
 router.post('/login', async (req, res, next) => {
   try {
     const user = await User.findOne({where: {email: req.body.email}})
@@ -19,6 +20,7 @@ router.post('/login', async (req, res, next) => {
   }
 })
 
+// auth/signup
 router.post('/signup', async (req, res, next) => {
   try {
     const user = await User.create(req.body)
@@ -32,14 +34,20 @@ router.post('/signup', async (req, res, next) => {
   }
 })
 
+// auth/logout
 router.post('/logout', (req, res) => {
   req.logout()
   req.session.destroy()
   res.redirect('/')
 })
 
-router.get('/me', (req, res) => {
-  res.json(req.user)
+// auth/me
+router.get('/me', (req, res, next) => {
+  try {
+    res.json(req.user)
+  } catch (error) {
+    next(error)
+  }
 })
 
 router.use('/google', require('./google'))

@@ -7,14 +7,14 @@ class Cart extends React.Component {
   constructor(props) {
     super(props)
   }
+
   componentDidMount() {
-    this.props.isLoggedIn && this.props.getCart()
-    !this.props.isLoggedIn && this.props.getGuestCart()
+    this.props.getCart()
+    this.props.getGuestCart()
   }
 
   render() {
     let cart = this.props.cart
-    console.log("why isn't it loading", cart)
     if (cart.fruits) {
       return (
         <div id="cart">
@@ -37,16 +37,17 @@ class Cart extends React.Component {
           <div>
             <h3>Subtotal: {cart.orderTotal}</h3>
           </div>
-          <ButtonCheckout cartId={cart.id}>Checkout</ButtonCheckout>
+          <ButtonCheckout cartId={cart.id} />
         </div>
       )
     } else {
-      return <div>Loading...</div>
+      return <div>Your fruit basket is empty!</div>
     }
   }
 }
 
 const mapStateToProps = state => ({
+  // user: state.user,
   cart: state.cart
 })
 

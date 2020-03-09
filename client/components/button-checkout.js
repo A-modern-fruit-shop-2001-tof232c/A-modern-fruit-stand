@@ -5,7 +5,10 @@ import {checkoutCart} from '../store/cart'
 const ButtonCheckout = props => {
   return (
     <div>
-      <button type="button" onClick={() => props.checkoutCart(props.cartId)} />
+      <button type="button" onClick={() => props.checkoutCart(props.cartId)}>
+        {' '}
+        Checkout{' '}
+      </button>
     </div>
   )
 }
