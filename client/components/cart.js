@@ -73,16 +73,13 @@ class Cart extends React.Component {
 
   render() {
     let cart = this.props.cart
-    if (cart.fruits) {
-      return (
+    return (
+      <div>
         <div id="cart">
-          <div>
-            <h2>Fruit Basket</h2>
-          </div>
-          <div>
-            {/* Map over all fruit in the cart*/}
-            {cart.fruits.map(fruit => {
-              console.log(fruit)
+          <h2>Fruit Basket</h2>
+          {console.log('my console.log cart.fruits', cart.fruits)}
+          {cart.fruits.length > 0 ? (
+            cart.fruits.map(fruit => {
               return (
                 <div key={fruit.id}>
                   <Link to={`/fruit/${fruit.id}`}>
@@ -92,7 +89,6 @@ class Cart extends React.Component {
                     type="button"
                     onClick={this.deleteItemHandler}
                     data-fruitid={fruit.id}
-                    type="button"
                   >
                     Remove Item
                   </button>
@@ -100,7 +96,6 @@ class Cart extends React.Component {
                     src={fruit.imgURL}
                     style={{maxWidth: '100px', maxHeight: '100px'}}
                   />
-
                   <div>
                     <button
                       onClick={this.incrementQuantityHandler}
@@ -127,22 +122,107 @@ class Cart extends React.Component {
                   </div>
                 </div>
               )
-            })}
-          </div>
-          <div>
-            <h3>Subtotal: {cart.orderTotal}</h3>
-          </div>
-          <ButtonCheckout cartId={cart.id} />
-          <div>
-            <Link to="/fruit">
-              <button type="button">CONTINUE SHOPPING</button>
-            </Link>
-          </div>
+            })
+          ) : (
+            // <div>
+            // {cart.fruits.length > 0 ? (<h3>Subtotal: {cart.orderTotal}</h3>) : null}
+            // </div>
+            // <ButtonCheckout cartId={cart.id} />
+            // <div>
+            //   <Link to="/fruit">
+            //     <button type="button">CONTINUE SHOPPING</button>
+            //   </Link>
+            // </div>
+            <div>
+              <h3>Your fruit basket is empty!</h3>
+              <Link to="/fruit">
+                <button type="button">CONTINUE SHOPPING</button>
+              </Link>
+            </div>
+          )}
         </div>
-      )
-    } else {
-      return <div>Your fruit basket is empty!</div>
-    }
+      </div>
+    )
+
+    //   let cart = this.props.cart
+    //   if (cart.fruits) {
+    //     return (
+    //       <div id="cart">
+    //         <div>
+    //           <h2>Fruit Basket</h2>
+    //         </div>
+    //         <div>
+    //           {/* Map over all fruit in the cart*/}
+    //           {cart.fruits.map(fruit => {
+    //             console.log(fruit)
+    //             return (
+    //               <div key={fruit.id}>
+    //                 <Link to={`/fruit/${fruit.id}`}>
+    //                   <h4>{fruit.name}</h4>
+    //                 </Link>
+    //                 <button
+    //                   type="button"
+    //                   onClick={this.deleteItemHandler}
+    //                   data-fruitid={fruit.id}
+    //                 >
+    //                   Remove Item
+    //                 </button>
+    //                 <img
+    //                   src={fruit.imgURL}
+    //                   style={{maxWidth: '100px', maxHeight: '100px'}}
+    //                 />
+
+    //                 <div>
+    //                   <button
+    //                     onClick={this.incrementQuantityHandler}
+    //                     type="button"
+    //                     data-fruit={fruit}
+    //                     data-fruitid={fruit.id}
+    //                   >
+    //                     +
+    //                   </button>
+    //                   <div>QTY: {fruit.orderFruit.quantity}</div>
+    //                   <button
+    //                     onClick={this.decrementQuantityHandler}
+    //                     type="button"
+    //                     data-fruit={fruit}
+    //                     data-fruitid={fruit.id}
+    //                   >
+    //                     -
+    //                   </button>
+    //                 </div>
+    //                 <div>Price Per Item: {fruit.orderFruit.itemPrice} </div>
+    //                 <div>
+    //                   Item Total:{' '}
+    //                   {fruit.orderFruit.quantity * fruit.orderFruit.itemPrice}
+    //                 </div>
+    //               </div>
+    //             )
+    //           })}
+    //         </div>
+    //         <div>
+    //         {cart.fruits.length > 0 ?  <h3>Subtotal: {cart.orderTotal}</h3> : null }
+    //         </div>
+    //        <ButtonCheckout cartId={cart.id} />
+    //         <div>
+    //           <Link to="/fruit">
+    //             <button type="button">CONTINUE SHOPPING</button>
+    //           </Link>
+    //         </div>
+    //       </div>
+    //     )
+    //   } else {
+    //     return (
+    //     <div>
+    //       <h3>
+    //       Your fruit basket is empty!
+    //       </h3>
+
+    //     <Link to="/fruit">
+    //       <button type="button">CONTINUE SHOPPING</button>
+    //     </Link>
+    //     </div>
+    //   )}
   }
 }
 
