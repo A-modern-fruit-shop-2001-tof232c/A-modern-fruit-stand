@@ -10,7 +10,8 @@ import {
   AllFruit,
   Cart,
   AdminContainer,
-  HomePage
+  HomePage,
+  EditSingleUser
 } from './components'
 import {me} from './store'
 

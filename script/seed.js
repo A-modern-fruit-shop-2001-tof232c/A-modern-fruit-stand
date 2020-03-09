@@ -2,32 +2,6 @@
 
 const db = require('../server/db')
 const {User, Order, Fruit, OrderFruit} = require('../server/db/models')
-
-while (n < count) {
-  const item = {...structure}
-  Object.keys(item).forEach(property => {
-    //this if statement checks if value is fruitname and passes an array
-    if (property === 'name')
-      item[property] = item[property]([
-        'A Tasty Generic Fruit',
-        'Wonder Fruit',
-        'Incredible Berry',
-        'Refreshing Lime',
-        'Goji Berry'
-      ])
-    else item[property] = item[property]()
-  })
-
-  //     results.push(item)
-
-  //     n++
-  //   }
-
-  //   return count === 1 ? results[0] : results
-}
-
-// console.log(people)
-
 const faker = require('faker')
 
 faker.array = function(structure, count = 1) {

@@ -74,7 +74,7 @@ router.get('/', async (req, res, next) => {
       })
       res.json(users)
     } else {
-      res.json('Only administrators may view this page.')
+      res.send('This page is for admins only')
     }
   } catch (err) {
     next(err)
