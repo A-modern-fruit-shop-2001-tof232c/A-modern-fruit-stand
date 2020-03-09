@@ -2,11 +2,12 @@
 
 const db = require('../server/db')
 const {User, Order, Fruit, OrderFruit} = require('../server/db/models')
-const faker = require('faker')
+// const faker = require('faker')
 
-faker.array = function(structure, count = 1) {
-  let n = 0
-  const results = []
+// faker.array = function(structure, count = 1) {
+//   let n = 0
+//   const results = []
+
 
   while (n < count) {
     const item = {...structure}
@@ -23,13 +24,14 @@ faker.array = function(structure, count = 1) {
       else item[property] = item[property]()
     })
 
-    results.push(item)
 
-    n++
-  }
+//     results.push(item)
 
-  return count === 1 ? results[0] : results
-}
+//     n++
+//   }
+
+//   return count === 1 ? results[0] : results
+// }
 
 let people = faker.array(
   {
@@ -46,6 +48,7 @@ let fruit = faker.array(
   },
   100
 )
+
 
 async function seed() {
   await db.sync({force: true})
@@ -79,9 +82,10 @@ async function seed() {
     })
   )
 
+
   const orders = await Promise.all([
     Order.create({
-      orderTotal: 0,
+      orderTotal: 270,
       paid: false,
       userId: 1
     }),
@@ -125,6 +129,7 @@ async function seed() {
       imgURL:
         'https://cdn4.iconfinder.com/data/icons/vegetables-60/48/Fruits_lemon_food-512.png',
       origin: 'New York',
+
       price: 49
     },
     ...fruit
@@ -138,23 +143,23 @@ async function seed() {
       fruitId: 1,
       userId: 1,
       quantity: 1,
-      itemPrice: 149,
+      itemPrice: 10,
       itemTotal: 0
     },
     {
       orderId: 1,
       fruitId: 2,
       userId: 1,
-      quantity: 1,
-      itemPrice: 49,
+      quantity: 2,
+      itemPrice: 100,
       itemTotal: 0
     },
     {
       orderId: 1,
       fruitId: 3,
       userId: 1,
-      quantity: 1,
-      itemPrice: 49,
+      quantity: 3,
+      itemPrice: 20,
       itemTotal: 0
     },
     {
