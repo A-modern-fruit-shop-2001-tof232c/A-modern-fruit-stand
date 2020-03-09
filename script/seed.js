@@ -27,7 +27,7 @@ while (n < count) {
 }
 
 // console.log(people)
-=======
+
 const faker = require('faker')
 
 faker.array = function(structure, count = 1) {
