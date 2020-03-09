@@ -10,6 +10,7 @@ class AdminAllUsers extends React.Component {
   }
   handleClickDelete(event) {
     event.preventDefault()
+    console.log('delete clicked')
     this.props.destroyUser(event.target.name)
   }
 
