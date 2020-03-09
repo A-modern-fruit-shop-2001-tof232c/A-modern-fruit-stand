@@ -3,6 +3,7 @@
 const db = require('../server/db')
 const {User, Order, Fruit, OrderFruit} = require('../server/db/models')
 
+
 //JASMIN'S NOTE: This faker data below was throwing an error for me and disallowing log in
 
 // const faker = require('faker')
@@ -63,7 +64,7 @@ async function seed() {
 
   const orders = await Promise.all([
     Order.create({
-      orderTotal: 0,
+      orderTotal: 270,
       paid: false,
       userId: 1
     }),
@@ -91,7 +92,7 @@ async function seed() {
       imgURL:
         'https://icons.iconarchive.com/icons/google/noto-emoji-food-drink/512/32349-red-apple-icon.png',
       origin: 'New York',
-      price: 49
+      price: 10
     }),
     Fruit.create({
       name: 'Pear',
@@ -99,7 +100,7 @@ async function seed() {
       imgURL:
         'https://cdn.pixabay.com/photo/2019/05/28/15/21/pear-4235369_960_720.png',
       origin: 'Genovia',
-      price: 149
+      price: 100
     }),
     Fruit.create({
       name: 'Lemons',
@@ -107,7 +108,7 @@ async function seed() {
       imgURL:
         'https://cdn4.iconfinder.com/data/icons/vegetables-60/48/Fruits_lemon_food-512.png',
       origin: 'New York',
-      price: 49
+      price: 20
     })
   ])
 
@@ -117,23 +118,23 @@ async function seed() {
       fruitId: 1,
       userId: 1,
       quantity: 1,
-      itemPrice: 149,
+      itemPrice: 10,
       itemTotal: 0
     },
     {
       orderId: 1,
       fruitId: 2,
       userId: 1,
-      quantity: 1,
-      itemPrice: 49,
+      quantity: 2,
+      itemPrice: 100,
       itemTotal: 0
     },
     {
       orderId: 1,
       fruitId: 3,
       userId: 1,
-      quantity: 1,
-      itemPrice: 49,
+      quantity: 3,
+      itemPrice: 20,
       itemTotal: 0
     },
     {

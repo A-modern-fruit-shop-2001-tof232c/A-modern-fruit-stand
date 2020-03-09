@@ -8,9 +8,15 @@ const initialState = {
 
 // ACTION TYPES
 const GET_CART = 'GET_CART'
+
 // const GET_GUEST_CART = 'GET_GUEST_CART'
 const UPDATE_CART = 'UPDATE_CART'
+
+const GET_GUEST_CART = 'GET_GUEST_CART'
+const ADD_ITEM = 'ADD_ITEM'
+
 const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART '
+const UPDATE_QUANTITY = 'UPDATE_QUANTITY'
 const REMOVE_ITEM = 'REMOVE_ITEM'
 
 // ACTION CREATORS
@@ -20,9 +26,10 @@ export const gotCart = cart => ({
 })
 
 export const updatedCart = fruit => ({
-  type: UPDATE_CART,
+  type: ADD_ITEM,
   fruit
 })
+
 
 export const getGuestCart = () => {
   //If guest is new, add an empty cart on local storage
@@ -101,6 +108,18 @@ export const updateGuestCart = fruitToAdd => {
 }
 //------------------------END OF UPDATE GUEST CART------------------------------
 
+export const updatedQuantity = cart => ({
+  type: UPDATE_QUANTITY,
+  cart
+})
+
+// export const updatedGuestCart = (fruitId, quantity) => ({
+//   type: UPDATE_GUEST_CART,
+//   fruitId,
+//   quantity
+// })
+
+
 export const removedItem = cart => ({
   type: REMOVE_ITEM,
   cart
@@ -120,11 +139,20 @@ export const getCart = () => async dispatch => {
 
 export const getUpdateCart = fruit => async dispatch => {
   try {
-    const {data} = await axios.put(`/api/cart/${fruit.fruitId}`, {
+    const {data} = await axios.post(`/api/cart/${fruit.fruitId}`, {
       id: fruit.fruitId,
       quantity: fruit.quantity
     })
     dispatch(updatedCart(data))
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export const updateQuantity = (fruitId, isIncrement) => async dispatch => {
+  try {
+    const {data} = await axios.put(`/api/cart/${fruitId}/${isIncrement}`)
+    dispatch(updatedQuantity(data))
   } catch (err) {
     console.log(err)
   }
@@ -149,9 +177,11 @@ const cartReducer = (state = initialState, action) => {
     case UPDATE_GUEST_CART: {
       return {orderTotal: action.fruit.orderTotal, fruits: action.fruit.fruits}
     }
-    case UPDATE_CART: {
-      // might need to change to action.cart
+    case ADD_ITEM: {
       return {...state, fruits: [...state.fruits, action.fruit]}
+    }
+    case UPDATE_QUANTITY: {
+      return action.cart
     }
     case REMOVE_ITEM: {
       return action.cart
