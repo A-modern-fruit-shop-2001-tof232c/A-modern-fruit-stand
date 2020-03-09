@@ -49,7 +49,32 @@ router.put('/:fruitId', async (req, res, next) => {
           OrderFruitInstance.increment('itemTotal', {
             by: Number(req.body.quantity) * fruitToAddPriceInPennies
           })
-          return cart
+          // const updatedCart = await Order.findOne({
+          //   where: {
+          //     userId: req.user.id,
+          //     paid: false
+          //   },
+          //   include: [{model: Fruit, attributes: ['name', 'price']}]
+          // })
+          // const orderTotal = updatedCart.fruits.reduce((accumlator, el) => {
+          //     return accumlator + el.orderFruit.itemTotal
+          //   }, 0)
+          await cart.update(
+            {
+              orderTotal: 0
+            },
+            {
+              where: {
+                id: cart.id,
+                userId: req.user.id,
+                paid: false
+              },
+              returning: true,
+              plain: true
+            }
+          )
+
+          return 'fruit qty and itemTotal has incremented'
         } else {
           // associate fruit to cart
           await cart.addFruit(fruitToAdd, {
@@ -59,7 +84,21 @@ router.put('/:fruitId', async (req, res, next) => {
               itemTotal: fruitToAddPriceInPennies * Number(req.body.quantity)
             }
           })
-          return cart
+          await cart.update(
+            {
+              orderTotal: 0
+            },
+            {
+              where: {
+                id: cart.id,
+                userId: req.user.id,
+                paid: false
+              },
+              returning: true,
+              plain: true
+            }
+          )
+          return 'cart has added new fruit and updated'
         }
       } else {
         // no cart, create new cart
@@ -69,27 +108,21 @@ router.put('/:fruitId', async (req, res, next) => {
         addToCart()
       }
     }
-    const updatedCart = await addToCart()
-    // TODO: first time adding fruit, gets error message about updatedCart.fruits being undefined
-    console.log('typeof updatedCart.fruits', typeof updatedCart.fruits)
-    const orderTotal = updatedCart.fruits.reduce((accumlator, el) => {
-      return accumlator + el.orderFruit.itemTotal
-    }, 0)
-    await updatedCart.update(
-      {
-        orderTotal: orderTotal
-      },
-      {
-        where: {
-          id: updatedCart.id,
-          userId: req.user.id,
-          paid: false
-        },
-        returning: true,
-        plain: true
-      }
-    )
-    res.json(updatedCart)
+    // const updatedCart = addToCart()
+    // console.log('updatedId===-----', updatedId, typeof updatedId)
+    // const updatedCart = await Order.findOne({
+    //     where: {
+    //       userId: req.user.id,
+    //       paid: false
+    //     },
+    //     include: [{model: Fruit, attributes: ['name', 'price']}]
+    //   })
+
+    // const orderTotal = updatedCart.fruits.reduce((accumlator, el) => {
+    //   return accumlator + el.orderFruit.itemTotal
+    // }, 0)
+    // console.log('orderTotal -------!!!', orderTotal)
+    res.json(addToCart())
   } catch (error) {
     next(error)
   }
