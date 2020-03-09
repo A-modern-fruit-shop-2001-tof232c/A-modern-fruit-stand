@@ -16,7 +16,7 @@ const CHECKOUT_CART = 'CHECKOUT_CART'
 
 //The rest of the action types are specific to guest vs. logged in user
 // const GET_GUEST_CART = 'GET_GUEST_CART'
-const GET_GUEST_CART = 'GET_GUEST_CART'
+// const GET_GUEST_CART = 'GET_GUEST_CART'
 const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART ' // adding an item to cart from all fruits
 const ADJUST_GUEST_CART = 'ADJUST_GUEST_CART' //increment or decrement on cart page
 
@@ -152,13 +152,6 @@ export const incrOrDecrGuestCart = (incrOrDecr, fruit) => {
     newStorage
   }
 }
-// create an object to include subtotal and fruits to
-// be consistant with cart object in getCart.
-// const gotGuestCart = (orderTotal, fruits) => ({
-//   type: GET_GUEST_CART,
-//   orderTotal,
-//   fruits
-// })
 
 const gotCheckoutCart = cartid => ({
   type: CHECKOUT_CART,

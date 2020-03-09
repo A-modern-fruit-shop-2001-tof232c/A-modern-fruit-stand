@@ -85,10 +85,6 @@ class Cart extends React.Component {
               console.log(fruit)
               return (
                 <div key={fruit.id}>
-                  <div>{fruit.name}</div>
-                  <img src={fruit.imgURL} />
-                  <div>QTY: {fruit.orderFruit.quantity}</div>
-                  <div>Price: {fruit.orderFruit.itemTotal}</div>
                   <Link to={`/fruit/${fruit.id}`}>
                     <h4>{fruit.name}</h4>
                   </Link>
