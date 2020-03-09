@@ -12,6 +12,7 @@ const UPDATE_CART = 'UPDATE_CART'
 const ADD_ITEM = 'ADD_ITEM'
 const UPDATE_QUANTITY = 'UPDATE_QUANTITY'
 const REMOVE_ITEM = 'REMOVE_ITEM'
+const CHECKOUT_CART = 'CHECKOUT_CART'
 
 //The rest of the action types are specific to guest vs. logged in user
 // const GET_GUEST_CART = 'GET_GUEST_CART'
