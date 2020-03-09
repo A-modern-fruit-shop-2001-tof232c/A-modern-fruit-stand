@@ -11,7 +11,11 @@ router.get('/:id', async (req, res, next) => {
   try {
     const singleUser = await User.findByPk(req.params.id)
     //IF USER IS ADMIN OR SINGLEUSER.ID MATCHES REQ.USER.ID, SEND BACK...ELSE AUTH ERROR
-    if (req.user.isAdmin || req.user.id === singleUser.id) res.json(singleUser)
+    if (
+      (req.user.isAdmin && req.user.id === req.session.passport.user) ||
+      req.user.id === req.session.passport.user
+    )
+      res.json(singleUser)
     else res.json('Users can only view their own page.')
   } catch (error) {
     next(error)
@@ -24,7 +28,7 @@ router.delete('/:id', async (req, res, next) => {
     const userToDelete = await User.findByPk(req.params.id)
     if (userToDelete) {
       //PERFORM ADMIN & REQ.USER CHECK LISTED ABOVE...IF ALLOWED...
-      if (req.user.isAdmin || req.user.id === userToDelete.id) {
+      if (req.user.isAdmin || req.session.passport.user === userToDelete.id) {
         userToDelete.destroy(userToDelete)
         res.sendStatus(204)
       } else {
@@ -41,7 +45,10 @@ router.put('/:id', async (req, res, next) => {
   try {
     const userToUpdate = await User.findByPk(req.params.id)
     if (userToUpdate) {
-      if (req.user.isAdmin || req.user.id === userToUpdate.id) {
+      if (
+        (req.user.isAdmin && req.session.passport.user === userToUpdate.id) ||
+        req.session.passport.user === userToUpdate.id
+      ) {
         await userToUpdate.update(req.body)
         res.json(userToUpdate)
       } else {
@@ -58,7 +65,7 @@ router.put('/:id', async (req, res, next) => {
 //SEND BACK: id and email of all users
 router.get('/', async (req, res, next) => {
   try {
-    if (req.user.isAdmin) {
+    if (req.user.isAdmin && req.user.id === req.session.passport.user) {
       const users = await User.findAll({
         // explicitly select only the id and email fields - even though
         // users' passwords are encrypted, it won't help if we just
