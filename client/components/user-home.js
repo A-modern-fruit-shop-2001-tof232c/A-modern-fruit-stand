@@ -7,7 +7,7 @@ import {connect} from 'react-redux'
  */
 export const UserHome = props => {
   const {email} = props
-
+  console.log('userhome', ' hello')
   return (
     <div>
       <h3>Welcome, {email}</h3>
