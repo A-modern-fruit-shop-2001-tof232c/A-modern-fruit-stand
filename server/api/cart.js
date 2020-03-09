@@ -26,7 +26,6 @@ router.put('/:fruitId', async (req, res, next) => {
   try {
     // get fruit we're adding
     const fruitToAdd = await Fruit.findByPk(req.params.fruitId)
-    const fruitToAddPriceInPennies = Number(fruitToAdd.price) * 100
     const addToCart = async () => {
       // get cart we're adding to || create new cart
       const cart = await Order.findOne({
@@ -52,18 +51,8 @@ router.put('/:fruitId', async (req, res, next) => {
             by: Number(req.body.quantity)
           })
           OrderFruitInstance.increment('itemTotal', {
-            by: Number(req.body.quantity) * fruitToAddPriceInPennies
+            by: Number(req.body.quantity) * fruitToAdd.price
           })
-          // const updatedCart = await Order.findOne({
-          //   where: {
-          //     userId: req.user.id,
-          //     paid: false
-          //   },
-          //   include: [{model: Fruit, attributes: ['name', 'price']}]
-          // })
-          // const orderTotal = updatedCart.fruits.reduce((accumlator, el) => {
-          //     return accumlator + el.orderFruit.itemTotal
-          //   }, 0)
           await cart.update(
             {
               orderTotal: 0
@@ -78,15 +67,22 @@ router.put('/:fruitId', async (req, res, next) => {
               plain: true
             }
           )
-
-          return 'fruit qty and itemTotal has incremented'
+          const updatedCart = await Order.findOne({
+            where: {
+              userId: req.user.id,
+              paid: false
+            },
+            include: [{model: Fruit, attributes: ['name', 'price']}]
+          })
+          console.log('updatedCart in final stage', updatedCart)
+          return updatedCart
         } else {
           // associate fruit to cart
           await cart.addFruit(fruitToAdd, {
             through: {
               quantity: Number(req.body.quantity),
-              itemPrice: fruitToAddPriceInPennies,
-              itemTotal: fruitToAddPriceInPennies * Number(req.body.quantity)
+              itemPrice: fruitToAdd.price,
+              itemTotal: fruitToAdd.price * Number(req.body.quantity)
             }
           })
           await cart.update(
@@ -103,7 +99,15 @@ router.put('/:fruitId', async (req, res, next) => {
               plain: true
             }
           )
-          return 'cart has added new fruit and updated'
+          const updatedCart = await Order.findOne({
+            where: {
+              userId: req.user.id,
+              paid: false
+            },
+            include: [{model: Fruit, attributes: ['name', 'price']}]
+          })
+          console.log('updatedCart in final stage', updatedCart)
+          return updatedCart
         }
       } else {
         // no cart, create new cart
@@ -113,20 +117,6 @@ router.put('/:fruitId', async (req, res, next) => {
         addToCart()
       }
     }
-    // const updatedCart = addToCart()
-    // console.log('updatedId===-----', updatedId, typeof updatedId)
-    // const updatedCart = await Order.findOne({
-    //     where: {
-    //       userId: req.user.id,
-    //       paid: false
-    //     },
-    //     include: [{model: Fruit, attributes: ['name', 'price']}]
-    //   })
-
-    // const orderTotal = updatedCart.fruits.reduce((accumlator, el) => {
-    //   return accumlator + el.orderFruit.itemTotal
-    // }, 0)
-    // console.log('orderTotal -------!!!', orderTotal)
     res.json(addToCart())
   } catch (error) {
     next(error)
