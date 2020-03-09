@@ -9,6 +9,7 @@ import {
   FruitSingle,
   AllFruit,
   Cart,
+  AdminContainer,
   HomePage
 } from './components'
 import {me} from './store'
@@ -33,6 +34,7 @@ class Routes extends Component {
         <Route exact path="/fruit" component={AllFruit} />
         <Route path="/fruit/:id" component={FruitSingle} />
         <Route path="/cart" component={Cart} />
+        <Route path="/admin" component={AdminContainer} />
 
         {isLoggedIn && (
           <Switch>

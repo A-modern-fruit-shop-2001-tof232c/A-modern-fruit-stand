@@ -2,6 +2,34 @@
 
 const db = require('../server/db')
 const {User, Order, Fruit, OrderFruit} = require('../server/db/models')
+// const faker = require('faker')
+
+// faker.array = function(structure, count = 1) {
+//   let n = 0
+//   const results = []
+
+//   while (n < count) {
+//     const item = {...structure}
+
+//     Object.keys(item).forEach(property => (item[property] = item[property]()))
+
+//     results.push(item)
+
+//     n++
+//   }
+
+//   return count === 1 ? results[0] : results
+// }
+
+// let people = faker.array(
+//   {
+//     email: faker.internet.exampleEmail,
+//     password: faker.internet.password
+//   },
+//   10
+// )
+
+// console.log(people)
 
 async function seed() {
   await db.sync({force: true})
@@ -27,11 +55,12 @@ async function seed() {
       password: '123',
       isAdmin: true
     })
+    // people.forEach(element => User.create({element}))
   ])
 
   const orders = await Promise.all([
     Order.create({
-      orderTotal: 0,
+      orderTotal: 270,
       paid: false,
       userId: 1
     }),
@@ -59,15 +88,15 @@ async function seed() {
       imgURL:
         'https://icons.iconarchive.com/icons/google/noto-emoji-food-drink/512/32349-red-apple-icon.png',
       origin: 'New York',
-      price: 49
+      price: 10
     }),
     Fruit.create({
       name: 'Pear',
       description: 'Great for programmers when ordering in pairs',
       imgURL:
-        'http://t0.gstatic.com/images?q=tbn%3AANd9GcT8AyNUZwWTLisWeZDQVdRgX65uAgsxtYdLrvTgiecg0tfMR9kXOPS_CL2uzC6eWMFHtiQO0ZNR&usqp=CAc',
+        'https://cdn.pixabay.com/photo/2019/05/28/15/21/pear-4235369_960_720.png',
       origin: 'Genovia',
-      price: 149
+      price: 100
     }),
     Fruit.create({
       name: 'Lemons',
@@ -75,7 +104,7 @@ async function seed() {
       imgURL:
         'https://cdn4.iconfinder.com/data/icons/vegetables-60/48/Fruits_lemon_food-512.png',
       origin: 'New York',
-      price: 49
+      price: 20
     })
   ])
 
@@ -85,23 +114,23 @@ async function seed() {
       fruitId: 1,
       userId: 1,
       quantity: 1,
-      itemPrice: 49,
+      itemPrice: 10,
       itemTotal: 0
     },
     {
       orderId: 1,
       fruitId: 2,
       userId: 1,
-      quantity: 1,
-      itemPrice: 149,
+      quantity: 2,
+      itemPrice: 100,
       itemTotal: 0
     },
     {
       orderId: 1,
       fruitId: 3,
       userId: 1,
-      quantity: 1,
-      itemPrice: 49,
+      quantity: 3,
+      itemPrice: 20,
       itemTotal: 0
     },
     {
@@ -110,7 +139,7 @@ async function seed() {
       userId: 2,
       quantity: 1,
       itemPrice: 49,
-      itemTotal: 0
+      itemTotal: 49
     },
     {
       orderId: 2,
@@ -118,7 +147,7 @@ async function seed() {
       userId: 2,
       quantity: 1,
       itemPrice: 149,
-      itemTotal: 0
+      itemTotal: 49
     },
     {
       orderId: 3,
@@ -126,7 +155,7 @@ async function seed() {
       userId: 2,
       quantity: 1,
       itemPrice: 149,
-      itemTotal: 0
+      itemTotal: 49
     },
     {
       orderId: 3,
@@ -134,15 +163,15 @@ async function seed() {
       userId: 2,
       quantity: 1,
       itemPrice: 49,
-      itemTotal: 0
+      itemTotal: 49
     },
     {
       orderId: 4,
       fruitId: 3,
       userId: 3,
       quantity: 1,
-      itemPrice: 490,
-      itemTotal: 0
+      itemPrice: 49,
+      itemTotal: 49
     }
   ]
   await Promise.all(

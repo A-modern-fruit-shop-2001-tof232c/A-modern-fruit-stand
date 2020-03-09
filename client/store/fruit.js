@@ -48,10 +48,10 @@ export const getAllFruit = () => {
   }
 }
 
-export const addFruitThunk = () => {
+export const addFruitThunk = newFruit => {
   return async dispatch => {
     try {
-      await axios.post('/api/fruit')
+      await axios.post('/api/fruit', newFruit)
       const {data} = await axios.get('/api/fruit')
       dispatch(gotAllFruit(data))
     } catch (error) {
@@ -72,12 +72,13 @@ export const deleteFruitThunk = id => {
   }
 }
 
-export const updateFruitThunk = id => {
+export const updateFruitThunk = (id, updatedFruit) => {
   return async dispatch => {
     try {
-      await axios.put(`/api/fruit/${id}`)
-      const {data} = await axios.get(`/api/fruit/${id}`)
-      dispatch(gotSingleFruit(data))
+      console.log('thunk', id, updatedFruit)
+      await axios.put(`/api/fruit/${id}`, updatedFruit)
+      const {data} = await axios.get(`/api/fruit`)
+      dispatch(gotAllFruit(data))
     } catch (error) {
       console.log(error)
     }

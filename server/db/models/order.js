@@ -17,20 +17,3 @@ const Order = db.define('order', {
 })
 
 module.exports = Order
-
-/*
-In the amount of time I wasn't sure the best way to handle the total. Whether it's through class/prototype method or a utility function. But left this prototype func here.
-*/
-
-// Order.prototype.calculateOrderTotal = function() {
-//   console.log('orderFruit', orderFruit)
-// }
-// Order.prototype.calculateOrderTotal = function() {
-//   // console.log('this', this.fruits)
-//   const fruitTotals= this.fruits.map(fruit => {
-//     return fruit.orderFruit
-
-//   })
-//   console.log('orderFruit', orderFruit, typeof orderFruit)
-//   return fruitTotals;
-// }
