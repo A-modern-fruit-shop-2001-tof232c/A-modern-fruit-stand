@@ -7,11 +7,12 @@ const initialState = {
 }
 
 // ACTION TYPES
-const GET_CART = 'GET_CART'
-// const GET_GUEST_CART = 'GET_GUEST_CART'
+const GET_CART = 'GET_CART' //Note: guest cart uses this same action type
 const UPDATE_CART = 'UPDATE_CART'
-const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART '
 const REMOVE_ITEM = 'REMOVE_ITEM'
+//The rest of the action types are specific to guest vs. logged in user
+const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART ' // adding an item to cart from all fruits
+const ADJUST_GUEST_CART = 'ADJUST_GUEST_CART' //increment or decrement on cart page
 
 // ACTION CREATORS
 export const gotCart = cart => ({
@@ -42,7 +43,7 @@ export const getGuestCart = () => {
   }
 }
 
-//---------------------------UPDATE GUEST CART------------------------------
+//--------------------- UPDATE / ADD TO GUEST CART------------------------------
 //this receives a fruit in the format: {quantity, selectedFruit}
 export const updateGuestCart = fruitToAdd => {
   //If guest is new, add an empty cart on local storage
@@ -64,9 +65,9 @@ export const updateGuestCart = fruitToAdd => {
       price: fruitToAdd.selectedFruit.price,
       id: fruitToAdd.selectedFruit.id,
       name: fruitToAdd.selectedFruit.name,
-      imgUrl: fruitToAdd.selectedFruit.imgURL,
+      imgURL: fruitToAdd.selectedFruit.imgURL,
       orderFruit: {
-        itemPrice: fruitToAdd.selectedFruit.price, //localStorage stores in DOLLARS
+        itemPrice: fruitToAdd.selectedFruit.price,
         quantity: fruitToAdd.quantity,
         itemTotal: fruitToAdd.selectedFruit.price * fruitToAdd.quantity,
         fruitId: fruitToAdd.selectedFruit.id
@@ -99,7 +100,51 @@ export const updateGuestCart = fruitToAdd => {
     fruit
   }
 }
-//------------------------END OF UPDATE GUEST CART------------------------------
+
+//------------------------REMOVE GUEST ITEM------------------------------
+export const removeGuestItem = fruitId => {
+  fruitId = Number(fruitId)
+  const oldStorage = JSON.parse(window.localStorage.getItem('guestCart'))
+  let priceReduction = 0
+  const editedCart = oldStorage.fruits.filter(el => {
+    if (el.id === fruitId) {
+      priceReduction = el.orderFruit.itemTotal
+      return false
+    }
+    return true
+  })
+  const cart = {
+    orderTotal: (oldStorage.orderTotal * 100 - priceReduction * 100) / 100,
+    fruits: editedCart
+  }
+  window.localStorage.setItem('guestCart', JSON.stringify(cart))
+  return {
+    type: REMOVE_ITEM,
+    cart
+  }
+}
+
+//------------------------INCREMENT OR DECREMENT GUEST ITEM------------------------------
+
+export const incrOrDecrGuestCart = (incrOrDecr, fruit) => {
+  let changeQty = 1
+  if (incrOrDecr === '-') {
+    if (fruit.orderFruit.quantity === 1) {
+      return removeGuestItem(fruit.id)
+    } else {
+      changeQty = -1
+    }
+  }
+  //now filter thru cart to reduce/increase fruit, line total, and order total
+  //return new storage item
+  //place on local storage and update redux store
+
+  const newStorage = {hi: 1}
+  return {
+    type: ADJUST_GUEST_CART,
+    newStorage
+  }
+}
 
 export const removedItem = cart => ({
   type: REMOVE_ITEM,
@@ -144,7 +189,7 @@ export const removeItem = fruitId => async dispatch => {
 const cartReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_CART: {
-      return {orderTotal: action.cart.orderTotal, fruits: action.cart.fruits}
+      return action.cart
     }
     case UPDATE_GUEST_CART: {
       return {orderTotal: action.fruit.orderTotal, fruits: action.fruit.fruits}
@@ -155,6 +200,9 @@ const cartReducer = (state = initialState, action) => {
     }
     case REMOVE_ITEM: {
       return action.cart
+    }
+    case ADJUST_GUEST_CART: {
+      return action.newStorage
     }
     default: {
       return state

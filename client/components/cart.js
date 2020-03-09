@@ -1,6 +1,12 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {getCart, getGuestCart, removeItem} from '../store/cart'
+import {
+  getCart,
+  getGuestCart,
+  removeItem,
+  removeGuestItem,
+  incrOrDecrGuestCart
+} from '../store/cart'
 import {Link} from 'react-router-dom'
 
 class Cart extends React.Component {
@@ -16,32 +22,44 @@ class Cart extends React.Component {
   componentDidMount() {
     if (this.props.isLoggedIn) {
       this.props.getCart()
-    }
-    if (!this.props.isLoggedIn) {
+    } else {
       this.props.getGuestCart()
     }
-    this.props.getCart()
   }
 
   deleteItemHandler(event) {
     event.preventDefault()
     // When click will remove the item from the cart
     const fruitId = event.target.dataset.fruitid
-    this.props.removeItem(fruitId)
+    if (this.props.isLoggedIn) {
+      this.props.removeItem(fruitId)
+    } else {
+      //for a guest user
+      this.props.removeGuestItem(fruitId)
+    }
   }
 
   incrementQuantityHandler(event) {
     event.preventDefault()
     // When click will increment the quantity of the cart by one
+    if (!this.props.isLoggedIn) {
+      const incrOrDecr = event.target.innerHTML
+      const fruit = event.target.dataset.fruit
+      this.props.incrOrDecrGuestCart(incrOrDecr, fruit)
+    }
   }
 
   decrementQuantityHandler(event) {
     event.preventDefault()
     // When click will decrement the quantity of the item by one.
+    if (!this.props.isLoggedIn) {
+      const incrOrDecr = event.target.innerHTML
+      const fruit = event.target.dataset.fruit
+      this.props.incrOrDecrGuestCart(incrOrDecr, fruit)
+    }
   }
 
   render() {
-    console.log('am I logged in', this.props.isLoggedIn)
     let cart = this.props.cart
     if (cart.fruits) {
       return (
@@ -52,6 +70,7 @@ class Cart extends React.Component {
           <div>
             {/* Map over all fruit in the cart*/}
             {cart.fruits.map(fruit => {
+              console.log(fruit)
               return (
                 <div key={fruit.id}>
                   <Link to={`/fruit/${fruit.id}`}>
@@ -66,12 +85,13 @@ class Cart extends React.Component {
                   </button>
                   <img
                     src={fruit.imgURL}
-                    style={{maxWidth: '100px', maxHeigth: '100px'}}
+                    style={{maxWidth: '100px', maxHeight: '100px'}}
                   />
 
                   <div>
                     <button
                       onClick={this.incrementQuantityHandler}
+                      data-fruit={fruit}
                       type="button"
                     >
                       +
@@ -79,6 +99,7 @@ class Cart extends React.Component {
                     <div>QTY: {fruit.orderFruit.quantity}</div>
                     <button
                       onClick={this.decrementQuantityHandler}
+                      data-fruit={fruit}
                       type="button"
                     >
                       -
@@ -115,7 +136,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getCart: () => dispatch(getCart()),
   getGuestCart: () => dispatch(getGuestCart()),
-  removeItem: fruitId => dispatch(removeItem(fruitId))
+  removeItem: fruitId => dispatch(removeItem(fruitId)),
+  removeGuestItem: fruitId => dispatch(removeGuestItem(fruitId)),
+  incrOrDecrGuestCart: (incrOrDecr, fruit) =>
+    dispatch(incrOrDecrGuestCart(incrOrDecr, fruit))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cart)

@@ -16,24 +16,6 @@ class ButtonAddToCart extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    // Check is the user is a logged in user
-    if (!this.props.user.id) {
-      // get the cart from the localStorage
-      // let cart = window.localStorage.getItem('cart')
-      // if there is a cart.
-      // if (cart) {
-      //   // Add item to cart.
-      //     if(cart[this.props.selectedFruit.id]){
-      //       cart[this.props.selectedFruit.id] += Number(this.state.QTY)
-      //     } else {
-      //       window.localStorage.setItem
-      //     }
-      //   }
-      //   // if there is no cart.
-      //   // initialize cart.
-      // }
-    }
-
     // setting up object to be passed to dispatch
     const fruitData = {
       fruitId: this.props.selectedFruit.id,
@@ -48,7 +30,6 @@ class ButtonAddToCart extends React.Component {
         quantity: fruitData.quantity,
         selectedFruit: this.props.selectedFruit
       })
-      // console.log('buttonComp: ',JSON.parse(window.localStorage.getItem('guestCart')))
     }
     this.setState(defaultState)
   }
