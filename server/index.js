@@ -64,7 +64,7 @@ const createApp = () => {
   app.use(passport.session())
   //Included middleware to see what is logged in middleware
   app.use((req, res, next) => {
-    console.log('SESSION: ', req.session, req.sessionID)
+    // console.log('SESSION: ', req.session, req.sessionID)
     next()
   })
 
