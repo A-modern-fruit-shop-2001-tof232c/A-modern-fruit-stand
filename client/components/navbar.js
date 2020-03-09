@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {Link} from 'react-router-dom'
+import {Link, withRouter} from 'react-router-dom'
 import {logout} from '../store'
 import {SidebarNav} from '../components'
 
@@ -12,12 +12,17 @@ class Navbar extends React.Component {
       openDrawer: false
     }
     this.toggleSidebarNav = this.toggleSidebarNav.bind(this)
+    this.navToCart = this.navToCart.bind(this)
   }
 
   toggleSidebarNav() {
     this.setState({
       openDrawer: !this.state.openDrawer
     })
+  }
+
+  navToCart() {
+    this.props.history.push(`/cart`)
   }
 
   render() {
@@ -45,16 +50,28 @@ class Navbar extends React.Component {
           {isLoggedIn ? (
             <div>
               {/* The navbar will show these links after you log in */}
-              <Link to="/home">Home</Link>
+              <Link to="/home">home</Link>
               <a href="#" onClick={handleClick}>
-                Logout
+                logout
               </a>
+              <img
+                src="https://cdn0.iconfinder.com/data/icons/ecommerce-57/100/Ecommerce_RTE-03-512.png"
+                alt="Guest Cart"
+                height="30px"
+                onClick={this.navToCart}
+              />
             </div>
           ) : (
             <div>
               {/* The navbar will show these links before you log in */}
-              <Link to="/login">Login</Link>
-              <Link to="/signup">Sign Up</Link>
+              <Link to="/login">login</Link>
+              <Link to="/signup">sign up</Link>
+              <img
+                src="https://cdn0.iconfinder.com/data/icons/ecommerce-57/100/Ecommerce_RTE-03-512.png"
+                alt="Guest Cart"
+                height="30px"
+                onClick={this.navToCart}
+              />
             </div>
           )}
         </nav>
@@ -68,7 +85,7 @@ class Navbar extends React.Component {
  */
 const mapState = state => {
   return {
-    isLoggedIn: !!state.user.id
+    isLoggedIn: !!state.user.selectedUser.id
   }
 }
 
@@ -80,7 +97,7 @@ const mapDispatch = dispatch => {
   }
 }
 
-export default connect(mapState, mapDispatch)(Navbar)
+export default withRouter(connect(mapState, mapDispatch)(Navbar))
 
 /**
  * PROP TYPES
