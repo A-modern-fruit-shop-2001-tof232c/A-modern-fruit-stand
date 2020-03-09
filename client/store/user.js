@@ -8,6 +8,7 @@ const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
 const DELETE_USER = 'DELETE_USER'
 const GET_ALL_USERS = 'GET_ALL_USERS'
+const UPDATE_SINGLE_USER = 'UPDATE_SINGLE_USER'
 
 /**
  * INITIAL STATE
@@ -58,7 +59,7 @@ export const logout = () => async dispatch => {
   try {
     await axios.post('/auth/logout')
     dispatch(removeUser())
-    history.push('/login')
+    history.push('/')
   } catch (err) {
     console.error(err)
   }
@@ -89,8 +90,8 @@ export const deleteUserForeverThunk = id => async dispatch => {
 export default function userReducer(state = initialState, action) {
   switch (action.type) {
     case GET_USER:
-      return action.user
-    case REMOVE_USER:
+      return {...state, selectedUser: action.user}
+    case REMOVE_USER: //this is for logging out
       return initialState
     case GET_ALL_USERS:
       return {...state, allUsers: action.info}

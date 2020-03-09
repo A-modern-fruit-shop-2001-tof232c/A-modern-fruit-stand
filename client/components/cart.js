@@ -1,12 +1,14 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {ButtonCheckout} from '../components'
 import {
   getCart,
-  // getGuestCart,
+  getGuestCart,
   removeItem,
+  removeGuestItem,
+  incrOrDecrGuestCart,
   updateQuantity
 } from '../store/cart'
+import {ButtonCheckout} from '../components'
 import {Link} from 'react-router-dom'
 
 class Cart extends React.Component {
@@ -20,32 +22,53 @@ class Cart extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getCart()
-    // getGuestCart() is currently commented out in ../store/cart
-    // this.props.getGuestCart()
+    if (this.props.isLoggedIn) {
+      this.props.getCart()
+    } else {
+      this.props.getGuestCart()
+    }
   }
 
   deleteItemHandler(event) {
     event.preventDefault()
     // When click will remove the item from the cart
     const fruitId = event.target.dataset.fruitid
-    this.props.removeItem(fruitId)
+    if (this.props.isLoggedIn) {
+      this.props.removeItem(fruitId)
+    } else {
+      //for a guest user
+      this.props.removeGuestItem(fruitId)
+    }
   }
 
   incrementQuantityHandler(event) {
     event.preventDefault()
     // When click will increment the quantity of the cart by one
-    const fruitId = event.target.dataset.fruitid
-    const isIncrement = true
-    this.props.updateQuantity(fruitId, isIncrement)
+    if (this.props.isLoggedIn) {
+      const fruitId = event.target.dataset.fruitid
+      const isIncrement = true
+      this.props.updateQuantity(fruitId, isIncrement)
+    } else {
+      //for a guest user
+      const incrOrDecr = event.target.innerHTML
+      const fruit = event.target.dataset.fruit
+      this.props.incrOrDecrGuestCart(incrOrDecr, fruit)
+    }
   }
 
   decrementQuantityHandler(event) {
     event.preventDefault()
     // When click will decrement the quantity of the item by one.
-    const fruitId = event.target.dataset.fruitid
-    const isIncrement = false
-    this.props.updateQuantity(fruitId, isIncrement)
+    if (this.props.isLoggedIn) {
+      const fruitId = event.target.dataset.fruitid
+      const isIncrement = false
+      this.props.updateQuantity(fruitId, isIncrement)
+    } else {
+      //for a guest user
+      const incrOrDecr = event.target.innerHTML
+      const fruit = event.target.dataset.fruit
+      this.props.incrOrDecrGuestCart(incrOrDecr, fruit)
+    }
   }
 
   render() {
@@ -59,6 +82,7 @@ class Cart extends React.Component {
           <div>
             {/* Map over all fruit in the cart*/}
             {cart.fruits.map(fruit => {
+              console.log(fruit)
               return (
                 <div key={fruit.id}>
                   <Link to={`/fruit/${fruit.id}`}>
@@ -68,26 +92,29 @@ class Cart extends React.Component {
                     type="button"
                     onClick={this.deleteItemHandler}
                     data-fruitid={fruit.id}
+                    type="button"
                   >
                     Remove Item
                   </button>
                   <img
                     src={fruit.imgURL}
-                    style={{maxWidth: '100px', maxHeigth: '100px'}}
+                    style={{maxWidth: '100px', maxHeight: '100px'}}
                   />
 
                   <div>
                     <button
-                      type="button"
                       onClick={this.incrementQuantityHandler}
+                      type="button"
+                      data-fruit={fruit}
                       data-fruitid={fruit.id}
                     >
                       +
                     </button>
                     <div>QTY: {fruit.orderFruit.quantity}</div>
                     <button
-                      type="button"
                       onClick={this.decrementQuantityHandler}
+                      type="button"
+                      data-fruit={fruit}
                       data-fruitid={fruit.id}
                     >
                       -
@@ -120,14 +147,17 @@ class Cart extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  // user: state.user,
-  cart: state.cart
+  cart: state.cart,
+  isLoggedIn: !!state.user.selectedUser.id
 })
 
 const mapDispatchToProps = dispatch => ({
   getCart: () => dispatch(getCart()),
   getGuestCart: () => dispatch(getGuestCart()),
   removeItem: fruitId => dispatch(removeItem(fruitId)),
+  removeGuestItem: fruitId => dispatch(removeGuestItem(fruitId)),
+  incrOrDecrGuestCart: (incrOrDecr, fruit) =>
+    dispatch(incrOrDecrGuestCart(incrOrDecr, fruit)),
   updateQuantity: (fruitId, isIncrement) =>
     dispatch(updateQuantity(fruitId, isIncrement))
 })

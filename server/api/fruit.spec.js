@@ -9,15 +9,15 @@ describe('fruit routes', function() {
   })
 })
 
-describe('/api/fruit URI', function() {
-  it('GET responds with all fruits', function() {
-    // when we make a request to /api/fruit, it returns an object with all fruits
-    return supertest
-      .get('/api/fruit')
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .expect(res => {
-        expect(res.body).to.eql([])
-      })
-  })
-})
+// describe('/api/fruit URI', function() {
+//   it('GET responds with all fruits', function() {
+//     // when we make a request to /api/fruit, it returns an object with all fruits
+//     return supertest
+//       .get('/api/fruit')
+//       .expect(200)
+//       .expect('Content-Type', /json/)
+//       .expect(res => {
+//         expect(res.body).to.eql([])
+//       })
+//   })
+// })

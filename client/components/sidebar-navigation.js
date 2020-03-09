@@ -16,43 +16,86 @@ const SidebarNav = props => {
           </div>
         </div>
         <div id="sidebarNavLinks">
-          <Link to="/fruit" className="NavBulletPoint">
+          <br />
+          <br />
+          <Link
+            to="/fruit"
+            className="NavBulletPoint"
+            onClick={props.toggleDrawer}
+          >
             shop fruit
           </Link>
           <br />
-          <Link to="/fruit" className="NavSubBulletPoint">
+          <Link
+            to="/fruit"
+            className="NavSubBulletPoint"
+            onClick={props.toggleDrawer}
+          >
             stone fruit
           </Link>
           <br />
-          <Link to="/fruit" className="NavSubBulletPoint">
+          <Link
+            to="/fruit"
+            className="NavSubBulletPoint"
+            onClick={props.toggleDrawer}
+          >
             tropical fruit
           </Link>
           <br />
-          <Link to="/fruit" className="NavSubBulletPoint">
+          <Link
+            to="/fruit"
+            className="NavSubBulletPoint"
+            onClick={props.toggleDrawer}
+          >
             berries
           </Link>
           <br />
-          <Link to="/fruit" className="NavSubBulletPoint">
+          <Link
+            to="/fruit"
+            className="NavSubBulletPoint"
+            onClick={props.toggleDrawer}
+          >
             melons
           </Link>
           <br />
-          <Link to="/fruit" className="NavSubBulletPoint">
+          <Link
+            to="/fruit"
+            className="NavSubBulletPoint"
+            onClick={props.toggleDrawer}
+          >
             citrus
           </Link>
           <br />
-          <Link to="/fruit" className="NavBulletPoint">
+          <br />
+          <Link
+            to="/fruit"
+            className="NavBulletPoint"
+            onClick={props.toggleDrawer}
+          >
             checkout
           </Link>
           <br />
-          <Link to="/login" className="NavBulletPoint">
+          <Link
+            to="/login"
+            className="NavBulletPoint"
+            onClick={props.toggleDrawer}
+          >
             log in
           </Link>
           <br />
-          <Link to="/signup" className="NavBulletPoint">
+          <Link
+            to="/signup"
+            className="NavBulletPoint"
+            onClick={props.toggleDrawer}
+          >
             create account
           </Link>
           <br />
-          <Link to="/fruit" className="NavBulletPoint">
+          <Link
+            to="/fruit"
+            className="NavBulletPoint"
+            onClick={props.toggleDrawer}
+          >
             admin tools
           </Link>
           <br />

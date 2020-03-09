@@ -11,6 +11,12 @@ class AdminAllFruit extends React.Component {
   constructor() {
     super()
     this.state = {
+      fruitSearch: '',
+      // selectedFruit: '',
+      currFruitName: '',
+      currFruitOrigin: '',
+      // currFruitPrice: '',
+      // currFruitDescription: ''
       searchInput: '',
       matchingFruit: [],
       chosenFruit: {}
