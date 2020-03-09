@@ -21,7 +21,7 @@ router.put('/:fruitId', async (req, res, next) => {
   try {
     // get fruit we're adding
     const fruitToAdd = await Fruit.findByPk(req.params.fruitId)
-    const fruitToAddPriceInPennies = fruitToAdd.price * 100
+    const fruitToAddPriceInPennies = Number(fruitToAdd.price) * 100
     const addToCart = async () => {
       // get cart we're adding to || create new cart
       const cart = await Order.findOne({
@@ -41,6 +41,8 @@ router.put('/:fruitId', async (req, res, next) => {
         })
         if (OrderFruitInstance) {
           // increment fruit quantity and itemtotal
+          // TODO: refractor line 45-50 to use .update() & hooks
+          // hint: sequelize.literal
           OrderFruitInstance.increment('quantity', {
             by: Number(req.body.quantity)
           })
@@ -68,6 +70,8 @@ router.put('/:fruitId', async (req, res, next) => {
       }
     }
     const updatedCart = await addToCart()
+    // TODO: first time adding fruit, gets error message about updatedCart.fruits being undefined
+    console.log('typeof updatedCart.fruits', typeof updatedCart.fruits)
     const orderTotal = updatedCart.fruits.reduce((accumlator, el) => {
       return accumlator + el.orderFruit.itemTotal
     }, 0)

@@ -84,7 +84,7 @@ export const getCart = () => async dispatch => {
 
 export const getUpdateCart = fruit => async dispatch => {
   try {
-    const {data} = await axios.post(`/api/cart/${fruit.fruitId}`, {
+    const {data} = await axios.put(`/api/cart/${fruit.fruitId}`, {
       id: fruit.fruitId,
       quantity: fruit.quantity
     })
