@@ -1,16 +1,16 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {getCart, getGuestCart, removeItem} from '../store/cart'
+import {getCart, getGuestCart, removeItem, updateQuantity} from '../store/cart'
 import {Link} from 'react-router-dom'
 
 class Cart extends React.Component {
   constructor(props) {
     super(props)
-    this.state = this.props.cart
+    // this.state = this.props.cart
     this.componentDidMount = this.componentDidMount.bind(this)
     this.deleteItemHandler = this.deleteItemHandler.bind(this)
     this.incrementQuantityHandler = this.incrementQuantityHandler.bind(this)
-    this.decrementQuantityHandler = this.deleteItemHandler.bind(this)
+    this.decrementQuantityHandler = this.decrementQuantityHandler.bind(this)
   }
   componentDidMount() {
     this.props.getCart()
@@ -26,11 +26,17 @@ class Cart extends React.Component {
   incrementQuantityHandler(event) {
     event.preventDefault()
     // When click will increment the quantity of the cart by one
+    const fruitId = event.target.dataset.fruitid
+    const isIncrement = true
+    this.props.updateQuantity(fruitId, isIncrement)
   }
 
   decrementQuantityHandler(event) {
     event.preventDefault()
     // When click will decrement the quantity of the item by one.
+    const fruitId = event.target.dataset.fruitid
+    const isIncrement = false
+    this.props.updateQuantity(fruitId, isIncrement)
   }
 
   render() {
@@ -61,12 +67,25 @@ class Cart extends React.Component {
                   />
 
                   <div>
-                    <button onClick={this.incrementQuantityHandler}>+</button>
+                    <button
+                      onClick={this.incrementQuantityHandler}
+                      data-fruitid={fruit.id}
+                    >
+                      +
+                    </button>
                     <div>QTY: {fruit.orderFruit.quantity}</div>
-                    <button onClick={this.decrementQuantityHandler}>-</button>
+                    <button
+                      onClick={this.decrementQuantityHandler}
+                      data-fruitid={fruit.id}
+                    >
+                      -
+                    </button>
                   </div>
                   <div>Price Per Item: {fruit.orderFruit.itemPrice} </div>
-                  <div>Item Total: {fruit.orderFruit.itemTotal}</div>
+                  <div>
+                    Item Total:{' '}
+                    {fruit.orderFruit.quantity * fruit.orderFruit.itemPrice}
+                  </div>
                 </div>
               )
             })}
@@ -95,7 +114,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getCart: () => dispatch(getCart()),
   getGuestCart: () => dispatch(getGuestCart()),
-  removeItem: fruitId => dispatch(removeItem(fruitId))
+  removeItem: fruitId => dispatch(removeItem(fruitId)),
+  updateQuantity: (fruitId, isIncrement) =>
+    dispatch(updateQuantity(fruitId, isIncrement))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cart)
