@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {Fruit, User, Order, OrderFruit} = require('../db/models')
+const {Fruit, Order, OrderFruit} = require('../db/models')
 module.exports = router
 
 // Get cart belonging to the LoggedIn user only if the order hasn't not been paid.
@@ -16,101 +16,68 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-// A POST route for adding fruit to cart for the LoggedIn user.
-router.post('/:fruitId', async (req, res, next) => {
+// PUT route for adding items to cart for LoggedIn in users
+router.put('/:fruitId', async (req, res, next) => {
   try {
-    // The fruit we want to add.
+    // get fruit we're adding
     const fruitToAdd = await Fruit.findByPk(req.params.fruitId)
-    // Find the cart for the logged in user.
-    let cart = await getCart(req.user.id)
-    // converting fruitInstance Price back to pennies
     const fruitToAddPriceInPennies = fruitToAdd.price * 100
-    // Does the user have a cart?
-    if (cart) {
-      // the user has a cart
-      // Does the user already have the fruit in the cart?
-      const fruit = cart.fruits.find(
-        fruitEl => fruitEl.name === fruitToAdd.name
-      )
-      console.log('fruit:', fruit)
-      // If the fruit is already in the cart.
-      if (fruit) {
-        const orderFruitInstance = await OrderFruit.findOne({
+    const addToCart = async () => {
+      // get cart we're adding to || create new cart
+      const cart = await Order.findOne({
+        where: {
+          userId: req.user.id,
+          paid: false
+        },
+        include: [{model: Fruit, attributes: ['name', 'price']}]
+      })
+      if (cart) {
+        // is fruitToAdd in cart?
+        const OrderFruitInstance = await OrderFruit.findOne({
           where: {
             orderId: cart.id,
-            fruitId: req.params.fruitId
+            fruitId: fruitToAdd.id
           }
         })
-        // Increment the quantity of the fruit in the cart.
-        // // Reflect the itemTotal base on the quantity of item.
-        orderFruitInstance.calculateItemsTotal()
-        await OrderFruit.update(
-          {
-            quantity: (orderFruitInstance.quantity += Number(
-              req.body.quantity
-            )),
-            itemTotal: orderFruitInstance.itemTotal
-          },
-          {
-            where: {
-              orderId: cart.id,
-              fruitId: req.params.fruitId
-            },
-            returning: true,
-            plain: true
-          }
-        )
+        if (OrderFruitInstance) {
+          // increment fruit quantity and itemtotal
+          OrderFruitInstance.increment('quantity', {
+            by: Number(req.body.quantity)
+          })
+          OrderFruitInstance.increment('itemTotal', {
+            by: Number(req.body.quantity) * fruitToAddPriceInPennies
+          })
+          return cart
+        } else {
+          // associate fruit to cart
+          await cart.addFruit(fruitToAdd, {
+            through: {
+              quantity: Number(req.body.quantity),
+              itemPrice: fruitToAddPriceInPennies,
+              itemTotal: fruitToAddPriceInPennies * Number(req.body.quantity)
+            }
+          })
+          return cart
+        }
       } else {
-        // If the fruit is not in the cart.
-        // Add the fruit.
-        await cart.addFruit(fruitToAdd, {
-          through: {
-            quantity: Number(req.body.quantity),
-            // can we do: fruitToAdd.calculateItemsTotal()?
-            itemTotal: fruitToAddPriceInPennies * Number(req.body.quantity)
-          }
-        })
-      }
-      // if the user does not have a cart.
-    } else {
-      // Make a cart for the user.
-      cart = await Order.create(
-        {
-          //
-          orderTotal: fruitToAddPriceInPennies * Number(req.body.quantity),
+        // no cart, create new cart
+        await Order.create({
           userId: req.user.id
-        },
-        {
-          include: [{model: Fruit}]
-        }
-      )
-      // Add the fruit into the cart.
-      await cart.addFruit(fruitToAdd, {
-        through: {
-          quantity: Number(req.body.quantity),
-          itemTotal: fruitToAddPriceInPennies * Number(req.body.quantity)
-        }
-      })
+        })
+        addToCart()
+      }
     }
-    // database call for cart again because of .update(), database calls make copies, not pass by ref.
-    const updatedCart = await Order.findOne({
-      where: {
-        userId: req.user.id,
-        paid: false
-      },
-      include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
-    })
+    const updatedCart = await addToCart()
     const orderTotal = updatedCart.fruits.reduce((accumlator, el) => {
       return accumlator + el.orderFruit.itemTotal
     }, 0)
-    // must make database call .update() to update database, cannot simply assign value to object, again not pass by ref.
-    await Order.update(
+    await updatedCart.update(
       {
         orderTotal: orderTotal
       },
       {
         where: {
-          id: cart.id,
+          id: updatedCart.id,
           userId: req.user.id,
           paid: false
         },
@@ -118,10 +85,27 @@ router.post('/:fruitId', async (req, res, next) => {
         plain: true
       }
     )
+    res.json(updatedCart)
+  } catch (error) {
+    next(error)
+  }
+})
 
+router.put('/checkout/:cartId', async (req, res, next) => {
+  try {
+    const cart = await Order.update(
+      {
+        paid: true
+      },
+      {
+        where: {
+          id: req.params.cartId
+        }
+      }
+    )
     res.json(cart)
-  } catch (err) {
-    next(err)
+  } catch (error) {
+    next(error)
   }
 })
 

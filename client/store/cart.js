@@ -4,30 +4,36 @@ import axios from 'axios'
 const GET_CART = 'GET_CART'
 const GET_GUEST_CART = 'GET_GUEST_CART'
 const ADD_ITEM = 'ADD_ITEM'
-const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART '
+// const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART '
+const CHECKOUT_CART = 'CHECKOUT_CART'
 const UPDATE_QUANTITY = 'UPDATE_QUANTITY'
 const REMOVE_ITEM = 'REMOVE_ITEM'
 
 // ACTION CREATORS
-export const gotCart = cart => ({
+const gotCart = cart => ({
   type: GET_CART,
   cart
 })
 
 // create an object to include subtotal and fruits to
 // be consistant with cart object in getCart.
-// export const gotGuestCart = (orderTotal, fruits) => ({
+// const gotGuestCart = (orderTotal, fruits) => ({
 //   type: GET_GUEST_CART,
 //   orderTotal,
 //   fruits
 // })
 
-export const updatedCart = fruit => ({
+const updatedCart = fruit => ({
   type: ADD_ITEM,
   fruit
 })
 
-export const updatedQuantity = cart => ({
+const gotCheckoutCart = cartid => ({
+  type: CHECKOUT_CART,
+  cartid
+})
+
+const updatedQuantity = cart => ({
   type: UPDATE_QUANTITY,
   cart
 })
@@ -38,7 +44,7 @@ export const updatedQuantity = cart => ({
 //   quantity
 // })
 
-export const removedItem = cart => ({
+const removedItem = cart => ({
   type: REMOVE_ITEM,
   cart
 })
@@ -51,7 +57,7 @@ export const getCart = () => async dispatch => {
     const {data} = await axios.get('/api/cart')
     dispatch(gotCart(data))
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
 }
 
@@ -84,7 +90,16 @@ export const getUpdateCart = fruit => async dispatch => {
     })
     dispatch(updatedCart(data))
   } catch (err) {
-    console.log(err)
+    console.error(err)
+  }
+}
+
+export const checkoutCart = id => async dispatch => {
+  try {
+    const {data} = await axios.put('/api/cart/checkout/' + id)
+    dispatch(gotCheckoutCart(data))
+  } catch (err) {
+    console.error(err)
   }
 }
 
@@ -108,11 +123,11 @@ export const removeItem = fruitId => async dispatch => {
 
 // CART REDUCER
 const initialState = {
-  // id: 'guest',
-  // orderTotal: 0,
-  // paid: false,
-  // userId: null,
-  // fruits: []
+  id: 'guest',
+  orderTotal: 0,
+  paid: false,
+  userId: null,
+  fruits: []
 }
 
 const cartReducer = (state = initialState, action) => {
@@ -125,6 +140,9 @@ const cartReducer = (state = initialState, action) => {
     }
     case ADD_ITEM: {
       return {...state, fruits: [...state.fruits, action.fruit]}
+    }
+    case CHECKOUT_CART: {
+      return initialState
     }
     case UPDATE_QUANTITY: {
       return action.cart

@@ -1,5 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {ButtonCheckout} from '../components'
 import {getCart, getGuestCart, removeItem, updateQuantity} from '../store/cart'
 import {Link} from 'react-router-dom'
 
@@ -12,8 +13,10 @@ class Cart extends React.Component {
     this.incrementQuantityHandler = this.incrementQuantityHandler.bind(this)
     this.decrementQuantityHandler = this.decrementQuantityHandler.bind(this)
   }
+
   componentDidMount() {
     this.props.getCart()
+    this.props.getGuestCart()
   }
 
   deleteItemHandler(event) {
@@ -52,10 +55,15 @@ class Cart extends React.Component {
             {cart.fruits.map(fruit => {
               return (
                 <div key={fruit.id}>
+                  <div>{fruit.name}</div>
+                  <img src={fruit.imgURL} />
+                  <div>QTY: {fruit.orderFruit.quantity}</div>
+                  <div>Price: {fruit.orderFruit.itemTotal}</div>
                   <Link to={`/fruit/${fruit.id}`}>
                     <h4>{fruit.name}</h4>
                   </Link>
                   <button
+                    type="button"
                     onClick={this.deleteItemHandler}
                     data-fruitid={fruit.id}
                   >
@@ -68,6 +76,7 @@ class Cart extends React.Component {
 
                   <div>
                     <button
+                      type="button"
                       onClick={this.incrementQuantityHandler}
                       data-fruitid={fruit.id}
                     >
@@ -75,6 +84,7 @@ class Cart extends React.Component {
                     </button>
                     <div>QTY: {fruit.orderFruit.quantity}</div>
                     <button
+                      type="button"
                       onClick={this.decrementQuantityHandler}
                       data-fruitid={fruit.id}
                     >
@@ -93,21 +103,22 @@ class Cart extends React.Component {
           <div>
             <h3>Subtotal: {cart.orderTotal}</h3>
           </div>
+          <ButtonCheckout cartId={cart.id} />
           <div>
-            <button>PROCEED TO CHECK OUT</button>
             <Link to="/fruit">
-              <button>CONTINUE SHOPPING</button>
+              <button type="button">CONTINUE SHOPPING</button>
             </Link>
           </div>
         </div>
       )
     } else {
-      return <div>Loading...</div>
+      return <div>Your fruit basket is empty!</div>
     }
   }
 }
 
 const mapStateToProps = state => ({
+  // user: state.user,
   cart: state.cart
 })
 
