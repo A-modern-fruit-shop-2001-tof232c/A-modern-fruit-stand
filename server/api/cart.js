@@ -7,7 +7,7 @@ module.exports = router
 router.get('/', async (req, res, next) => {
   try {
     if (req.user.id !== req.session.passport.user) {
-      res.send('Not your basket!')
+      res.status(302).send('Not your basket!')
       return
     }
     if (req.user.id === req.session.passport.user) {
@@ -31,7 +31,7 @@ router.get('/', async (req, res, next) => {
 router.put('/:fruitId', async (req, res, next) => {
   try {
     if (req.user.id !== req.session.passport.user) {
-      res.send('Not your basket!')
+      res.status(302).send('Not your basket!')
       return
     }
     if (req.user.id === req.session.passport.user) {
@@ -136,7 +136,7 @@ router.put('/checkout/:cartId', async (req, res, next) => {
 router.put('/:fruitId/:isIncrement', async (req, res, next) => {
   try {
     if (req.user.id !== req.session.passport.user) {
-      res.send('Not your basket!')
+      res.status(302).send('Not your basket!')
       return
     }
     if (req.user.id === req.session.passport.user) {
@@ -186,7 +186,7 @@ router.put('/:fruitId/:isIncrement', async (req, res, next) => {
 router.delete('/:fruitId', async (req, res, next) => {
   try {
     if (req.user.id !== req.session.passport.user) {
-      res.send('Not your basket!')
+      res.status(302).send('Not your basket!')
       return
     }
     if (req.user.id === req.session.passport.user) {
