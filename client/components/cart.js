@@ -10,7 +10,7 @@ class Cart extends React.Component {
     this.componentDidMount = this.componentDidMount.bind(this)
     this.deleteItemHandler = this.deleteItemHandler.bind(this)
     this.incrementQuantityHandler = this.incrementQuantityHandler.bind(this)
-    this.decrementQuantityHandler = this.deleteItemHandler.bind(this)
+    this.decrementQuantityHandler = this.decrementQuantityHandler.bind(this)
   }
   componentDidMount() {
     this.props.getCart()

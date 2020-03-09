@@ -145,15 +145,22 @@ router.put('/:fruitId/:isIncrement', async (req, res, next) => {
     const fruitItem = fruit.orderFruit
     let orderTotal = cart.orderTotal
 
-    // determine the method base on the button press.
-    if (req.params.isIncrement) {
+    // determine the method based on the button press.
+    if (req.params.isIncrement === 'true') {
       fruitItem.quantity++
-      orderTotal = orderTotal + fruitItem.itemPrice
+      orderTotal += fruitItem.itemPrice
     } else {
       fruitItem.quantity--
-      orderTotal = orderTotal - fruitItem.itemPrice
+      orderTotal -= fruitItem.itemPrice
     }
-    cart.update({orderTotal: orderTotal})
+    // Must await update before fetching the updatedOrder. Otherwise, you
+    // may get stale data.
+    if (fruitItem.quantity < 1) {
+      await fruitItem.destroy()
+    } else {
+      await fruitItem.update({quantity: fruitItem.quantity})
+    }
+    await cart.update({orderTotal: orderTotal})
     const updatedOrder = await getUpdatedOrder(cart.id)
 
     res.json(updatedOrder)

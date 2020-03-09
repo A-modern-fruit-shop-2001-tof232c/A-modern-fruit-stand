@@ -88,7 +88,7 @@ export const getUpdateCart = fruit => async dispatch => {
   }
 }
 
-export const getUpdateQuantity = (fruitId, isIncrement) => async dispatch => {
+export const updateQuantity = (fruitId, isIncrement) => async dispatch => {
   try {
     const {data} = await axios.put(`/api/cart/${fruitId}/${isIncrement}`)
     dispatch(updatedQuantity(data))
@@ -124,7 +124,6 @@ const cartReducer = (state = initialState, action) => {
       return {...state, orderTotal: action.orderTotal, fruits: action.fruits}
     }
     case ADD_ITEM: {
-      // might need to change to action.cart
       return {...state, fruits: [...state.fruits, action.fruit]}
     }
     case UPDATE_QUANTITY: {
