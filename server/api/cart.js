@@ -70,6 +70,8 @@ router.put('/:fruitId', async (req, res, next) => {
       }
     }
     const updatedCart = await addToCart()
+    // TODO: first time adding fruit, gets error message about updatedCart.fruits being undefined
+    console.log('typeof updatedCart.fruits', typeof updatedCart.fruits)
     const orderTotal = updatedCart.fruits.reduce((accumlator, el) => {
       return accumlator + el.orderFruit.itemTotal
     }, 0)

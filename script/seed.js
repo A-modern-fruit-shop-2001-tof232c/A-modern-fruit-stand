@@ -2,61 +2,82 @@
 
 const db = require('../server/db')
 const {User, Order, Fruit, OrderFruit} = require('../server/db/models')
-// const faker = require('faker')
+const faker = require('faker')
 
-// faker.array = function(structure, count = 1) {
-//   let n = 0
-//   const results = []
+faker.array = function(structure, count = 1) {
+  let n = 0
+  const results = []
 
-//   while (n < count) {
-//     const item = {...structure}
+  while (n < count) {
+    const item = {...structure}
+    Object.keys(item).forEach(property => {
+      //this if statement checks if value is fruitname and passes an array
+      if (property === 'name')
+        item[property] = item[property]([
+          'A Tasty Generic Fruit',
+          'Wonder Fruit',
+          'Incredible Berry',
+          'Refreshing Lime',
+          'Goji Berry'
+        ])
+      else item[property] = item[property]()
+    })
 
-//     Object.keys(item).forEach(property => (item[property] = item[property]()))
+    results.push(item)
 
-//     results.push(item)
+    n++
+  }
 
-//     n++
-//   }
+  return count === 1 ? results[0] : results
+}
 
-//   return count === 1 ? results[0] : results
-// }
+let people = faker.array(
+  {
+    email: faker.internet.email,
+    password: faker.internet.password
+  },
+  100
+)
 
-// let people = faker.array(
-//   {
-//     email: faker.internet.exampleEmail,
-//     password: faker.internet.password
-//   },
-//   10
-// )
-
-// console.log(people)
+let fruit = faker.array(
+  {
+    name: faker.random.arrayElement,
+    price: faker.random.number
+  },
+  100
+)
 
 async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
 
-  const users = await Promise.all([
-    User.create({
+  const users = [
+    {
       firstName: 'Cody',
       lastName: 'Pug',
       email: 'cody@email.com',
       password: '123'
-    }),
-    User.create({
+    },
+    {
       firstName: 'Murphy',
       lastName: 'Brown',
       email: 'murphy@email.com',
       password: '123'
-    }),
-    User.create({
+    },
+    {
       firstName: 'Angela',
       lastName: 'V',
       email: 'angela@email.com',
       password: '123',
       isAdmin: true
+    }
+  ]
+
+  await Promise.all(
+    users.map(element => {
+      return User.create(element)
     })
-    // people.forEach(element => User.create({element}))
-  ])
+  )
 
   const orders = await Promise.all([
     Order.create({
@@ -81,32 +102,36 @@ async function seed() {
     })
   ])
 
-  const fruits = await Promise.all([
-    Fruit.create({
+  const fruits = [
+    {
       name: 'Apple',
       description: 'A delicious tarty apple from New York',
       imgURL:
         'https://icons.iconarchive.com/icons/google/noto-emoji-food-drink/512/32349-red-apple-icon.png',
       origin: 'New York',
-      price: 10
-    }),
-    Fruit.create({
+      price: 49
+    },
+    {
       name: 'Pear',
       description: 'Great for programmers when ordering in pairs',
       imgURL:
         'https://cdn.pixabay.com/photo/2019/05/28/15/21/pear-4235369_960_720.png',
       origin: 'Genovia',
-      price: 100
-    }),
-    Fruit.create({
+      price: 149
+    },
+    {
       name: 'Lemons',
       description: 'When life gives you them...',
       imgURL:
         'https://cdn4.iconfinder.com/data/icons/vegetables-60/48/Fruits_lemon_food-512.png',
       origin: 'New York',
-      price: 20
-    })
-  ])
+
+      price: 49
+    },
+    ...fruit
+  ]
+
+  await Promise.all(fruits.map(element => Fruit.create(element)))
 
   const orderFruitJoinTable = [
     {
@@ -174,11 +199,13 @@ async function seed() {
       itemTotal: 49
     }
   ]
+
   await Promise.all(
     orderFruitJoinTable.map(instance => {
       return OrderFruit.create(instance)
     })
   )
+
   console.log(`seeded ${users.length} users`)
   console.log(`seeded ${orders.length} orders`)
   console.log(`seeded ${fruits.length} fruits`)
