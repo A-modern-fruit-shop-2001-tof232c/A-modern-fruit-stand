@@ -80,75 +80,75 @@ class Cart extends React.Component {
 
   render() {
     let cart = this.props.cart
-    if (cart.fruits) {
-      return (
+    return (
+      <div>
         <div id="cart">
-          <div>
-            <h2>Fruit Basket</h2>
-          </div>
-          <div>
-            {/* Map over all fruit in the cart*/}
-            {cart.fruits.map(fruit => {
-              return (
-                <div key={fruit.id}>
-                  <Link to={`/fruit/${fruit.id}`}>
-                    <h4>{fruit.name}</h4>
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={this.deleteItemHandler}
-                    data-fruitid={fruit.id}
-                    type="button"
-                  >
-                    Remove Item
-                  </button>
-                  <img
-                    src={fruit.imgURL}
-                    style={{maxWidth: '100px', maxHeight: '100px'}}
-                  />
-
-                  <div>
+          <h2>Fruit Basket</h2>
+          {console.log('my console.log cart.fruits', cart.fruits)}
+          {cart.fruits ? (
+            <div>
+              {cart.fruits.map(fruit => {
+                return (
+                  <div key={fruit.id}>
+                    <Link to={`/fruit/${fruit.id}`}>
+                      <h4>{fruit.name}</h4>
+                    </Link>
                     <button
-                      onClick={this.incrementQuantityHandler}
                       type="button"
-                      data-fruit={fruit}
+                      onClick={this.deleteItemHandler}
                       data-fruitid={fruit.id}
                     >
-                      +
+                      Remove Item
                     </button>
-                    <div>QTY: {fruit.orderFruit.quantity}</div>
-                    <button
-                      onClick={this.decrementQuantityHandler}
-                      type="button"
-                      data-fruit={fruit}
-                      data-fruitid={fruit.id}
-                    >
-                      -
-                    </button>
+                    <img
+                      src={fruit.imgURL}
+                      style={{maxWidth: '100px', maxHeight: '100px'}}
+                    />
+                    <div>
+                      <button
+                        onClick={this.incrementQuantityHandler}
+                        type="button"
+                        data-fruit={fruit}
+                        data-fruitid={fruit.id}
+                      >
+                        +
+                      </button>
+                      <div>QTY: {fruit.orderFruit.quantity}</div>
+                      <button
+                        onClick={this.decrementQuantityHandler}
+                        type="button"
+                        data-fruit={fruit}
+                        data-fruitid={fruit.id}
+                      >
+                        -
+                      </button>
+                    </div>
+                    <div>Price Per Item: {fruit.orderFruit.itemPrice} </div>
+                    <div>
+                      Item Total:{' '}
+                      {fruit.orderFruit.quantity * fruit.orderFruit.itemPrice}
+                    </div>
                   </div>
-                  <div>Price Per Item: {fruit.orderFruit.itemPrice} </div>
-                  <div>
-                    Item Total:{' '}
-                    {fruit.orderFruit.quantity * fruit.orderFruit.itemPrice}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-          <div>
-            <h3>Subtotal: {cart.orderTotal}</h3>
-          </div>
-          <ButtonCheckout cartId={cart.id} />
-          <div>
-            <Link to="/fruit">
-              <button type="button">CONTINUE SHOPPING</button>
-            </Link>
-          </div>
+                )
+              })}
+              <ButtonCheckout cartId={cart.id} />
+              <div>
+                <Link to="/fruit">
+                  <button type="button">CONTINUE SHOPPING</button>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <h3>Your fruit basket is empty!</h3>
+              <Link to="/fruit">
+                <button type="button">CONTINUE SHOPPING</button>
+              </Link>
+            </div>
+          )}
         </div>
-      )
-    } else {
-      return <div>Your fruit basket is empty!</div>
-    }
+      </div>
+    )
   }
 }
 
