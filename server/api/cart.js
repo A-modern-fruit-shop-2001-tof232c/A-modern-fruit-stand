@@ -119,6 +119,7 @@ router.put('/checkout/:cartId', async (req, res, next) => {
 })
 
 // A PUT route to update the quantity of the item from the cart component.
+// TODO: Protect route.
 router.put('/:fruitId/:isIncrement', async (req, res, next) => {
   try {
     let cart = await getCart(req.user.id)
