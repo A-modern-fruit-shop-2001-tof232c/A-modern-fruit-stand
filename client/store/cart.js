@@ -7,14 +7,15 @@ const initialState = {
 }
 
 // ACTION TYPES
-const GET_CART = 'GET_CART' //Note: guest cart uses this same action type
+const GET_CART = 'GET_CART'
 const UPDATE_CART = 'UPDATE_CART'
 const ADD_ITEM = 'ADD_ITEM'
-const CHECKOUT_CART = 'CHECKOUT_CART'
 const UPDATE_QUANTITY = 'UPDATE_QUANTITY'
 const REMOVE_ITEM = 'REMOVE_ITEM'
+
 //The rest of the action types are specific to guest vs. logged in user
 // const GET_GUEST_CART = 'GET_GUEST_CART'
+const GET_GUEST_CART = 'GET_GUEST_CART'
 const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART ' // adding an item to cart from all fruits
 const ADJUST_GUEST_CART = 'ADJUST_GUEST_CART' //increment or decrement on cart page
 
@@ -28,13 +29,6 @@ export const updatedCart = fruit => ({
   type: UPDATE_CART,
   fruit
 })
-
-// Jasmin commented out below because the variable name is duplicated from above.
-//It isn't exported so I assume it isn't used? not sure :/
-// const updatedCart = fruit => ({
-//   type: ADD_ITEM,
-//   fruit
-// })
 
 export const getGuestCart = () => {
   //If guest is new, add an empty cart on local storage
@@ -136,7 +130,6 @@ export const removeGuestItem = fruitId => {
 }
 
 //------------------------INCREMENT OR DECREMENT GUEST ITEM------------------------------
-
 export const incrOrDecrGuestCart = (incrOrDecr, fruit) => {
   let changeQty = 1
   if (incrOrDecr === '-') {
@@ -171,7 +164,7 @@ const gotCheckoutCart = cartid => ({
   cartid
 })
 
-const updatedQuantity = cart => ({
+export const updatedQuantity = cart => ({
   type: UPDATE_QUANTITY,
   cart
 })

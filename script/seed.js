@@ -2,6 +2,9 @@
 
 const db = require('../server/db')
 const {User, Order, Fruit, OrderFruit} = require('../server/db/models')
+
+//JASMIN'S NOTE: This faker data below was throwing an error for me and disallowing log in
+
 // const faker = require('faker')
 
 // faker.array = function(structure, count = 1) {
@@ -31,21 +34,7 @@ while (n < count) {
   //   return count === 1 ? results[0] : results
 }
 
-let people = faker.array(
-  {
-    email: faker.internet.email,
-    password: faker.internet.password
-  },
-  100
-)
-
-let fruit = faker.array(
-  {
-    name: faker.random.arrayElement,
-    price: faker.random.number
-  },
-  100
-)
+// console.log(people)
 
 async function seed() {
   await db.sync({force: true})
