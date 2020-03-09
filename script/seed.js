@@ -2,12 +2,11 @@
 
 const db = require('../server/db')
 const {User, Order, Fruit, OrderFruit} = require('../server/db/models')
-// const faker = require('faker')
+const faker = require('faker')
 
-// faker.array = function(structure, count = 1) {
-//   let n = 0
-//   const results = []
-
+faker.array = function(structure, count = 1) {
+  let n = 0
+  const results = []
 
   while (n < count) {
     const item = {...structure}
@@ -24,14 +23,13 @@ const {User, Order, Fruit, OrderFruit} = require('../server/db/models')
       else item[property] = item[property]()
     })
 
+    results.push(item)
 
-//     results.push(item)
+    n++
+  }
 
-//     n++
-//   }
-
-//   return count === 1 ? results[0] : results
-// }
+  return count === 1 ? results[0] : results
+}
 
 let people = faker.array(
   {
@@ -48,7 +46,6 @@ let fruit = faker.array(
   },
   100
 )
-
 
 async function seed() {
   await db.sync({force: true})
@@ -81,7 +78,6 @@ async function seed() {
       return User.create(element)
     })
   )
-
 
   const orders = await Promise.all([
     Order.create({
