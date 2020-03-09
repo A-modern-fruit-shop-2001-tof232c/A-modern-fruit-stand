@@ -35,12 +35,12 @@ class Routes extends Component {
         <Route exact path="/fruit" component={AllFruit} />
         <Route path="/fruit/:id" component={FruitSingle} />
         <Route path="/cart" component={Cart} />
+        <Route path="/admin" component={AdminContainer} />
 
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}
             <Route path="/home" component={UserHome} />
-            <Route path="/admin/" component={AdminContainer} />
           </Switch>
         )}
 
