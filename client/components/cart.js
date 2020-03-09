@@ -10,6 +10,7 @@ import {
 } from '../store/cart'
 import {ButtonCheckout} from '../components'
 import {Link} from 'react-router-dom'
+import {me} from '../store/user'
 
 class Cart extends React.Component {
   constructor(props) {
@@ -21,7 +22,13 @@ class Cart extends React.Component {
     this.decrementQuantityHandler = this.decrementQuantityHandler.bind(this)
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    //check if user data didn't load yet
+    if (!this.props.isLoggedIn) {
+      await this.props.getUserInfo() // dispatches me()
+    }
+    //after data loads, THEN check if user is logged in
+    //this solves an issue with user data loading after cart data
     if (this.props.isLoggedIn) {
       this.props.getCart()
     } else {
@@ -228,7 +235,8 @@ class Cart extends React.Component {
 
 const mapStateToProps = state => ({
   cart: state.cart,
-  isLoggedIn: !!state.user.selectedUser.id
+  isLoggedIn: !!state.user.selectedUser.id,
+  user: state.user
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -239,7 +247,8 @@ const mapDispatchToProps = dispatch => ({
   incrOrDecrGuestCart: (incrOrDecr, fruit) =>
     dispatch(incrOrDecrGuestCart(incrOrDecr, fruit)),
   updateQuantity: (fruitId, isIncrement) =>
-    dispatch(updateQuantity(fruitId, isIncrement))
+    dispatch(updateQuantity(fruitId, isIncrement)),
+  getUserInfo: () => dispatch(me())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cart)
