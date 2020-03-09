@@ -1,7 +1,12 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {ButtonCheckout} from '../components'
-import {getCart, getGuestCart, removeItem, updateQuantity} from '../store/cart'
+import {
+  getCart,
+  // getGuestCart,
+  removeItem,
+  updateQuantity
+} from '../store/cart'
 import {Link} from 'react-router-dom'
 
 class Cart extends React.Component {
@@ -16,7 +21,8 @@ class Cart extends React.Component {
 
   componentDidMount() {
     this.props.getCart()
-    this.props.getGuestCart()
+    // getGuestCart() is currently commented out in ../store/cart
+    // this.props.getGuestCart()
   }
 
   deleteItemHandler(event) {
@@ -55,10 +61,6 @@ class Cart extends React.Component {
             {cart.fruits.map(fruit => {
               return (
                 <div key={fruit.id}>
-                  <div>{fruit.name}</div>
-                  <img src={fruit.imgURL} />
-                  <div>QTY: {fruit.orderFruit.quantity}</div>
-                  <div>Price: {fruit.orderFruit.itemTotal}</div>
                   <Link to={`/fruit/${fruit.id}`}>
                     <h4>{fruit.name}</h4>
                   </Link>
