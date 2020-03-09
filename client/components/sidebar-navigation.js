@@ -68,11 +68,11 @@ const SidebarNav = props => {
           <br />
           <br />
           <Link
-            to="/fruit"
+            to="/cart"
             className="NavBulletPoint"
             onClick={props.toggleDrawer}
           >
-            checkout
+            cart
           </Link>
           <br />
           <Link
