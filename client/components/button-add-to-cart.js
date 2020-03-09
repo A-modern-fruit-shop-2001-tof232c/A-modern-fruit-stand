@@ -1,9 +1,9 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {getUpdateCart} from '../store/cart'
+import {getUpdateCart, updateGuestCart} from '../store/cart'
 
 const defaultState = {
-  QTY: 0
+  QTY: 1
 }
 
 class ButtonAddToCart extends React.Component {
@@ -16,31 +16,21 @@ class ButtonAddToCart extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    // Check is the user is a logged in user
-    if (!this.props.user.id) {
-      // get the cart from the localStorage
-      // let cart = window.localStorage.getItem('cart')
-      // if there is a cart.
-      // if (cart) {
-      //   // Add item to cart.
-      //     if(cart[this.props.selectedFruit.id]){
-      //       cart[this.props.selectedFruit.id] += Number(this.state.QTY)
-      //     } else {
-      //       window.localStorage.setItem
-      //     }
-      //   }
-      //   // if there is no cart.
-      //   // initialize cart.
-      // }
-    }
-
     // setting up object to be passed to dispatch
     const fruitData = {
       fruitId: this.props.selectedFruit.id,
       quantity: this.state.QTY
     }
-    // dispatch
-    this.props.updateCart(fruitData)
+    // For a logged in user: dispatch update cart to talk with database
+    if (this.props.isLoggedIn) {
+      this.props.updateCart(fruitData)
+    } else {
+      // For a guest user: update the redux store with cart item
+      this.props.updateGuestCart({
+        quantity: fruitData.quantity,
+        selectedFruit: this.props.selectedFruit
+      })
+    }
     this.setState(defaultState)
   }
 
@@ -72,13 +62,15 @@ class ButtonAddToCart extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    selectedFruit: state.fruit.selectedFruit
+    selectedFruit: state.fruit.selectedFruit,
+    isLoggedIn: !!state.user.selectedUser.id
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateCart: data => dispatch(getUpdateCart(data))
+    updateCart: data => dispatch(getUpdateCart(data)),
+    updateGuestCart: data => dispatch(updateGuestCart(data))
   }
 }
 

@@ -2,7 +2,8 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {
   addFruitThunk,
-  removeFruitThunk,
+  // removeFruitThunk is not defined, do you mean deleteFruitThunk?
+  // removeFruitThunk,
   updateFruitThunk
 } from '../../store/fruit'
 
@@ -10,6 +11,12 @@ class AdminAllFruit extends React.Component {
   constructor() {
     super()
     this.state = {
+      fruitSearch: '',
+      // selectedFruit: '',
+      currFruitName: '',
+      currFruitOrigin: '',
+      // currFruitPrice: '',
+      // currFruitDescription: ''
       searchInput: '',
       matchingFruit: [],
       chosenFruit: {}
