@@ -2,6 +2,14 @@ import axios from 'axios'
 import history from '../history'
 
 /**
+ * ACTION TYPES
+ */
+const GET_USER = 'GET_USER'
+const REMOVE_USER = 'REMOVE_USER'
+const DELETE_USER = 'DELETE_USER'
+const GET_ALL_USERS = 'GET_ALL_USERS'
+
+/**
  * INITIAL STATE
  */
 // const defaultUser = {}
@@ -10,13 +18,6 @@ const initialState = {
   allUsers: [],
   selectedUser: {}
 }
-
-/**
- * ACTION TYPES
- */
-const GET_USER = 'GET_USER'
-const REMOVE_USER = 'REMOVE_USER'
-const GET_ALL_USERS = 'GET_ALL_USERS'
 
 /**
  * ACTION CREATORS
@@ -65,6 +66,16 @@ export const logout = () => async dispatch => {
 
 export const gotAllUsersThunk = () => async dispatch => {
   try {
+    const {data} = await axios.get('/api/users')
+    dispatch(fetchAllUsers(data))
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const deleteUserForeverThunk = id => async dispatch => {
+  try {
+    await axios.delete(`/api/users/${id}`)
     const {data} = await axios.get('/api/users')
     dispatch(fetchAllUsers(data))
   } catch (error) {

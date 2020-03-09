@@ -5,18 +5,20 @@ import {
   getGuestCart,
   removeItem,
   removeGuestItem,
-  incrOrDecrGuestCart
+  incrOrDecrGuestCart,
+  updateQuantity
 } from '../store/cart'
+import {ButtonCheckout} from '../components'
 import {Link} from 'react-router-dom'
 
 class Cart extends React.Component {
   constructor(props) {
     super(props)
-    this.state = this.props.cart
+    // this.state = this.props.cart
     this.componentDidMount = this.componentDidMount.bind(this)
     this.deleteItemHandler = this.deleteItemHandler.bind(this)
     this.incrementQuantityHandler = this.incrementQuantityHandler.bind(this)
-    this.decrementQuantityHandler = this.deleteItemHandler.bind(this)
+    this.decrementQuantityHandler = this.decrementQuantityHandler.bind(this)
   }
 
   componentDidMount() {
@@ -42,7 +44,12 @@ class Cart extends React.Component {
   incrementQuantityHandler(event) {
     event.preventDefault()
     // When click will increment the quantity of the cart by one
-    if (!this.props.isLoggedIn) {
+    if (this.props.isLoggedIn) {
+      const fruitId = event.target.dataset.fruitid
+      const isIncrement = true
+      this.props.updateQuantity(fruitId, isIncrement)
+    } else {
+      //for a guest user
       const incrOrDecr = event.target.innerHTML
       const fruit = event.target.dataset.fruit
       this.props.incrOrDecrGuestCart(incrOrDecr, fruit)
@@ -52,7 +59,12 @@ class Cart extends React.Component {
   decrementQuantityHandler(event) {
     event.preventDefault()
     // When click will decrement the quantity of the item by one.
-    if (!this.props.isLoggedIn) {
+    if (this.props.isLoggedIn) {
+      const fruitId = event.target.dataset.fruitid
+      const isIncrement = false
+      this.props.updateQuantity(fruitId, isIncrement)
+    } else {
+      //for a guest user
       const incrOrDecr = event.target.innerHTML
       const fruit = event.target.dataset.fruit
       this.props.incrOrDecrGuestCart(incrOrDecr, fruit)
@@ -73,10 +85,15 @@ class Cart extends React.Component {
               console.log(fruit)
               return (
                 <div key={fruit.id}>
+                  <div>{fruit.name}</div>
+                  <img src={fruit.imgURL} />
+                  <div>QTY: {fruit.orderFruit.quantity}</div>
+                  <div>Price: {fruit.orderFruit.itemTotal}</div>
                   <Link to={`/fruit/${fruit.id}`}>
                     <h4>{fruit.name}</h4>
                   </Link>
                   <button
+                    type="button"
                     onClick={this.deleteItemHandler}
                     data-fruitid={fruit.id}
                     type="button"
@@ -91,22 +108,27 @@ class Cart extends React.Component {
                   <div>
                     <button
                       onClick={this.incrementQuantityHandler}
-                      data-fruit={fruit}
                       type="button"
+                      data-fruit={fruit}
+                      data-fruitid={fruit.id}
                     >
                       +
                     </button>
                     <div>QTY: {fruit.orderFruit.quantity}</div>
                     <button
                       onClick={this.decrementQuantityHandler}
-                      data-fruit={fruit}
                       type="button"
+                      data-fruit={fruit}
+                      data-fruitid={fruit.id}
                     >
                       -
                     </button>
                   </div>
                   <div>Price Per Item: {fruit.orderFruit.itemPrice} </div>
-                  <div>Item Total: {fruit.orderFruit.itemTotal}</div>
+                  <div>
+                    Item Total:{' '}
+                    {fruit.orderFruit.quantity * fruit.orderFruit.itemPrice}
+                  </div>
                 </div>
               )
             })}
@@ -114,8 +136,8 @@ class Cart extends React.Component {
           <div>
             <h3>Subtotal: {cart.orderTotal}</h3>
           </div>
+          <ButtonCheckout cartId={cart.id} />
           <div>
-            <button type="button">PROCEED TO CHECK OUT</button>
             <Link to="/fruit">
               <button type="button">CONTINUE SHOPPING</button>
             </Link>
@@ -123,7 +145,7 @@ class Cart extends React.Component {
         </div>
       )
     } else {
-      return <div>Loading...</div>
+      return <div>Your fruit basket is empty!</div>
     }
   }
 }
@@ -139,7 +161,9 @@ const mapDispatchToProps = dispatch => ({
   removeItem: fruitId => dispatch(removeItem(fruitId)),
   removeGuestItem: fruitId => dispatch(removeGuestItem(fruitId)),
   incrOrDecrGuestCart: (incrOrDecr, fruit) =>
-    dispatch(incrOrDecrGuestCart(incrOrDecr, fruit))
+    dispatch(incrOrDecrGuestCart(incrOrDecr, fruit)),
+  updateQuantity: (fruitId, isIncrement) =>
+    dispatch(updateQuantity(fruitId, isIncrement))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cart)

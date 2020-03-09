@@ -6,13 +6,7 @@ module.exports = router
 // Get cart belonging to the LoggedIn user only if the order hasn't not been paid.
 router.get('/', async (req, res, next) => {
   try {
-    const cart = await Order.findOne({
-      where: {
-        userId: req.user.id,
-        paid: false
-      },
-      include: [{model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}]
-    })
+    const cart = await getCart(req.user.id)
     if (cart) {
       res.json(cart)
     } else {
@@ -27,106 +21,68 @@ router.get('/', async (req, res, next) => {
 // vs
 // changing the quantity of the item from the cart component. <-- This is a PUT
 // TO DO: PUT route for adding fruit to cart for the LoggedIn user.
+// PUT route for adding items to cart for LoggedIn in users
 router.put('/:fruitId', async (req, res, next) => {
   try {
-    // The fruit we want to add.
+    // get fruit we're adding
     const fruitToAdd = await Fruit.findByPk(req.params.fruitId)
-    // Find the cart for the logged in user.
-    let cart = await Order.findOne({
-      where: {
-        userId: req.user.id,
-        paid: false
-      },
-      include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
-    })
-    // converting fruitInstance Price back to pennies
     const fruitToAddPriceInPennies = fruitToAdd.price * 100
-    // Does the user have a cart?
-    if (cart) {
-      // the user has a cart
-      // Does the user already have the fruit in the cart?
-      const fruit = cart.fruits.find(
-        fruitEl => fruitEl.name === fruitToAdd.name
-      )
-      console.log('fruit:', fruit)
-      // If the fruit is already in the cart.
-      if (fruit) {
-        const orderFruitInstance = await OrderFruit.findOne({
+    const addToCart = async () => {
+      // get cart we're adding to || create new cart
+      const cart = await Order.findOne({
+        where: {
+          userId: req.user.id,
+          paid: false
+        },
+        include: [{model: Fruit, attributes: ['name', 'price']}]
+      })
+      if (cart) {
+        // is fruitToAdd in cart?
+        const OrderFruitInstance = await OrderFruit.findOne({
           where: {
             orderId: cart.id,
-            fruitId: req.params.fruitId
+            fruitId: fruitToAdd.id
           }
         })
-        // Increment the quantity of the fruit in the cart.
-        // // Reflect the itemTotal base on the quantity of item.
-        orderFruitInstance.calculateItemsTotal()
-        await OrderFruit.update(
-          {
-            quantity: (orderFruitInstance.quantity += Number(
-              req.body.quantity
-            )),
-            itemTotal: orderFruitInstance.itemTotal
-          },
-          {
-            where: {
-              orderId: cart.id,
-              fruitId: req.params.fruitId
-            },
-            returning: true,
-            plain: true
-          }
-        )
+        if (OrderFruitInstance) {
+          // increment fruit quantity and itemtotal
+          OrderFruitInstance.increment('quantity', {
+            by: Number(req.body.quantity)
+          })
+          OrderFruitInstance.increment('itemTotal', {
+            by: Number(req.body.quantity) * fruitToAddPriceInPennies
+          })
+          return cart
+        } else {
+          // associate fruit to cart
+          await cart.addFruit(fruitToAdd, {
+            through: {
+              quantity: Number(req.body.quantity),
+              itemPrice: fruitToAddPriceInPennies,
+              itemTotal: fruitToAddPriceInPennies * Number(req.body.quantity)
+            }
+          })
+          return cart
+        }
       } else {
-        // If the fruit is not in the cart.
-        // Add the fruit.
-        await cart.addFruit(fruitToAdd, {
-          through: {
-            quantity: Number(req.body.quantity),
-            // can we do: fruitToAdd.calculateItemsTotal()?
-            itemTotal: fruitToAddPriceInPennies * Number(req.body.quantity)
-          }
-        })
-      }
-      // if the user does not have a cart.
-    } else {
-      // Make a cart for the user.
-      cart = await Order.create(
-        {
-          //
-          orderTotal: fruitToAddPriceInPennies * Number(req.body.quantity),
+        // no cart, create new cart
+        await Order.create({
           userId: req.user.id
-        },
-        {
-          include: [{model: Fruit}]
-        }
-      )
-      // Add the fruit into the cart.
-      await cart.addFruit(fruitToAdd, {
-        through: {
-          quantity: Number(req.body.quantity),
-          itemTotal: fruitToAddPriceInPennies * Number(req.body.quantity)
-        }
-      })
+        })
+        addToCart()
+      }
     }
-    // database call for cart again because of .update(), database calls make copies, not pass by ref.
-    const updatedCart = await Order.findOne({
-      where: {
-        userId: req.user.id,
-        paid: false
-      },
-      include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
-    })
+    const updatedCart = await addToCart()
     const orderTotal = updatedCart.fruits.reduce((accumlator, el) => {
       return accumlator + el.orderFruit.itemTotal
     }, 0)
-    // must make database call .update() to update database, cannot simply assign value to object, again not pass by ref.
-    await Order.update(
+    await updatedCart.update(
       {
         orderTotal: orderTotal
       },
       {
         where: {
-          id: cart.id,
+          id: updatedCart.id,
           userId: req.user.id,
           paid: false
         },
@@ -134,63 +90,120 @@ router.put('/:fruitId', async (req, res, next) => {
         plain: true
       }
     )
+    res.json(updatedCart)
+  } catch (error) {
+    next(error)
+  }
+})
 
+router.put('/checkout/:cartId', async (req, res, next) => {
+  try {
+    const cart = await Order.update(
+      {
+        paid: true
+      },
+      {
+        where: {
+          id: req.params.cartId
+        }
+      }
+    )
     res.json(cart)
+  } catch (error) {
+    next(error)
+  }
+})
+
+// A PUT route to update the quantity of the item from the cart component.
+router.put('/:fruitId/:isIncrement', async (req, res, next) => {
+  try {
+    let cart = await getCart(req.user.id)
+
+    if (!cart) {
+      res.status(404).send('Error 404: No Basket')
+      return
+    }
+
+    const fruit = cart.fruits.find(
+      fruitEl => fruitEl.id === Number(req.params.fruitId)
+    )
+    if (!fruit) {
+      res.status(404).send('This fruit is not in the basket')
+      return
+    }
+    const fruitItem = fruit.orderFruit
+    let orderTotal = cart.orderTotal
+
+    // determine the method based on the button press.
+    if (req.params.isIncrement === 'true') {
+      fruitItem.quantity++
+      orderTotal += fruitItem.itemPrice
+    } else {
+      fruitItem.quantity--
+      orderTotal -= fruitItem.itemPrice
+    }
+    // Must await update before fetching the updatedOrder. Otherwise, you
+    // may get stale data.
+    if (fruitItem.quantity < 1) {
+      await fruitItem.destroy()
+    } else {
+      await fruitItem.update({quantity: fruitItem.quantity})
+    }
+    await cart.update({orderTotal: orderTotal})
+    const updatedOrder = await getUpdatedOrder(cart.id)
+
+    res.json(updatedOrder)
   } catch (err) {
     next(err)
   }
 })
-
-// A PUT request???
 
 // Need route to delete item in cart. This is deleting the entire item from the cart component.
 router.delete('/:fruitId', async (req, res, next) => {
   try {
-    const fruitToDelete = await Fruit.findByPk(req.params.fruitId)
-    const nameOfFruitToDelete = fruitToDelete.name
+    let cart = await getCart(req.user.id)
 
-    let cart = await Order.findOne({
-      where: {
-        userId: req.user.id,
-        paid: false
-      },
-      include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
-    })
-    if (cart) {
-      const fruit = cart.fruits.find(
-        fruitEl => fruitEl.name === nameOfFruitToDelete
-      )
-      if (fruit) {
-        const fruitItem = fruit.orderFruit
-        // console.log('FRUIT:', fruitItem)
-        const removeQuantity = fruitItem.quantity
-        // console.log('FRUIT QUANTITY:', removeQuantity)
-        const orderFruitInstance = await OrderFruit.findOne({
-          where: {
-            orderId: cart.id,
-            fruitId: req.params.fruitId
-          }
-        })
-        // console.log('instance:', orderFruitInstance)
-        await orderFruitInstance.calculateItemsTotal()
-        await orderFruitInstance.destroy()
-        const newOrderTotal = cart.orderTotal - fruit.price * removeQuantity
-        // console.log('orderTotal:', cart.orderTotal)
-        // console.log('fruit price:', fruit.price)
-        console.log(Object.keys(Order.prototype))
-        await cart.update({orderTotal: newOrderTotal})
-        const updatedOrder = await Order.findByPk(cart.id, {
-          include: [{model: Fruit, attributes: ['name', 'price', 'imgURL']}]
-        })
-
-        res.json(updatedOrder)
-      } else {
-        res.status(404).send('This fruit is not in the basket')
-      }
-    } else {
-      res.status(404).send('Error 404: No fruit in the basket to remove')
+    if (!cart) {
+      res.status(404).send('Error 404: No Basket')
+      return
     }
+
+    const fruit = cart.fruits.find(
+      fruitEl => fruitEl.id === Number(req.params.fruitId)
+    )
+    if (!fruit) {
+      res.status(404).send('This fruit is not in the basket')
+      return
+    }
+
+    const fruitItem = fruit.orderFruit
+    const priceToSubtract = fruitItem.itemPrice * fruitItem.quantity
+    await fruitItem.destroy()
+    const newOrderTotal = cart.orderTotal - priceToSubtract
+    await cart.update({orderTotal: newOrderTotal})
+    // TODO: Figure out whether it is necessary to query the database again
+    // for the cart. Why can't the previous cart instance be returned in
+    // the client?
+    const updatedOrder = await getUpdatedOrder(cart.id)
+
+    res.json(updatedOrder).end()
   } catch (err) {
     next(err)
   }
 })
+
+function getCart(userId) {
+  return Order.findOne({
+    where: {
+      userId: userId,
+      paid: false
+    },
+    include: [{model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}]
+  })
+}
+
+function getUpdatedOrder(cartId) {
+  return Order.findByPk(cartId, {
+    include: [{model: Fruit, attributes: ['id', 'name', 'price', 'imgURL']}]
+  })
+}

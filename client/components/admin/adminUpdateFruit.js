@@ -13,17 +13,18 @@ class AdminAllFruit extends React.Component {
       fruitSearch: '',
       // selectedFruit: '',
       currFruitName: '',
-      currFruitOrigin: ''
+      currFruitOrigin: '',
       // currFruitPrice: '',
       // currFruitDescription: ''
+      searchInput: '',
+      matchingFruit: [],
+      chosenFruit: {}
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
   handleChange(event) {
-    console.log(event.target.value, event.target.dataset.div_id)
-    this.setState({[event.target.name]: event.target.value})
-    this.setState({selectedFruitId: event.target.dataset.div_id})
+    this.setState({searchInput: event.target.value})
   }
 
   handleSubmit(event) {
