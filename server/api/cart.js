@@ -25,6 +25,7 @@ router.get('/', async (req, res, next) => {
 // PUT route for adding items to cart for LoggedIn in users
 router.put('/:fruitId', async (req, res, next) => {
   try {
+    console.log('user cart check:', req.user.id)
     if (!req.user.id) {
       res.status(302).send('Not your basket!')
       return
@@ -53,7 +54,8 @@ router.put('/:fruitId', async (req, res, next) => {
           OrderFruitInstance.increment('itemTotal', {
             by: Number(req.body.quantity) * fruitToAdd.price
           })
-          return cart
+          await cart.update({orderTotal: 0})
+          return getCart(req.user.id)
         } else {
           // associate fruit to cart
           await cart.addFruit(fruitToAdd, {
@@ -63,7 +65,8 @@ router.put('/:fruitId', async (req, res, next) => {
               itemTotal: fruitToAdd.price * Number(req.body.quantity)
             }
           })
-          return cart
+          await cart.update({orderTotal: 0})
+          return getCart(req.user.id)
         }
       } else {
         // no cart, create new cart

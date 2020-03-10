@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {checkoutCart} from '../store/cart'
+import Checkout from './checkout'
 
 class ButtonCheckout extends React.Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class ButtonCheckout extends React.Component {
       previousCartId: this.props.cartId,
       displayCheckOut: false
     })
+    this.props.props.history.push('/cart/confirmation')
   }
   render() {
     return this.state.displayCheckOut ? (
@@ -30,8 +32,12 @@ class ButtonCheckout extends React.Component {
       </div>
     ) : (
       <div>
-        Thank you for your order! Your Confirmation Number is{' '}
-        {this.state.previousCartId}
+        <Checkout
+          order={this.props.orderId}
+          orderTotal={this.props.orderTotal}
+        />
+        {/* Thank you for your order! Your Confirmation Number is{' '}
+        {this.state.previousCartId} */}
       </div>
     )
   }

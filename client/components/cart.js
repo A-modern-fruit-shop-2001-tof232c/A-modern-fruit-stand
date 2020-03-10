@@ -11,12 +11,11 @@ import {
 import {ButtonCheckout} from '../components'
 import {Link} from 'react-router-dom'
 import {me} from '../store/user'
+import {convertPrice} from '../../util/util-intDeci'
 
 class Cart extends React.Component {
   constructor(props) {
     super(props)
-    // this.state = this.props.cart
-    this.componentDidMount = this.componentDidMount.bind(this)
     this.deleteItemHandler = this.deleteItemHandler.bind(this)
     this.incrementQuantityHandler = this.incrementQuantityHandler.bind(this)
     this.decrementQuantityHandler = this.decrementQuantityHandler.bind(this)
@@ -138,7 +137,13 @@ class Cart extends React.Component {
               })}
               <div>
                 <h3>Subtotal: {convertPrice(cart.orderTotal)}</h3>
-                <ButtonCheckout cartId={cart.id} />
+
+                <ButtonCheckout
+                  orderId={cart.id}
+                  orderTotal={cart.orderTotal}
+                  cartId={cart.id}
+                  props={this.props}
+                />
               </div>
               <div>
                 <Link to="/fruit">
@@ -179,12 +184,3 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cart)
-
-function convertPrice(priceInCents) {
-  let dollars = Math.floor(priceInCents / 100)
-  let cents = priceInCents % 100
-  if (cents < 10) {
-    cents = '0' + String(cents)
-  }
-  return `$ ${dollars}.${cents}`
-}

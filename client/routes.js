@@ -12,7 +12,8 @@ import {
   AdminContainer,
   AdminNav,
   HomePage,
-  EditSingleUser
+  EditSingleUser,
+  Checkout
 } from './components'
 import {me} from './store'
 
@@ -40,6 +41,7 @@ class Routes extends Component {
         <Route exact path="/admin/users" component={AdminContainer} />
         <Route exact path="/admin/users/:id" component={EditSingleUser} />
         <Route exact path="/admin/fruits" component={AllFruit} />
+        <Route exact path="/cart/confirmation" component={Checkout} />
 
         {isLoggedIn && (
           <Switch>
