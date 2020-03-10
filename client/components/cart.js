@@ -11,6 +11,7 @@ import {
 import {ButtonCheckout} from '../components'
 import {Link} from 'react-router-dom'
 import {me} from '../store/user'
+import {convertPrice} from '../../util/util-intDeci'
 
 class Cart extends React.Component {
   constructor(props) {
@@ -133,12 +134,27 @@ class Cart extends React.Component {
                         Remove Item
                       </button>
                     </div>
+                    <div>
+                      Price Per Item: {convertPrice(fruit.orderFruit.itemPrice)}{' '}
+                    </div>
+                    <div>
+                      Item Total:{' '}
+                      {convertPrice(
+                        fruit.orderFruit.quantity * fruit.orderFruit.itemPrice
+                      )}
+                    </div>
                   </div>
                 )
               })}
               <div>
-                <h3>Subtotal: {cart.orderTotal}</h3>
-                <ButtonCheckout cartId={cart.id} />
+                <h3>Subtotal: {convertPrice(cart.orderTotal)}</h3>
+
+                <ButtonCheckout
+                  orderId={cart.id}
+                  orderTotal={cart.orderTotal}
+                  cartId={cart.id}
+                  props={this.props}
+                />
               </div>
               <div>
                 <Link to="/fruit">

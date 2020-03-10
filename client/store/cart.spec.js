@@ -14,7 +14,7 @@ describe('thunk creators', () => {
   let store
   let mockAxios
 
-  const initialState = {user: {}}
+  const initialState = {cart: {}}
 
   beforeEach(() => {
     mockAxios = new MockAdapter(axios)
@@ -26,40 +26,39 @@ describe('thunk creators', () => {
     store.clearActions()
   })
 
-  // describe('getCart', () => {
-  //   it('eventually dispatches the GET CART action', async () => {
-  //     const fakeCart = {
-  //       id: 1,
-  //       date: '2020-03-05',
-  //       orderTotal: 0,
-  //       paid: false,
-  //       createdAt: '2020-03-06T04:13:25.169Z',
-  //       updatedAt: '2020-03-06T04:13:25.169Z',
-  //       userId: 1,
-  //       fruits: [
-  //         {
-  //           price: 1.49,
-  //           id: 1,
-  //           name: 'Pear',
-  //           imgURL:
-  //             'http://t0.gstatic.com/images?q=tbn%3AANd9GcT8AyNUZwWTLisWeZDQVdRgX65uAgsxtYdLrvTgiecg0tfMR9kXOPS_CL2uzC6eWMFHtiQO0ZNR&usqp=CAc',
-  //           orderFruit: {
-  //             orderId: 1,
-  //             quantity: 1,
-  //             itemPrice: 49,
-  //             itemTotal: 0,
-  //             fruitId: 1,
-  //             createdAt: '2020-03-06T04:13:25.185Z',
-  //             updatedAt: '2020-03-06T04:13:25.185Z'
-  //           }
-  //         }
-  //       ]
-  //     }
-  //     mockAxios.onGet('/cart').replyOnce(200, fakeCart)
-  //     await store.dispatch(getCart())
-  //     const actions = store.getActions()
-  //     expect(actions[0].type).to.be.equal('GET_USER')
-  //     expect(actions.cart).to.be.deep.equal(fakeCart)
-  //   })
-  // })
+  describe('getCart', () => {
+    it('eventually dispatches the GET CART action', async () => {
+      const fakeUser = {
+        id: 1,
+        orderTotal: 1000,
+        paid: false,
+        userId: 1,
+        fruits: [
+          {
+            id: 2,
+            name: 'Pear',
+            price: 10,
+            orderFruit: {orderId: 1, quantity: 1, itemPrice: 10, fruitId: 2}
+          },
+          {
+            id: 1,
+            name: 'Apple',
+            price: 10,
+            orderFruit: {orderId: 1, quantity: 2, itemPrice: 10, fruitId: 1}
+          },
+          {
+            id: 1,
+            name: 'Lemon',
+            price: 10,
+            orderFruit: {orderId: 1, quantity: 2, itemPrice: 10, fruitId: 1}
+          }
+        ]
+      }
+      mockAxios.onGet('/api/cart').replyOnce(200, fakeUser)
+      await store.dispatch(getCart())
+      const actions = store.getActions()
+      expect(actions[0].type).to.be.equal('GET_CART')
+      expect(actions[0].cart).to.be.deep.equal(fakeUser)
+    })
+  })
 })

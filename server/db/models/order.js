@@ -19,7 +19,8 @@ const Order = db.define('order', {
 
 module.exports = Order
 
-Order.beforeUpdate(async orderInstance => {
+Order.afterUpdate(async orderInstance => {
+  console.log('in afterUpdate hook')
   const eagerload = await OrderFruit.findAll({
     where: {
       orderId: orderInstance.id
@@ -28,4 +29,5 @@ Order.beforeUpdate(async orderInstance => {
   orderInstance.orderTotal = eagerload.reduce((accumlator, el) => {
     return accumlator + el.itemTotal
   }, 0)
+  console.log('total:', orderInstance.orderTotal)
 })
