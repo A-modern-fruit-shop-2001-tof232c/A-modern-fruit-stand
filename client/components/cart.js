@@ -81,45 +81,19 @@ class Cart extends React.Component {
     return (
       <div>
         <div id="cart">
-          <div>
-            <h2>Fruit Basket</h2>
-          </div>
-          <div>
-            {/* Map over all fruit in the cart*/}
-            {cart.fruits.map(fruit => {
-              // console.log(fruit)
-              return (
-                <div key={fruit.id}>
-                  <Link to={`/fruit/${fruit.id}`}>
-                    <h4>{fruit.name}</h4>
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={this.deleteItemHandler}
-                    data-fruitid={fruit.id}
-                  >
-                    Remove Item
-                  </button>
-                  <img
-                    src={fruit.imgURL}
-                    style={{maxWidth: '100px', maxHeight: '100px'}}
-                  />
-
-                  <div>
-                    <button
-                      onClick={this.incrementQuantityHandler}
-                      type="button"
-                      data-fruitid={fruit.id}
-                    >
-                      +
-                    </button>
-                    <div>QTY: {fruit.orderFruit.quantity}</div>
-
+          <h2>Fruit Basket</h2>
+          {cart.fruits ? (
+            <div>
+              {/* Map over all fruit in the cart*/}
+              {cart.fruits.map(fruit => {
+                return (
+                  <div key={fruit.id}>
+                    <Link to={`/fruit/${fruit.id}`}>
+                      <h4>{fruit.name}</h4>
+                    </Link>
                     <button
                       type="button"
-
                       onClick={this.deleteItemHandler}
-
                       data-fruitid={fruit.id}
                     >
                       Remove Item
@@ -128,15 +102,38 @@ class Cart extends React.Component {
                       src={fruit.imgURL}
                       style={{maxWidth: '100px', maxHeight: '100px'}}
                     />
+
                     <div>
                       <button
                         onClick={this.incrementQuantityHandler}
                         type="button"
-                        data-fruit={fruit}
                         data-fruitid={fruit.id}
                       >
                         +
                       </button>
+                      <div>QTY: {fruit.orderFruit.quantity}</div>
+
+                      <button
+                        type="button"
+                        onClick={this.deleteItemHandler}
+                        data-fruitid={fruit.id}
+                      >
+                        Remove Item
+                      </button>
+                      <img
+                        src={fruit.imgURL}
+                        style={{maxWidth: '100px', maxHeight: '100px'}}
+                      />
+                      <div>
+                        <button
+                          onClick={this.incrementQuantityHandler}
+                          type="button"
+                          data-fruit={fruit}
+                          data-fruitid={fruit.id}
+                        >
+                          +
+                        </button>
+                      </div>
                       <div>QTY: {fruit.orderFruit.quantity}</div>
                       <button
                         onClick={this.decrementQuantityHandler}
@@ -155,8 +152,10 @@ class Cart extends React.Component {
                   </div>
                 )
               })}
-              <h3>Subtotal: {cart.orderTotal}</h3>
-              <ButtonCheckout cartId={cart.id} />
+              <div>
+                <h3>Subtotal: {cart.orderTotal}</h3>
+                <ButtonCheckout cartId={cart.id} />
+              </div>
               <div>
                 <Link to="/fruit">
                   <button type="button">CONTINUE SHOPPING</button>
