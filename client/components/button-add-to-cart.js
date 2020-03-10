@@ -17,6 +17,7 @@ class ButtonAddToCart extends React.Component {
   handleSubmit(event) {
     event.preventDefault()
     // setting up object to be passed to dispatch
+    alert('Added Item(s) to Cart')
     const fruitData = {
       fruitId: this.props.selectedFruit.id,
       quantity: this.state.QTY

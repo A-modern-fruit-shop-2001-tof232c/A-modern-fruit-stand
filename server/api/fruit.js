@@ -28,7 +28,11 @@ router.get('/:id', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     if (req.body.name && req.user.isAdmin) {
-      const newFruit = await Fruit.create(req.body)
+      const newFruit = await Fruit.create({
+        name: req.body.name,
+        description: req.body.description,
+        price: req.body.price
+      })
       res.status(201).json(newFruit)
     } else {
       //look up what status to send for failed post
@@ -56,7 +60,11 @@ router.put('/:id', async (req, res, next) => {
   try {
     const fruitToUpdate = await Fruit.findByPk(req.params.id)
     if (fruitToUpdate.name && req.user.isAdmin) {
-      await fruitToUpdate.update(req.body)
+      await fruitToUpdate.update({
+        name: req.body.name,
+        description: req.body.description,
+        price: req.body.price
+      })
       res.json(fruitToUpdate)
     } else {
       res.json('That Fruit does not Exist!')
