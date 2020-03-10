@@ -47,16 +47,16 @@ router.put('/:fruitId', async (req, res, next) => {
         })
         if (OrderFruitInstance) {
           // increment fruit quantity and itemtotal
-          // TODO: refractor line 45-50 to use .update() & hooks
-          // hint: sequelize.literal
+
           await OrderFruitInstance.increment('quantity', {
             by: Number(req.body.quantity)
           })
           await OrderFruitInstance.increment('itemTotal', {
             by: Number(req.body.quantity) * fruitToAdd.price
           })
-          await cart.update({orderTotal: 0})
-          console.log('should be updated cart:', getCart(req.user.id))
+          await cart.increment('orderTotal', {
+            by: Number(req.body.quantity) * fruitToAdd.price
+          })
           return getCart(req.user.id)
         } else {
           // associate fruit to cart
@@ -67,7 +67,10 @@ router.put('/:fruitId', async (req, res, next) => {
               itemTotal: fruitToAdd.price * Number(req.body.quantity)
             }
           })
-          await cart.update({orderTotal: 0})
+
+          await cart.increment('orderTotal', {
+            by: Number(req.body.quantity) * fruitToAdd.price
+          })
           return getCart(req.user.id)
         }
       } else {
