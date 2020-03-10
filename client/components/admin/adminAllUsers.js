@@ -15,6 +15,7 @@ class AdminAllUsers extends React.Component {
   }
 
   render() {
+    //console.log('inside all users', this.props)
     let usersCollection = this.props.matchedUsers
     if (usersCollection) {
       return (

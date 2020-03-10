@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {SearchBar, AdminNav} from '../../components/index'
+import {SearchBar} from '../../components/index'
 import {getAllFruit} from '../../store/fruit'
 import {gotAllUsersThunk} from '../../store/user'
 

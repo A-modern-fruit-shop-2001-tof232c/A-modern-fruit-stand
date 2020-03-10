@@ -7,6 +7,7 @@ export const autofill = (inputStr, arrItems, searchTerm) => {
   // let arrLowerCase = arrItems.map(element => element.name.toLowerCase())
   //function will search the arrayItems and return anything containing inputStr at beginning
   //filter the array to all items for which a slice of beginning to inputStr.length === inputStr
+  console.log(searchTerm)
   return arrItems.filter(element => {
     const elementSlice = element[searchTerm].slice(0, inputStr.length)
 
