@@ -10,6 +10,7 @@ import {
 } from '../store/cart'
 import {ButtonCheckout} from '../components'
 import {Link} from 'react-router-dom'
+import {me} from '../store/user'
 
 class Cart extends React.Component {
   constructor(props) {
@@ -21,7 +22,13 @@ class Cart extends React.Component {
     this.decrementQuantityHandler = this.decrementQuantityHandler.bind(this)
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    //check if user data didn't load yet
+    if (!this.props.isLoggedIn) {
+      await this.props.getUserInfo() // dispatches me()
+    }
+    //after data loads, THEN check if user is logged in
+    //this solves an issue with user data loading after cart data
     if (this.props.isLoggedIn) {
       this.props.getCart()
     } else {
@@ -44,37 +51,35 @@ class Cart extends React.Component {
   incrementQuantityHandler(event) {
     event.preventDefault()
     // When click will increment the quantity of the cart by one
+    const fruitId = event.target.dataset.fruitid
     if (this.props.isLoggedIn) {
-      const fruitId = event.target.dataset.fruitid
       const isIncrement = true
       this.props.updateQuantity(fruitId, isIncrement)
     } else {
       //for a guest user
       const incrOrDecr = event.target.innerHTML
-      const fruit = event.target.dataset.fruit
-      this.props.incrOrDecrGuestCart(incrOrDecr, fruit)
+      this.props.incrOrDecrGuestCart(incrOrDecr, fruitId)
     }
   }
 
   decrementQuantityHandler(event) {
     event.preventDefault()
     // When click will decrement the quantity of the item by one.
+    const fruitId = event.target.dataset.fruitid
     if (this.props.isLoggedIn) {
-      const fruitId = event.target.dataset.fruitid
       const isIncrement = false
       this.props.updateQuantity(fruitId, isIncrement)
     } else {
       //for a guest user
       const incrOrDecr = event.target.innerHTML
-      const fruit = event.target.dataset.fruit
-      this.props.incrOrDecrGuestCart(incrOrDecr, fruit)
+      this.props.incrOrDecrGuestCart(incrOrDecr, fruitId)
     }
   }
 
   render() {
     let cart = this.props.cart
-    if (cart.fruits) {
-      return (
+    return (
+      <div>
         <div id="cart">
           <div>
             <h2>Fruit Basket</h2>
@@ -82,7 +87,7 @@ class Cart extends React.Component {
           <div>
             {/* Map over all fruit in the cart*/}
             {cart.fruits.map(fruit => {
-              console.log(fruit)
+              // console.log(fruit)
               return (
                 <div key={fruit.id}>
                   <Link to={`/fruit/${fruit.id}`}>
@@ -92,7 +97,6 @@ class Cart extends React.Component {
                     type="button"
                     onClick={this.deleteItemHandler}
                     data-fruitid={fruit.id}
-                    type="button"
                   >
                     Remove Item
                   </button>
@@ -105,50 +109,77 @@ class Cart extends React.Component {
                     <button
                       onClick={this.incrementQuantityHandler}
                       type="button"
-                      data-fruit={fruit}
                       data-fruitid={fruit.id}
                     >
                       +
                     </button>
                     <div>QTY: {fruit.orderFruit.quantity}</div>
+
                     <button
-                      onClick={this.decrementQuantityHandler}
                       type="button"
-                      data-fruit={fruit}
+
+                      onClick={this.deleteItemHandler}
+
                       data-fruitid={fruit.id}
                     >
-                      -
+                      Remove Item
                     </button>
+                    <img
+                      src={fruit.imgURL}
+                      style={{maxWidth: '100px', maxHeight: '100px'}}
+                    />
+                    <div>
+                      <button
+                        onClick={this.incrementQuantityHandler}
+                        type="button"
+                        data-fruit={fruit}
+                        data-fruitid={fruit.id}
+                      >
+                        +
+                      </button>
+                      <div>QTY: {fruit.orderFruit.quantity}</div>
+                      <button
+                        onClick={this.decrementQuantityHandler}
+                        type="button"
+                        data-fruit={fruit}
+                        data-fruitid={fruit.id}
+                      >
+                        -
+                      </button>
+                    </div>
+                    <div>Price Per Item: {fruit.orderFruit.itemPrice} </div>
+                    <div>
+                      Item Total:{' '}
+                      {fruit.orderFruit.quantity * fruit.orderFruit.itemPrice}
+                    </div>
                   </div>
-                  <div>Price Per Item: {fruit.orderFruit.itemPrice} </div>
-                  <div>
-                    Item Total:{' '}
-                    {fruit.orderFruit.quantity * fruit.orderFruit.itemPrice}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-          <div>
-            <h3>Subtotal: {cart.orderTotal}</h3>
-          </div>
-          <ButtonCheckout cartId={cart.id} />
-          <div>
-            <Link to="/fruit">
-              <button type="button">CONTINUE SHOPPING</button>
-            </Link>
-          </div>
+                )
+              })}
+              <ButtonCheckout cartId={cart.id} />
+              <div>
+                <Link to="/fruit">
+                  <button type="button">CONTINUE SHOPPING</button>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <h3>Your fruit basket is empty!</h3>
+              <Link to="/fruit">
+                <button type="button">CONTINUE SHOPPING</button>
+              </Link>
+            </div>
+          )}
         </div>
-      )
-    } else {
-      return <div>Your fruit basket is empty!</div>
-    }
+      </div>
+    )
   }
 }
 
 const mapStateToProps = state => ({
   cart: state.cart,
-  isLoggedIn: !!state.user.selectedUser.id
+  isLoggedIn: !!state.user.selectedUser.id,
+  user: state.user
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -159,7 +190,8 @@ const mapDispatchToProps = dispatch => ({
   incrOrDecrGuestCart: (incrOrDecr, fruit) =>
     dispatch(incrOrDecrGuestCart(incrOrDecr, fruit)),
   updateQuantity: (fruitId, isIncrement) =>
-    dispatch(updateQuantity(fruitId, isIncrement))
+    dispatch(updateQuantity(fruitId, isIncrement)),
+  getUserInfo: () => dispatch(me())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cart)

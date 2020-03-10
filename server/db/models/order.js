@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
+const OrderFruit = require('./orderFruit')
 
 const Order = db.define('order', {
   date: {
@@ -17,3 +18,14 @@ const Order = db.define('order', {
 })
 
 module.exports = Order
+
+Order.beforeUpdate(async orderInstance => {
+  const eagerload = await OrderFruit.findAll({
+    where: {
+      orderId: orderInstance.id
+    }
+  })
+  orderInstance.orderTotal = eagerload.reduce((accumlator, el) => {
+    return accumlator + el.itemTotal
+  }, 0)
+})
