@@ -46,6 +46,7 @@ export const auth = (email, password, method) => async dispatch => {
   try {
     res = await axios.post(`/auth/${method}`, {email, password})
     console.log('RED.DATA: ', res.data)
+    console.log('RED.DATA: ', res.error)
   } catch (authError) {
     return dispatch(getUser({error: authError}))
   }
