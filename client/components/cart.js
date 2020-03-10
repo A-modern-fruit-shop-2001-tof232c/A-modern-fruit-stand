@@ -51,30 +51,28 @@ class Cart extends React.Component {
   incrementQuantityHandler(event) {
     event.preventDefault()
     // When click will increment the quantity of the cart by one
+    const fruitId = event.target.dataset.fruitid
     if (this.props.isLoggedIn) {
-      const fruitId = event.target.dataset.fruitid
       const isIncrement = true
       this.props.updateQuantity(fruitId, isIncrement)
     } else {
       //for a guest user
       const incrOrDecr = event.target.innerHTML
-      const fruit = event.target.dataset.fruit
-      this.props.incrOrDecrGuestCart(incrOrDecr, fruit)
+      this.props.incrOrDecrGuestCart(incrOrDecr, fruitId)
     }
   }
 
   decrementQuantityHandler(event) {
     event.preventDefault()
     // When click will decrement the quantity of the item by one.
+    const fruitId = event.target.dataset.fruitid
     if (this.props.isLoggedIn) {
-      const fruitId = event.target.dataset.fruitid
       const isIncrement = false
       this.props.updateQuantity(fruitId, isIncrement)
     } else {
       //for a guest user
       const incrOrDecr = event.target.innerHTML
-      const fruit = event.target.dataset.fruit
-      this.props.incrOrDecrGuestCart(incrOrDecr, fruit)
+      this.props.incrOrDecrGuestCart(incrOrDecr, fruitId)
     }
   }
 
@@ -83,19 +81,45 @@ class Cart extends React.Component {
     return (
       <div>
         <div id="cart">
-          <h2>Fruit Basket</h2>
-          {console.log('my console.log cart.fruits', cart.fruits)}
-          {cart.fruits ? (
-            <div>
-              {cart.fruits.map(fruit => {
-                return (
-                  <div key={fruit.id}>
-                    <Link to={`/fruit/${fruit.id}`}>
-                      <h4>{fruit.name}</h4>
-                    </Link>
+          <div>
+            <h2>Fruit Basket</h2>
+          </div>
+          <div>
+            {/* Map over all fruit in the cart*/}
+            {cart.fruits.map(fruit => {
+              // console.log(fruit)
+              return (
+                <div key={fruit.id}>
+                  <Link to={`/fruit/${fruit.id}`}>
+                    <h4>{fruit.name}</h4>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={this.deleteItemHandler}
+                    data-fruitid={fruit.id}
+                  >
+                    Remove Item
+                  </button>
+                  <img
+                    src={fruit.imgURL}
+                    style={{maxWidth: '100px', maxHeight: '100px'}}
+                  />
+
+                  <div>
+                    <button
+                      onClick={this.incrementQuantityHandler}
+                      type="button"
+                      data-fruitid={fruit.id}
+                    >
+                      +
+                    </button>
+                    <div>QTY: {fruit.orderFruit.quantity}</div>
+
                     <button
                       type="button"
+
                       onClick={this.deleteItemHandler}
+
                       data-fruitid={fruit.id}
                     >
                       Remove Item

@@ -35,13 +35,13 @@ router.put('/:fruitId', async (req, res, next) => {
       return
     }
     if (req.user.id === req.session.passport.user) {
-      // get fruit we're adding
-      const fruitToAdd = await Fruit.findByPk(req.params.fruitId)
-      const fruitToAddPriceInPennies = Number(fruitToAdd.price) * 100
-      const addToCart = async () => {
-        // get cart we're adding to || create new cart
-        const cart = await getCart(req.user.id)
-        if (cart) {
+
+    // get fruit we're adding
+    const fruitToAdd = await Fruit.findByPk(req.params.fruitId)
+    const addToCart = async () => {
+      // get cart we're adding to || create new cart
+      const cart = await getCart(req.user.id)
+      if (cart) {
           // is fruitToAdd in cart?
           const OrderFruitInstance = await OrderFruit.findOne({
             where: {
@@ -172,6 +172,7 @@ router.put('/:fruitId/:isIncrement', async (req, res, next) => {
       res.json(updatedOrder)
     }
   } catch (err) {
+
     next(err)
   }
 })
@@ -199,6 +200,7 @@ router.delete('/:fruitId', async (req, res, next) => {
         return
       }
 
+
       const fruitItem = fruit.orderFruit
       const priceToSubtract = fruitItem.itemPrice * fruitItem.quantity
       await fruitItem.destroy()
@@ -208,6 +210,7 @@ router.delete('/:fruitId', async (req, res, next) => {
       // for the cart. Why can't the previous cart instance be returned in
       // the client?
       const updatedOrder = await getUpdatedOrder(cart.id)
+
 
       res.json(updatedOrder).end()
     }

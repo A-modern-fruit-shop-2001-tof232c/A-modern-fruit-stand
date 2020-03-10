@@ -130,23 +130,42 @@ export const removeGuestItem = fruitId => {
   }
 }
 
-//------------------------INCREMENT OR DECREMENT GUEST ITEM------------------------------
-export const incrOrDecrGuestCart = (incrOrDecr, fruit) => {
+//------------------------INCREMENT OR DECREMENT GUEST ITEM---------------------------
+export const incrOrDecrGuestCart = (incrOrDecr, fruitId) => {
+  fruitId = Number(fruitId)
   let changeQty = 1
   if (incrOrDecr === '-') {
-    if (fruit.orderFruit.quantity === 1) {
-      return removeGuestItem(fruit.id)
-    } else {
-      changeQty = -1
-    }
+    changeQty = -1
   }
+  const oldStorage = JSON.parse(window.localStorage.getItem('guestCart'))
+
+  let priceChangePennies = 0
+  // console.log(oldStorage.fruits)
+  const editedCart = oldStorage.fruits.map(el => {
+    if (el.id === fruitId) {
+      //if user decrements and item qty is 1, remove item completely
+      if (el.orderFruit.quantity === '1' && changeQty === -1) {
+        console.log('removing last item')
+        return removeGuestItem(fruitId)
+      } else {
+        //update the fruit total price and the qty
+        priceChangePennies = changeQty * el.price * 100
+        el.orderFruit.itemTotal =
+          (el.orderFruit.itemTotal * 100 + priceChangePennies) / 100
+        el.orderFruit.quantity = String(
+          Number(el.orderFruit.quantity) + changeQty
+        )
+      }
+    }
+    return el
+  })
+  const newTotal = (oldStorage.orderTotal * 100 + priceChangePennies) / 100
+  console.log('newTotal: ', newTotal)
+  const newStorage = {orderTotal: newTotal, fruits: editedCart}
   //now filter thru cart to reduce/increase fruit, line total, and order total
   //return new storage item
   //place on local storage and update redux store
-
-  //Jasmin's still owrking on this
-
-  const newStorage = {hi: 1}
+  window.localStorage.setItem('guestCart', JSON.stringify(newStorage))
   return {
     type: ADJUST_GUEST_CART,
     newStorage
