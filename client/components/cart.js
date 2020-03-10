@@ -16,7 +16,7 @@ class Cart extends React.Component {
   constructor(props) {
     super(props)
     // this.state = this.props.cart
-    this.componentDidMount = this.componentDidMount.bind(this)
+
     this.deleteItemHandler = this.deleteItemHandler.bind(this)
     this.incrementQuantityHandler = this.incrementQuantityHandler.bind(this)
     this.decrementQuantityHandler = this.decrementQuantityHandler.bind(this)
