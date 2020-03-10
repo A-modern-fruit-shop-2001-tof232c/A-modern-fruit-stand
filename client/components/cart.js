@@ -104,26 +104,6 @@ class Cart extends React.Component {
                     />
 
                     <div>
-                      <button
-                        onClick={this.incrementQuantityHandler}
-                        type="button"
-                        data-fruitid={fruit.id}
-                      >
-                        +
-                      </button>
-                      <div>QTY: {fruit.orderFruit.quantity}</div>
-
-                      <button
-                        type="button"
-                        onClick={this.deleteItemHandler}
-                        data-fruitid={fruit.id}
-                      >
-                        Remove Item
-                      </button>
-                      <img
-                        src={fruit.imgURL}
-                        style={{maxWidth: '100px', maxHeight: '100px'}}
-                      />
                       <div>
                         <button
                           onClick={this.incrementQuantityHandler}
