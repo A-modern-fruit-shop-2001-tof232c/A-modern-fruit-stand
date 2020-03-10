@@ -12,8 +12,9 @@ router.get('/:id', async (req, res, next) => {
     const singleUser = await User.findByPk(req.params.id)
     //IF USER IS ADMIN OR SINGLEUSER.ID MATCHES REQ.USER.ID, SEND BACK...ELSE AUTH ERROR
     if (
-      (req.user.isAdmin && req.user.id === req.session.passport.user) ||
-      singleUser.id === req.session.passport.user
+      req.user.isAdmin ||
+      //req.user.id = singleuser.id
+      singleUser.id === req.user.id
     )
       res.json(singleUser)
     else res.json('Users can only view their own page.')
@@ -28,11 +29,12 @@ router.delete('/:id', async (req, res, next) => {
     const userToDelete = await User.findByPk(req.params.id)
     if (userToDelete) {
       //PERFORM ADMIN & REQ.USER CHECK LISTED ABOVE...IF ALLOWED...
-      if (req.user.isAdmin || req.session.passport.user === userToDelete.id) {
+      if (req.user.isAdmin || req.user.id === userToDelete.id) {
         userToDelete.destroy(userToDelete)
         res.sendStatus(204)
       } else {
-        res.json('You do not have access to this page.')
+        //Status for unauthorized (401?)
+        res.sendStatus(401)
       }
     }
   } catch (error) {
@@ -45,14 +47,15 @@ router.put('/:id', async (req, res, next) => {
   try {
     const userToUpdate = await User.findByPk(req.params.id)
     if (userToUpdate) {
-      if (
-        (req.user.isAdmin && req.session.passport.user) ||
-        req.session.passport.user === userToUpdate.id
-      ) {
-        await userToUpdate.update(req.body)
+      if (req.user.isAdmin || req.user.id === userToUpdate.id) {
+        await userToUpdate.update({
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email
+        }) //Make sure to pass specific params not full body
         res.json(userToUpdate)
       } else {
-        res.json('You cannot edit this page.')
+        res.sendStatus(401)
       }
     }
   } catch (error) {
@@ -65,7 +68,7 @@ router.put('/:id', async (req, res, next) => {
 //SEND BACK: id and email of all users
 router.get('/', async (req, res, next) => {
   try {
-    if (req.user.isAdmin && req.user.id === req.session.passport.user) {
+    if (req.user.isAdmin) {
       const users = await User.findAll({
         // explicitly select only the id and email fields - even though
         // users' passwords are encrypted, it won't help if we just
@@ -74,7 +77,7 @@ router.get('/', async (req, res, next) => {
       })
       res.json(users)
     } else {
-      res.send('This page is for admins only')
+      res.sendStatus(401)
     }
   } catch (err) {
     next(err)

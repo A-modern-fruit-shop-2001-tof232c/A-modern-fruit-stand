@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {autofill} from '../../../script/autofill'
 import {AdminAllUsers} from '../admin/adminAllUsers'
+//query params
 
 class SearchBar extends React.Component {
   constructor(props) {
