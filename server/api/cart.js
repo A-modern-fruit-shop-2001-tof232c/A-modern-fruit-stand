@@ -24,9 +24,7 @@ router.get('/', async (req, res, next) => {
 // TO DO: PUT route for adding fruit to cart for the LoggedIn user.
 // PUT route for adding items to cart for LoggedIn in users
 router.put('/:fruitId', async (req, res, next) => {
-  // if (req.params.fruitId) {
   try {
-    console.log('in put after signup and add to cart:')
     if (!req.user.id) {
       res.status(302).send('Not your basket!')
       return
@@ -84,10 +82,8 @@ router.put('/:fruitId', async (req, res, next) => {
 
     res.json(addToCart())
   } catch (error) {
-    console.log('in the catch for api cart')
     next(error)
   }
-  // }
 })
 
 router.put('/checkout/:cartId', async (req, res, next) => {

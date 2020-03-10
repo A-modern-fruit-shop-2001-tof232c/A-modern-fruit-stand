@@ -10,7 +10,7 @@ function convertPrice(priceInCents) {
   if (cents < 10) {
     cents = '0' + String(cents)
   }
-  return `$ ${dollars}.${cents}`
+  return `$${dollars}.${cents}`
 }
 
 module.exports = {deciToInt, convertPrice}

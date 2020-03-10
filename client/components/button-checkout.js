@@ -8,6 +8,7 @@ class ButtonCheckout extends React.Component {
     super(props)
     this.state = {
       previousCartId: this.props.cartId,
+      previousTotal: this.props.orderTotal,
       displayCheckOut: true
     }
     this.onCheckout = this.onCheckout.bind(this)
@@ -18,6 +19,7 @@ class ButtonCheckout extends React.Component {
     this.props.checkoutCart(this.props.cartId)
     this.setState({
       previousCartId: this.props.cartId,
+      previousTotal: this.props.orderTotal,
       displayCheckOut: false
     })
     // this.props.props.history.push('/cart/confirmation')
@@ -33,8 +35,8 @@ class ButtonCheckout extends React.Component {
     ) : (
       <div>
         <Checkout
-          order={this.props.orderId}
-          orderTotal={this.props.orderTotal}
+          order={this.state.previousCartId}
+          orderTotal={this.state.previousTotal}
         />
         {/* Thank you for your order! Your Confirmation Number is{' '}
         {this.state.previousCartId} */}
