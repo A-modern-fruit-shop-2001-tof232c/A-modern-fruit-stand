@@ -84,7 +84,8 @@ export const updateGuestCart = fruitToAdd => {
     //if cart already has a qty of fruit to add
     newCart = oldCart.map(el => {
       if (el.id === fruitToAdd.selectedFruit.id) {
-        el.orderFruit.quantity += fruitToAdd.quantity
+        el.orderFruit.quantity =
+          Number(el.orderFruit.quantity) + Number(fruitToAdd.quantity)
         el.orderFruit.itemTotal += fruitToAdd.quantity * el.orderFruit.itemPrice
       }
       return el
@@ -146,9 +147,8 @@ export const incrOrDecrGuestCart = (incrOrDecr, fruitId) => {
         //update the fruit total price and the qty
         priceChange = changeQty * el.price
         el.orderFruit.itemTotal += priceChange
-        el.orderFruit.quantity = String(
+        el.orderFruit.quantity =
           Number(el.orderFruit.quantity) + Number(changeQty) //CHECK HERE!!!!!!!!:)
-        )
       }
     }
     return el
