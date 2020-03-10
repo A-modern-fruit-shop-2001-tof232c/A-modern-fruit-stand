@@ -2,6 +2,7 @@ const Sequelize = require('sequelize')
 const db = require('../db')
 
 const OrderFruit = db.define('orderFruit', {
+  // TODO: Look into keeping orderId and fruitId
   orderId: {
     type: Sequelize.INTEGER
   },

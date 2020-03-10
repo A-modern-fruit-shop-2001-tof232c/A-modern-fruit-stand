@@ -66,7 +66,7 @@ describe('Can view logged in user cart', function(done) {
       authenticatedUserCart.put('/cart/1').expect(200, done)
     })
 
-    xit('should return a 302 response for a guest cart', function(done) {
+    it('should return a 302 response for a guest cart', function(done) {
       request(app)
         .put('/cart')
         .expect(302, done)

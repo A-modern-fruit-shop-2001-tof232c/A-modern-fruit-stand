@@ -124,16 +124,20 @@ class Cart extends React.Component {
                         -
                       </button>
                     </div>
-                    <div>Price Per Item: {fruit.orderFruit.itemPrice} </div>
+                    <div>
+                      Price Per Item: {convertPrice(fruit.orderFruit.itemPrice)}{' '}
+                    </div>
                     <div>
                       Item Total:{' '}
-                      {fruit.orderFruit.quantity * fruit.orderFruit.itemPrice}
+                      {convertPrice(
+                        fruit.orderFruit.quantity * fruit.orderFruit.itemPrice
+                      )}
                     </div>
                   </div>
                 )
               })}
               <div>
-                <h3>Subtotal: {cart.orderTotal}</h3>
+                <h3>Subtotal: {convertPrice(cart.orderTotal)}</h3>
                 <ButtonCheckout cartId={cart.id} />
               </div>
               <div>
@@ -175,3 +179,12 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cart)
+
+function convertPrice(priceInCents) {
+  let dollars = Math.floor(priceInCents / 100)
+  let cents = priceInCents % 100
+  if (cents < 10) {
+    cents = '0' + String(cents)
+  }
+  return `$ ${dollars}.${cents}`
+}
