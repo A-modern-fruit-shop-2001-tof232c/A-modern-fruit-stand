@@ -19,4 +19,4 @@ const AdminNav = props => {
   )
 }
 
-export {AdminNav}
+export default AdminNav
