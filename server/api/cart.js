@@ -42,7 +42,6 @@ router.put('/:fruitId', async (req, res, next) => {
       // get cart we're adding to || create new cart
       const cart = await getCart(req.user.id)
       if (cart) {
-      
           // is fruitToAdd in cart?
           const OrderFruitInstance = await OrderFruit.findOne({
             where: {
