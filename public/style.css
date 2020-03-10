@@ -180,9 +180,123 @@ nav > div > a {
 }
 
 /*
-------------------------------ALL FRUIT PAGE----------------------------
+------------------------- LOGIN / SIGNUP COMP -----------------------
+*/
+
+#loginSignupContainer {
+  margin: 50px;
+}
+
+/*
+------------------------- ALL FRUIT COMPONENT -----------------------
 */
 
 .FruitCard {
   cursor: pointer;
 }
+
+#allFruitContainer {
+  margin: 50px;
+}
+
+#allFruitMapContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-around;
+  align-items: stretch;
+}
+
+#allFruitMapContainer > div {
+  background-color: #ffeeb2;
+  margin: 5px;
+  padding: 10px;
+  min-width: 150px;
+  max-width: 150px;
+  min-height: 100px;
+}
+
+#allFruitMapContainer > div > div {
+  background-color: white;
+  max-height: 150px;
+  min-width: 150px;
+  display: flex;
+  align-content: space-between;
+  flex-flow: column;
+}
+
+#allFruitMapContainer > div > div > img {
+  /* align-self: center; */
+  position: relative;
+  margin: 0 auto;
+  display: block;
+}
+
+#allFruitMapContainer > div > div > h4 {
+  text-align: center;
+  padding: 5px;
+}
+
+#allFruitMapContainer > div > div > h5 {
+  text-align: center;
+  padding: 5px;
+}
+
+/*
+---------------------- SINGLE FRUIT COMPONENT -------------------------
+*/
+
+#singleFruitComp {
+  margin: 50px;
+}
+
+#singleFruitContainer {
+  display: flex;
+}
+
+#singleFruitContainer > div {
+  margin: 10px;
+}
+
+#singleFruitComp > button {
+  margin: 50px 10px;
+}
+
+/*
+---------------------- CART COMPONENT -------------------------
+*/
+
+#cartContainer {
+  margin: 40px;
+}
+
+#cartFruitCard {
+  display: flex;
+}
+
+#cartFruitCard > div {
+  margin: 10px;
+}
+
+#incrementDiv > button {
+  margin: 5px;
+}
+
+#removeItemFromCart {
+  margin: 5px 10px;
+}
+
+#cartFruitCard > div > div {
+  margin: 10px;
+}
+
+div > a > h4 {
+  margin: 10px;
+}
+
+#fruitCartImgContainer {
+  min-width: 140px;
+}
+
+/*
+------------------------------------------------------------------
+*/

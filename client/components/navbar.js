@@ -34,6 +34,7 @@ class Navbar extends React.Component {
         <SidebarNav
           openDrawer={this.state.openDrawer}
           toggleDrawer={this.toggleSidebarNav}
+          isAdmin={this.props.isAdmin}
         />
         <div className="navBarHeaderLeft">
           {/* Sidebar Navigation Hamburger*/}
@@ -85,7 +86,8 @@ class Navbar extends React.Component {
  */
 const mapState = state => {
   return {
-    isLoggedIn: !!state.user.selectedUser.id
+    isLoggedIn: !!state.user.selectedUser.id,
+    isAdmin: state.user.selectedUser.isAdmin
   }
 }
 

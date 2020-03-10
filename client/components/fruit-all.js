@@ -24,7 +24,7 @@ class AllFruit extends React.Component {
       return (
         <div id="allFruitContainer">
           <h1>All Fruit</h1>
-          <div>
+          <div id="allFruitMapContainer">
             {/* Map over all available fruit */}
             {allTheFruities.map(oneFruit => {
               return (
@@ -43,6 +43,8 @@ class AllFruit extends React.Component {
                   <div>
                     <h5>{oneFruit.name}</h5>
                     <h5>{convertPrice(oneFruit.price)}</h5>
+                    <h4>{oneFruit.name}</h4>
+                    <h5>${oneFruit.price}</h5>
                   </div>
                 </div>
               )

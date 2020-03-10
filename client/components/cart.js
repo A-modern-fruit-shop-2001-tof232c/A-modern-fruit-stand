@@ -16,6 +16,8 @@ import {convertPrice} from '../../util/util-intDeci'
 class Cart extends React.Component {
   constructor(props) {
     super(props)
+    // this.state = this.props.cart
+
     this.deleteItemHandler = this.deleteItemHandler.bind(this)
     this.incrementQuantityHandler = this.incrementQuantityHandler.bind(this)
     this.decrementQuantityHandler = this.decrementQuantityHandler.bind(this)
@@ -26,8 +28,7 @@ class Cart extends React.Component {
     if (!this.props.isLoggedIn) {
       await this.props.getUserInfo() // dispatches me()
     }
-    //after data loads, THEN check if user is logged in
-    //this solves an issue with user data loading after cart data
+    //after data loads, then check if user is logged in
     if (this.props.isLoggedIn) {
       this.props.getCart()
     } else {
@@ -78,49 +79,59 @@ class Cart extends React.Component {
   render() {
     let cart = this.props.cart
     return (
-      <div>
+      <div id="cartContainer">
+        <h2>Your Fruit Basket</h2>
         <div id="cart">
-          <h2>Fruit Basket</h2>
           {cart.fruits ? (
             <div>
               {/* Map over all fruit in the cart*/}
               {cart.fruits.map(fruit => {
                 return (
-                  <div key={fruit.id}>
-                    <Link to={`/fruit/${fruit.id}`}>
-                      <h4>{fruit.name}</h4>
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={this.deleteItemHandler}
-                      data-fruitid={fruit.id}
-                    >
-                      Remove Item
-                    </button>
-                    <img
-                      src={fruit.imgURL}
-                      style={{maxWidth: '100px', maxHeight: '100px'}}
-                    />
-
+                  <div key={fruit.id} id="cartFruitCard">
+                    <div id="fruitCartImgContainer">
+                      <img
+                        src={fruit.imgURL}
+                        style={{maxWidth: '130px', maxHeight: '130px'}}
+                      />
+                    </div>
                     <div>
+                      <Link to={`/fruit/${fruit.id}`}>
+                        <h4>{fruit.name}</h4>
+                      </Link>
+
                       <div>
-                        <button
-                          onClick={this.incrementQuantityHandler}
-                          type="button"
-                          data-fruit={fruit}
-                          data-fruitid={fruit.id}
-                        >
-                          +
-                        </button>
+                        <div id="incrementDiv">
+                          <button
+                            onClick={this.decrementQuantityHandler}
+                            type="button"
+                            data-fruit={fruit}
+                            data-fruitid={fruit.id}
+                          >
+                            -
+                          </button>
+                          <span>Quantity: {fruit.orderFruit.quantity}</span>
+                          <button
+                            onClick={this.incrementQuantityHandler}
+                            type="button"
+                            data-fruit={fruit}
+                            data-fruitid={fruit.id}
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
-                      <div>QTY: {fruit.orderFruit.quantity}</div>
+                      <div>Price Per Item: {fruit.orderFruit.itemPrice} </div>
+                      <div>
+                        Item Total:{' '}
+                        {fruit.orderFruit.quantity * fruit.orderFruit.itemPrice}
+                      </div>
                       <button
-                        onClick={this.decrementQuantityHandler}
                         type="button"
-                        data-fruit={fruit}
+                        onClick={this.deleteItemHandler}
                         data-fruitid={fruit.id}
+                        id="removeItemFromCart"
                       >
-                        -
+                        Remove Item
                       </button>
                     </div>
                     <div>

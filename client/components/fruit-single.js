@@ -15,14 +15,22 @@ class FruitSingle extends React.Component {
 
   render() {
     return (
-      <div>
-        <h3>{this.props.selectedFruit.name}</h3>
-        <div>
-          <img
-            src={this.props.selectedFruit.imgURL}
-            alt={this.props.selectedFruit.name}
-            height="180"
-          />
+      <div id="singleFruitComp">
+        <h2>{this.props.selectedFruit.name}</h2>
+        <div id="singleFruitContainer">
+          <div>
+            <img
+              src={this.props.selectedFruit.imgURL}
+              alt={this.props.selectedFruit.name}
+              height="180"
+            />
+          </div>
+          <div>
+            <p>{this.props.selectedFruit.description}</p>
+            <p>Origin: {this.props.selectedFruit.origin}</p>
+            <p>{this.props.selectedFruit.price} ea</p>
+            <ButtonAddToCart /> <br />
+          </div>
         </div>
         <p>{this.props.selectedFruit.description}</p>
         <p>Origin: {this.props.selectedFruit.origin}</p>
