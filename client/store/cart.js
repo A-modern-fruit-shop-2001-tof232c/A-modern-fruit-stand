@@ -153,7 +153,7 @@ export const incrOrDecrGuestCart = (incrOrDecr, fruitId) => {
         el.orderFruit.itemTotal =
           (el.orderFruit.itemTotal * 100 + priceChangePennies) / 100
         el.orderFruit.quantity = String(
-          Number(el.orderFruit.quantity) + changeQty
+          Number(el.orderFruit.quantity) + changeQty //CHECK HERE!!!!!!!!:)
         )
       }
     }
