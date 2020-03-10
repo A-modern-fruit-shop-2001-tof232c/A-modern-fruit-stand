@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {getAllFruit} from '../store/fruit'
+import {convertPrice} from '../../util/util-intDeci'
 
 class AllFruit extends React.Component {
   constructor(props) {
@@ -41,7 +42,7 @@ class AllFruit extends React.Component {
                   </div>
                   <div>
                     <h5>{oneFruit.name}</h5>
-                    <h5>${oneFruit.price}</h5>
+                    <h5>{convertPrice(oneFruit.price)}</h5>
                   </div>
                 </div>
               )
