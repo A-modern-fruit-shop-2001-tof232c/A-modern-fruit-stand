@@ -54,7 +54,7 @@ router.put('/:fruitId', async (req, res, next) => {
               by: Number(req.body.quantity)
             })
             OrderFruitInstance.increment('itemTotal', {
-              by: Number(req.body.quantity) * fruitToAddPriceInPennies
+              by: Number(req.body.quantity) * fruitToAdd.price
             })
             return cart
           } else {
@@ -62,8 +62,8 @@ router.put('/:fruitId', async (req, res, next) => {
             await cart.addFruit(fruitToAdd, {
               through: {
                 quantity: Number(req.body.quantity),
-                itemPrice: fruitToAddPriceInPennies,
-                itemTotal: fruitToAddPriceInPennies * Number(req.body.quantity)
+                itemPrice: fruitToAdd.price,
+                itemTotal: fruitToAdd.price * Number(req.body.quantity)
               }
             })
             return cart
