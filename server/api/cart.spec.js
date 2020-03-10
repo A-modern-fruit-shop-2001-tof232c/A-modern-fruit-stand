@@ -7,51 +7,7 @@ const User = db.model('user')
 const Order = db.model('order')
 const Fruit = db.model('fruit')
 
-// describe('Cart routes', () => {
-//   const userFirstName = 'Cody'
-//   const userLastName = 'Pug'
-//   const userEmail = 'cody@email.com'
-//   const userPassword = '123'
-
-//   const testTotal = 247
-//   const orderPaid = false
-
-//   const fruitName = 'Apple'
-//   const fruitImgURL =
-//     'https://icons.iconarchive.com/icons/google/noto-emoji-food-drink/512/32349-red-apple-icon.png'
-//   const fruitPrice = 0.49
-//   const fruitOrigin = 'New York'
-//   const fruitDescription = 'It is an apple'
-
-//   beforeEach(async () => {
-//     await db.sync({force: true})
-//     const user = await User.create({
-//       firstName: userFirstName,
-//       lastName: userLastName,
-//       email: userEmail,
-//       password: userPassword
-//     })
-//     await Fruit.create({
-//       name: fruitName,
-//       imgURL: fruitImgURL,
-//       price: fruitPrice
-//     })
-//     return Order.create({
-//       orderTotal: testTotal,
-//       userId: user.id
-//     })
-//   })
-
-//   describe('api/cart', () => {
-//     it('GET /api/cart', async () => {
-//       const res = await authenticatedUser.get('api/cart').expect(200)
-//       expect(res.body).to.be.an('object')
-//       expect(res.body.orderTotal).to.be.equal(testTotal)
-//     })
-//   })
-// })
-
-describe('Cart Route', () => {
+describe('Can view logged in user cart', function(done) {
   const cart = {
     id: 1,
     orderTotal: 1000,
@@ -93,43 +49,51 @@ describe('Cart Route', () => {
       })
   })
 
-  it('GET /api/cart responds with loggedIn users cart', function(done) {
-    authenticatedUserCart.get('/cart').expect(200, done)
+  describe('Loggedin user can view cart', function(done) {
+    it('should return a 200 response if the user is logged in', function() {
+      authenticatedUserCart.get('/cart').expect(200, done)
+    })
+
+    it('should return a 302 response for a guest cart', function() {
+      request(app)
+        .get('/cart')
+        .expect(302, done)
+    })
   })
 
-  it('should return a 302 response for a guest cart', function(done) {
-    request(app)
-      .get('/cart')
-      .expect(302, done)
+  describe('LoggedIn user can add item to cart', function(done) {
+    it('PUT /api/cart/:fruitId responds with loggedIn users cart', function(done) {
+      authenticatedUserCart.put('/cart/1').expect(200, done)
+    })
+
+    it('should return a 302 response for a guest cart', function(done) {
+      request(app)
+        .put('/cart')
+        .expect(302, done)
+    })
   })
 
-  it('PUT /api/cart/:fruitId responds with loggedIn users cart', function(done) {
-    authenticatedUserCart.put('/cart/:fruitId').expect(200, done)
+  describe('LoggedIn user can update quantity in cart', function(done) {
+    it('PUT /api/cart/:fruitId/:isIncrement responds with loggedIn users cart', function(done) {
+      authenticatedUserCart.put('/cart/:fruitId/:isIncrement').expect(200, done)
+    })
+
+    it('should return a 302 response for a guest cart', function(done) {
+      request(app)
+        .put('/cart/:fruitId/:isIncrement')
+        .expect(302, done)
+    })
   })
 
-  it('should return a 302 response for a guest cart', function(done) {
-    request(app)
-      .put('/cart/:fruitId')
-      .expect(302, done)
-  })
+  describe('LoggedIn user can remove item in cart', function(done) {
+    it('DELETE /api/cart/:fruitId responds with loggedIn users cart', function(done) {
+      authenticatedUserCart.delete('/cart/:fruitId').expect(200, done)
+    })
 
-  it('PUT /api/cart/:fruitId/:isIncrement responds with loggedIn users cart', function(done) {
-    authenticatedUserCart.put('/cart/:fruitId/:isIncrement').expect(200, done)
-  })
-
-  it('should return a 302 response for a guest cart', function(done) {
-    request(app)
-      .put('/cart/:fruitId/:isIncrement')
-      .expect(302, done)
-  })
-
-  it('DELETE /api/cart responds with loggedIn users cart', function(done) {
-    authenticatedUserCart.get('/cart').expect(200, done)
-  })
-
-  it('should return a 302 response for a guest cart', function(done) {
-    request(app)
-      .get('/cart')
-      .expect(302, done)
+    it('should return a 302 response for a guest cart', function(done) {
+      request(app)
+        .delete('/cart/:fruitId')
+        .expect(302, done)
+    })
   })
 })
