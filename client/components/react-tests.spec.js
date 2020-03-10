@@ -8,6 +8,7 @@ import Adapter from 'enzyme-adapter-react-16'
 //NOTE: Must import the componenets that are NOT "connected"
 import {UserHome} from './user-home'
 import {AllFruit} from './fruit-all'
+import {Cart} from './cart'
 
 const adapter = new Adapter()
 enzyme.configure({adapter})
@@ -77,4 +78,20 @@ describe('REACT COMPONENTS', () => {
   /**
    * TESTS FOR: FRUIT-SINGLE.JS COMPONENT ------------------------------------
    */
+
+  /**
+   * TESTS FOR: CART.JS COMPONENT ------------------------------------
+   */
+
+  describe('Cart', () => {
+    let cart
+
+    beforeEach(() => {
+      cart = shallow(<Cart name="Apple" />)
+    })
+
+    xit('renders the fruit name in an h4', () => {
+      expect(cart.find('h4').text()).to.be.equal('Apple')
+    })
+  })
 })

@@ -66,7 +66,7 @@ describe('Can view logged in user cart', function(done) {
       authenticatedUserCart.put('/cart/1').expect(200, done)
     })
 
-    it('should return a 302 response for a guest cart', function(done) {
+    xit('should return a 302 response for a guest cart', function(done) {
       request(app)
         .put('/cart')
         .expect(302, done)
@@ -78,7 +78,7 @@ describe('Can view logged in user cart', function(done) {
       authenticatedUserCart.put('/cart/:fruitId/:isIncrement').expect(200, done)
     })
 
-    it('should return a 302 response for a guest cart', function(done) {
+    xit('should return a 302 response for a guest cart', function(done) {
       request(app)
         .put('/cart/:fruitId/:isIncrement')
         .expect(302, done)
@@ -90,7 +90,7 @@ describe('Can view logged in user cart', function(done) {
       authenticatedUserCart.delete('/cart/:fruitId').expect(200, done)
     })
 
-    it('should return a 302 response for a guest cart', function(done) {
+    xit('should return a 302 response for a guest cart', function(done) {
       request(app)
         .delete('/cart/:fruitId')
         .expect(302, done)
