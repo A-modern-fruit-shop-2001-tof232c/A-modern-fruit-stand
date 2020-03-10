@@ -85,19 +85,14 @@ export const updateGuestCart = fruitToAdd => {
     newCart = oldCart.map(el => {
       if (el.id === fruitToAdd.selectedFruit.id) {
         el.orderFruit.quantity += fruitToAdd.quantity
-        el.orderFruit.itemTotal =
-          (el.orderFruit.itemTotal * 100 +
-            fruitToAdd.quantity * el.orderFruit.itemPrice * 100) /
-          100
+        el.orderFruit.itemTotal += fruitToAdd.quantity * el.orderFruit.itemPrice
       }
       return el
     })
   }
   //create a new cart total
-  const newTotal =
-    (oldStorage.orderTotal * 100 +
-      fruitToAdd.quantity * fruitToAdd.selectedFruit.price * 100) /
-    100
+  const newTotal = (oldStorage.orderTotal +=
+    fruitToAdd.quantity * fruitToAdd.selectedFruit.price)
   //create object to send back to reducer and reset local storage
   const fruit = {orderTotal: newTotal, fruits: newCart}
   window.localStorage.setItem('guestCart', JSON.stringify(fruit))
@@ -120,7 +115,7 @@ export const removeGuestItem = fruitId => {
     return true
   })
   const cart = {
-    orderTotal: (oldStorage.orderTotal * 100 - priceReduction * 100) / 100,
+    orderTotal: oldStorage.orderTotal - priceReduction,
     fruits: editedCart
   }
   window.localStorage.setItem('guestCart', JSON.stringify(cart))
@@ -139,7 +134,7 @@ export const incrOrDecrGuestCart = (incrOrDecr, fruitId) => {
   }
   const oldStorage = JSON.parse(window.localStorage.getItem('guestCart'))
 
-  let priceChangePennies = 0
+  let priceChange = 0
   // console.log(oldStorage.fruits)
   const editedCart = oldStorage.fruits.map(el => {
     if (el.id === fruitId) {
@@ -149,9 +144,8 @@ export const incrOrDecrGuestCart = (incrOrDecr, fruitId) => {
         return removeGuestItem(fruitId)
       } else {
         //update the fruit total price and the qty
-        priceChangePennies = changeQty * el.price * 100
-        el.orderFruit.itemTotal =
-          (el.orderFruit.itemTotal * 100 + priceChangePennies) / 100
+        priceChange = changeQty * el.price
+        el.orderFruit.itemTotal += priceChange
         el.orderFruit.quantity = String(
           Number(el.orderFruit.quantity) + Number(changeQty) //CHECK HERE!!!!!!!!:)
         )
@@ -159,7 +153,7 @@ export const incrOrDecrGuestCart = (incrOrDecr, fruitId) => {
     }
     return el
   })
-  const newTotal = (oldStorage.orderTotal * 100 + priceChangePennies) / 100
+  const newTotal = oldStorage.orderTotal + priceChange
   console.log('newTotal: ', newTotal)
   const newStorage = {orderTotal: newTotal, fruits: editedCart}
   //now filter thru cart to reduce/increase fruit, line total, and order total
