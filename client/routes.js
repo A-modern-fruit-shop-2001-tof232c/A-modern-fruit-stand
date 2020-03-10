@@ -10,6 +10,7 @@ import {
   AllFruit,
   Cart,
   AdminContainer,
+  AdminNav,
   HomePage,
   EditSingleUser
 } from './components'
@@ -35,7 +36,10 @@ class Routes extends Component {
         <Route exact path="/fruit" component={AllFruit} />
         <Route path="/fruit/:id" component={FruitSingle} />
         <Route path="/cart" component={Cart} />
-        <Route path="/admin" component={AdminContainer} />
+        <Route exact path="/admin" component={AdminNav} />
+        <Route exact path="/admin/users" component={AdminContainer} />
+        <Route exact path="/admin/users/:id" component={EditSingleUser} />
+        <Route exact path="/admin/fruits" component={AllFruit} />
 
         {isLoggedIn && (
           <Switch>

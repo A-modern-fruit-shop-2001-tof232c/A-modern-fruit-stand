@@ -46,7 +46,7 @@ router.put('/:id', async (req, res, next) => {
     const userToUpdate = await User.findByPk(req.params.id)
     if (userToUpdate) {
       if (
-        (req.user.isAdmin && req.session.passport.user === userToUpdate.id) ||
+        (req.user.isAdmin && req.session.passport.user) ||
         req.session.passport.user === userToUpdate.id
       ) {
         await userToUpdate.update(req.body)
