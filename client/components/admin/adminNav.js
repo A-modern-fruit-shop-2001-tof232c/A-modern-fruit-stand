@@ -1,5 +1,5 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 
 /*
 Admin Nav should Include:
@@ -8,14 +8,19 @@ Manage Products
 Add New Product
 */
 
-const AdminNav = props => {
-  console.log('AdminNavHere!')
+function AdminNav() {
   return (
-    <div>
-      <ol>
+    <ol>
+      <NavLink to="/admin/users">
+        <li>Manage Users</li>
+      </NavLink>
+      <NavLink to="/admin/fruits">
+        <li>Manage Products</li>
+      </NavLink>
+      <NavLink to="/admin/newFruit">
         <li>Add New Product</li>
-      </ol>
-    </div>
+      </NavLink>
+    </ol>
   )
 }
 

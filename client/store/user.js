@@ -9,6 +9,7 @@ const REMOVE_USER = 'REMOVE_USER'
 const DELETE_USER = 'DELETE_USER'
 const GET_ALL_USERS = 'GET_ALL_USERS'
 const UPDATE_SINGLE_USER = 'UPDATE_SINGLE_USER'
+const GET_SINGLE_USER = 'GET_SINGLE_USER'
 
 /**
  * INITIAL STATE
@@ -26,6 +27,7 @@ const initialState = {
 const getUser = user => ({type: GET_USER, user})
 const removeUser = () => ({type: REMOVE_USER})
 const fetchAllUsers = info => ({type: GET_ALL_USERS, info})
+const fetchSingleUser = info => ({type: GET_SINGLE_USER, info})
 
 /**
  * THUNK CREATORS
@@ -83,6 +85,24 @@ export const deleteUserForeverThunk = id => async dispatch => {
     console.log(error)
   }
 }
+export const updateUser = (id, userUpdates) => async dispatch => {
+  try {
+    await axios.put(`/api/users/${id}`, userUpdates)
+    const {data} = await axios.get(`/api/users/${id}`)
+    dispatch(fetchSingleUser(data))
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const oneUserThunk = id => async dispatch => {
+  try {
+    const {data} = await axios.get(`/api/users/${id}`)
+    dispatch(fetchSingleUser(data))
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 /**
  * REDUCER
@@ -95,6 +115,8 @@ export default function userReducer(state = initialState, action) {
       return initialState
     case GET_ALL_USERS:
       return {...state, allUsers: action.info}
+    case GET_SINGLE_USER:
+      return {...state, selectedUser: action.info}
     default:
       return state
   }

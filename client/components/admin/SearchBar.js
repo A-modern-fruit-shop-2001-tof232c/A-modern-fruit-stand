@@ -17,8 +17,10 @@ class SearchBar extends React.Component {
     this.setState({searchInput: event.target.value})
     let currInput = this.state.searchInput
     console.log(currInput)
+    console.log(this.props.allUsers)
     if (this.props.typeSearch === 'user') {
-      let myMatches = autofill(currInput, this.props.allUsers, 'firstName')
+      let myMatches = autofill(currInput, this.props.allUsers, 'email')
+      console.log(myMatches)
       this.setState({matches: myMatches})
       console.log(this.state.matches)
     } else {
