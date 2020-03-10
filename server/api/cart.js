@@ -35,82 +35,73 @@ router.put('/:fruitId', async (req, res, next) => {
       return
     }
     if (req.user.id === req.session.passport.user) {
+
     // get fruit we're adding
     const fruitToAdd = await Fruit.findByPk(req.params.fruitId)
     const addToCart = async () => {
       // get cart we're adding to || create new cart
       const cart = await getCart(req.user.id)
       if (cart) {
-        // is fruitToAdd in cart?
-        const OrderFruitInstance = await OrderFruit.findOne({
+      
+          // is fruitToAdd in cart?
+          const OrderFruitInstance = await OrderFruit.findOne({
+            where: {
+              orderId: cart.id,
+              fruitId: fruitToAdd.id
+            }
+          })
+          if (OrderFruitInstance) {
+            // increment fruit quantity and itemtotal
+            // TODO: refractor line 45-50 to use .update() & hooks
+            // hint: sequelize.literal
+            OrderFruitInstance.increment('quantity', {
+              by: Number(req.body.quantity)
+            })
+            OrderFruitInstance.increment('itemTotal', {
+              by: Number(req.body.quantity) * fruitToAddPriceInPennies
+            })
+            return cart
+          } else {
+            // associate fruit to cart
+            await cart.addFruit(fruitToAdd, {
+              through: {
+                quantity: Number(req.body.quantity),
+                itemPrice: fruitToAddPriceInPennies,
+                itemTotal: fruitToAddPriceInPennies * Number(req.body.quantity)
+              }
+            })
+            return cart
+          }
+        } else {
+          // no cart, create new cart
+          await Order.create({
+            userId: req.user.id
+          })
+          addToCart()
+        }
+      }
+      const updatedCart = await addToCart()
+      // TODO: first time adding fruit, gets error message about updatedCart.fruits being undefined
+      console.log('typeof updatedCart.fruits', typeof updatedCart.fruits)
+      const orderTotal = updatedCart.fruits.reduce((accumlator, el) => {
+        return accumlator + el.orderFruit.itemTotal
+      }, 0)
+      await updatedCart.update(
+        {
+          orderTotal: orderTotal
+        },
+        {
           where: {
+            id: updatedCart.id,
             userId: req.user.id,
             paid: false
-          }
-          
-        })
-        if (OrderFruitInstance) {
-          // increment fruit quantity and itemtotal
-          // TODO: refractor line 45-50 to use .update() & hooks
-          // hint: sequelize.literal
-          OrderFruitInstance.increment('quantity', {
-            by: Number(req.body.quantity)
-          })
-          OrderFruitInstance.increment('itemTotal', {
-            by: Number(req.body.quantity) * fruitToAdd.price
-          })
-          await cart.update(
-            {
-              orderTotal: 0
-            },
-            {
-              where: {
-                id: cart.id,
-                userId: req.user.id,
-                paid: false
-              },
-              returning: true,
-              plain: true
-            }
-          )
-          const updatedCart = await getCart(req.user.id)
-          return updatedCart
-        } else {
-          // associate fruit to cart
-          await cart.addFruit(fruitToAdd, {
-            through: {
-              quantity: Number(req.body.quantity),
-              itemPrice: fruitToAdd.price,
-              itemTotal: fruitToAdd.price * Number(req.body.quantity)
-            }
-          })
-          await cart.update(
-            {
-              orderTotal: 0
-            },
-            {
-              where: {
-                id: cart.id,
-                userId: req.user.id,
-                paid: false
-              },
-              returning: true,
-              plain: true
-            }
-          )
-          const updatedCart = await getCart(req.user.id)
-          return updatedCart
+          },
+          returning: true,
+          plain: true
         }
-        } else {
-        // no cart, create new cart
-        await Order.create({
-          userId: req.user.id
-        })
-        addToCart()
-      
-      }
+      )
+      res.json(updatedCart)
     }
-    res.json(addToCart())
   } catch (error) {
     next(error)
   }
@@ -181,7 +172,8 @@ router.put('/:fruitId/:isIncrement', async (req, res, next) => {
 
       res.json(updatedOrder)
     }
-  }} catch (err) {
+  } catch (err) {
+
     next(err)
   }
 })
@@ -209,6 +201,7 @@ router.delete('/:fruitId', async (req, res, next) => {
         return
       }
 
+
       const fruitItem = fruit.orderFruit
       const priceToSubtract = fruitItem.itemPrice * fruitItem.quantity
       await fruitItem.destroy()
@@ -218,6 +211,7 @@ router.delete('/:fruitId', async (req, res, next) => {
       // for the cart. Why can't the previous cart instance be returned in
       // the client?
       const updatedOrder = await getUpdatedOrder(cart.id)
+
 
       res.json(updatedOrder).end()
     }
