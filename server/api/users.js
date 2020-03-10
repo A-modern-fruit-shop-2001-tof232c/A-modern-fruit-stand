@@ -13,7 +13,7 @@ router.get('/:id', async (req, res, next) => {
     //IF USER IS ADMIN OR SINGLEUSER.ID MATCHES REQ.USER.ID, SEND BACK...ELSE AUTH ERROR
     if (
       (req.user.isAdmin && req.user.id === req.session.passport.user) ||
-      req.user.id === req.session.passport.user
+      singleUser.id === req.session.passport.user
     )
       res.json(singleUser)
     else res.json('Users can only view their own page.')
