@@ -131,6 +131,7 @@ class Cart extends React.Component {
                   </div>
                 )
               })}
+              <h3>Subtotal: {cart.orderTotal}</h3>
               <ButtonCheckout cartId={cart.id} />
               <div>
                 <Link to="/fruit">

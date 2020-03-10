@@ -40,13 +40,7 @@ router.put('/:fruitId', async (req, res, next) => {
       const fruitToAddPriceInPennies = Number(fruitToAdd.price) * 100
       const addToCart = async () => {
         // get cart we're adding to || create new cart
-        const cart = await Order.findOne({
-          where: {
-            userId: req.user.id,
-            paid: false
-          },
-          include: [{model: Fruit, attributes: ['name', 'price']}]
-        })
+        const cart = await getCart(req.user.id)
         if (cart) {
           // is fruitToAdd in cart?
           const OrderFruitInstance = await OrderFruit.findOne({
