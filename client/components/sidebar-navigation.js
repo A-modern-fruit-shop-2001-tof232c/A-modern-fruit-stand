@@ -91,13 +91,17 @@ const SidebarNav = props => {
             create account
           </Link>
           <br />
-          <Link
-            to="/fruit"
-            className="NavBulletPoint"
-            onClick={props.toggleDrawer}
-          >
-            admin tools
-          </Link>
+          {props.isAdmin ? (
+            <Link
+              to="/admin"
+              className="NavBulletPoint"
+              onClick={props.toggleDrawer}
+            >
+              admin tools
+            </Link>
+          ) : (
+            ''
+          )}
           <br />
         </div>
       </div>
