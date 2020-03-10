@@ -20,7 +20,7 @@ class ButtonCheckout extends React.Component {
       previousCartId: this.props.cartId,
       displayCheckOut: false
     })
-    this.props.props.history.push('/cart/confirmation')
+    // this.props.props.history.push('/cart/confirmation')
   }
   render() {
     return this.state.displayCheckOut ? (

@@ -24,8 +24,9 @@ router.get('/', async (req, res, next) => {
 // TO DO: PUT route for adding fruit to cart for the LoggedIn user.
 // PUT route for adding items to cart for LoggedIn in users
 router.put('/:fruitId', async (req, res, next) => {
+  // if (req.params.fruitId) {
   try {
-    console.log('user cart check:', req.user.id)
+    console.log('in put after signup and add to cart:')
     if (!req.user.id) {
       res.status(302).send('Not your basket!')
       return
@@ -48,13 +49,14 @@ router.put('/:fruitId', async (req, res, next) => {
           // increment fruit quantity and itemtotal
           // TODO: refractor line 45-50 to use .update() & hooks
           // hint: sequelize.literal
-          OrderFruitInstance.increment('quantity', {
+          await OrderFruitInstance.increment('quantity', {
             by: Number(req.body.quantity)
           })
-          OrderFruitInstance.increment('itemTotal', {
+          await OrderFruitInstance.increment('itemTotal', {
             by: Number(req.body.quantity) * fruitToAdd.price
           })
           await cart.update({orderTotal: 0})
+          console.log('should be updated cart:', getCart(req.user.id))
           return getCart(req.user.id)
         } else {
           // associate fruit to cart
@@ -76,30 +78,13 @@ router.put('/:fruitId', async (req, res, next) => {
         addToCart()
       }
     }
-    const updatedCart = await addToCart()
-    // TODO: first time adding fruit, gets error message about updatedCart.fruits being undefined
-    console.log('typeof updatedCart.fruits', typeof updatedCart.fruits)
-    const orderTotal = updatedCart.fruits.reduce((accumlator, el) => {
-      return accumlator + el.orderFruit.itemTotal
-    }, 0)
-    await updatedCart.update(
-      {
-        orderTotal: orderTotal
-      },
-      {
-        where: {
-          id: updatedCart.id,
-          userId: req.user.id,
-          paid: false
-        },
-        returning: true,
-        plain: true
-      }
-    )
-    res.json(updatedCart)
+
+    res.json(addToCart())
   } catch (error) {
+    console.log('in the catch for api cart')
     next(error)
   }
+  // }
 })
 
 router.put('/checkout/:cartId', async (req, res, next) => {
