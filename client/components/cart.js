@@ -139,15 +139,6 @@ class Cart extends React.Component {
                         Remove Item
                       </button>
                     </div>
-                    {/* <div>
-                      Price Per Item: {convertPrice(fruit.orderFruit.itemPrice)}{' '}
-                    </div> */}
-                    {/* <div>
-                      Item Total:{' '}
-                      {convertPrice(
-                        fruit.orderFruit.quantity * fruit.orderFruit.itemPrice
-                      )}
-                    </div> */}
                   </div>
                 )
               })}

@@ -28,7 +28,7 @@ class FruitSingle extends React.Component {
           <div>
             <p>{this.props.selectedFruit.description}</p>
             <p>Origin: {this.props.selectedFruit.origin}</p>
-            <p>{this.props.selectedFruit.price} ea</p>
+            <p>{convertPrice(this.props.selectedFruit.price)} ea</p>
             <ButtonAddToCart /> <br />
           </div>
         </div>
