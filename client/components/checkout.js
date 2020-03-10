@@ -5,6 +5,7 @@ import {convertPrice} from '../../util/util-intDeci'
 class Checkout extends React.Component {
   render() {
     let order = this.props.order
+    console.log('in checkout:', this.props)
     let orderTotal = this.props.orderTotal
     return (
       <div>

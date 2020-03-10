@@ -85,6 +85,7 @@ class Cart extends React.Component {
           {cart.fruits ? (
             <div>
               {/* Map over all fruit in the cart*/}
+
               {cart.fruits.map(fruit => {
                 return (
                   <div key={fruit.id} id="cartFruitCard">
@@ -152,10 +153,11 @@ class Cart extends React.Component {
                 )
               })}
               <div>
-                <h3>Subtotal: {convertPrice(cart.orderTotal)}</h3>
+                {cart.fruits[0] ? (
+                  <h3>Subtotal: {convertPrice(cart.orderTotal)}</h3>
+                ) : null}
 
                 <ButtonCheckout
-                  orderId={cart.id}
                   orderTotal={cart.orderTotal}
                   cartId={cart.id}
                   props={this.props}
