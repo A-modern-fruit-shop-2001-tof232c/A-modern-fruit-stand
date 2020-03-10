@@ -27,7 +27,6 @@ class Routes extends Component {
   render() {
     const {isLoggedIn} = this.props
     const {isAdmin} = this.props
-    console.log(isAdmin)
 
     return (
       <Switch>
@@ -42,7 +41,9 @@ class Routes extends Component {
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}
+            <Route path="/profile" component={UserProfile} />
             <Route path="/home" component={UserHome} />
+            <Route component={HomePage} />
           </Switch>
         )}
 
@@ -52,11 +53,12 @@ class Routes extends Component {
             <Route exact path="/admin/users" component={AdminContainer} />
             <Route exact path="/admin/users/:id" component={EditSingleUser} />
             <Route exact path="/admin/fruits" component={AllFruit} />
+            <Route component={HomePage} />
           </Switch>
         )}
 
         {/* Displays our Login component as a fallback */}
-        <Route component={Login} />
+        <Route component={HomePage} />
       </Switch>
     )
   }
