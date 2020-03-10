@@ -6,11 +6,17 @@ module.exports = router
 // Get cart belonging to the LoggedIn user only if the order hasn't not been paid.
 router.get('/', async (req, res, next) => {
   try {
-    const cart = await getCart(req.user.id)
-    if (cart) {
-      res.json(cart)
-    } else {
-      res.json('No items in cart')
+    if (req.user.id !== req.session.passport.user) {
+      res.status(302).send('Not your basket!')
+      return
+    }
+    if (req.user.id === req.session.passport.user) {
+      const cart = await getCart(req.user.id)
+      if (cart) {
+        res.json(cart)
+      } else {
+        res.json('No items in cart')
+      }
     }
   } catch (err) {
     next(err)
@@ -24,6 +30,11 @@ router.get('/', async (req, res, next) => {
 // PUT route for adding items to cart for LoggedIn in users
 router.put('/:fruitId', async (req, res, next) => {
   try {
+    if (req.user.id !== req.session.passport.user) {
+      res.status(302).send('Not your basket!')
+      return
+    }
+    if (req.user.id === req.session.passport.user) {
     // get fruit we're adding
     const fruitToAdd = await Fruit.findByPk(req.params.fruitId)
     const addToCart = async () => {
@@ -33,9 +44,10 @@ router.put('/:fruitId', async (req, res, next) => {
         // is fruitToAdd in cart?
         const OrderFruitInstance = await OrderFruit.findOne({
           where: {
-            orderId: cart.id,
-            fruitId: fruitToAdd.id
+            userId: req.user.id,
+            paid: false
           }
+          
         })
         if (OrderFruitInstance) {
           // increment fruit quantity and itemtotal
@@ -89,12 +101,13 @@ router.put('/:fruitId', async (req, res, next) => {
           const updatedCart = await getCart(req.user.id)
           return updatedCart
         }
-      } else {
+        } else {
         // no cart, create new cart
         await Order.create({
           userId: req.user.id
         })
         addToCart()
+      
       }
     }
     res.json(addToCart())
@@ -105,6 +118,7 @@ router.put('/:fruitId', async (req, res, next) => {
 
 router.put('/checkout/:cartId', async (req, res, next) => {
   try {
+    // TODO: Should this route be protected for a logged in user?
     const cart = await Order.update(
       {
         paid: true
@@ -122,45 +136,52 @@ router.put('/checkout/:cartId', async (req, res, next) => {
 })
 
 // A PUT route to update the quantity of the item from the cart component.
+// TODO: Protect route.
 router.put('/:fruitId/:isIncrement', async (req, res, next) => {
   try {
-    let cart = await getCart(req.user.id)
-
-    if (!cart) {
-      res.status(404).send('Error 404: No Basket')
+    if (req.user.id !== req.session.passport.user) {
+      res.status(302).send('Not your basket!')
       return
     }
+    if (req.user.id === req.session.passport.user) {
+      let cart = await getCart(req.user.id)
 
-    const fruit = cart.fruits.find(
-      fruitEl => fruitEl.id === Number(req.params.fruitId)
-    )
-    if (!fruit) {
-      res.status(404).send('This fruit is not in the basket')
-      return
-    }
-    const fruitItem = fruit.orderFruit
-    let orderTotal = cart.orderTotal
+      if (!cart) {
+        res.status(404).send('Error 404: No Basket')
+        return
+      }
 
-    // determine the method based on the button press.
-    if (req.params.isIncrement === 'true') {
-      fruitItem.quantity++
-      orderTotal += fruitItem.itemPrice
-    } else {
-      fruitItem.quantity--
-      orderTotal -= fruitItem.itemPrice
-    }
-    // Must await update before fetching the updatedOrder. Otherwise, you
-    // may get stale data.
-    if (fruitItem.quantity < 1) {
-      await fruitItem.destroy()
-    } else {
-      await fruitItem.update({quantity: fruitItem.quantity})
-    }
-    await cart.update({orderTotal: orderTotal})
-    const updatedOrder = await getUpdatedOrder(cart.id)
+      const fruit = cart.fruits.find(
+        fruitEl => fruitEl.id === Number(req.params.fruitId)
+      )
+      if (!fruit) {
+        res.status(404).send('This fruit is not in the basket')
+        return
+      }
+      const fruitItem = fruit.orderFruit
+      let orderTotal = cart.orderTotal
 
-    res.json(updatedOrder)
-  } catch (err) {
+      // determine the method based on the button press.
+      if (req.params.isIncrement === 'true') {
+        fruitItem.quantity++
+        orderTotal += fruitItem.itemPrice
+      } else {
+        fruitItem.quantity--
+        orderTotal -= fruitItem.itemPrice
+      }
+      // Must await update before fetching the updatedOrder. Otherwise, you
+      // may get stale data.
+      if (fruitItem.quantity < 1) {
+        await fruitItem.destroy()
+      } else {
+        await fruitItem.update({quantity: fruitItem.quantity})
+      }
+      await cart.update({orderTotal: orderTotal})
+      const updatedOrder = await getUpdatedOrder(cart.id)
+
+      res.json(updatedOrder)
+    }
+  }} catch (err) {
     next(err)
   }
 })
@@ -168,32 +189,38 @@ router.put('/:fruitId/:isIncrement', async (req, res, next) => {
 // Need route to delete item in cart. This is deleting the entire item from the cart component.
 router.delete('/:fruitId', async (req, res, next) => {
   try {
-    let cart = await getCart(req.user.id)
-
-    if (!cart) {
-      res.status(404).send('Error 404: No Basket')
+    if (req.user.id !== req.session.passport.user) {
+      res.status(302).send('Not your basket!')
       return
     }
+    if (req.user.id === req.session.passport.user) {
+      let cart = await getCart(req.user.id)
 
-    const fruit = cart.fruits.find(
-      fruitEl => fruitEl.id === Number(req.params.fruitId)
-    )
-    if (!fruit) {
-      res.status(404).send('This fruit is not in the basket')
-      return
+      if (!cart) {
+        res.status(404).send('Error 404: No Basket')
+        return
+      }
+
+      const fruit = cart.fruits.find(
+        fruitEl => fruitEl.id === Number(req.params.fruitId)
+      )
+      if (!fruit) {
+        res.status(404).send('This fruit is not in the basket')
+        return
+      }
+
+      const fruitItem = fruit.orderFruit
+      const priceToSubtract = fruitItem.itemPrice * fruitItem.quantity
+      await fruitItem.destroy()
+      const newOrderTotal = cart.orderTotal - priceToSubtract
+      await cart.update({orderTotal: newOrderTotal})
+      // TODO: Figure out whether it is necessary to query the database again
+      // for the cart. Why can't the previous cart instance be returned in
+      // the client?
+      const updatedOrder = await getUpdatedOrder(cart.id)
+
+      res.json(updatedOrder).end()
     }
-
-    const fruitItem = fruit.orderFruit
-    const priceToSubtract = fruitItem.itemPrice * fruitItem.quantity
-    await fruitItem.destroy()
-    const newOrderTotal = cart.orderTotal - priceToSubtract
-    await cart.update({orderTotal: newOrderTotal})
-    // TODO: Figure out whether it is necessary to query the database again
-    // for the cart. Why can't the previous cart instance be returned in
-    // the client?
-    const updatedOrder = await getUpdatedOrder(cart.id)
-
-    res.json(updatedOrder).end()
   } catch (err) {
     next(err)
   }
