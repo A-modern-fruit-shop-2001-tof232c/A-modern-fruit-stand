@@ -43,7 +43,7 @@ export const getAllFruit = () => {
       const {data} = await axios.get('/api/fruit')
       dispatch(gotAllFruit(data))
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 }
@@ -55,7 +55,7 @@ export const addFruitThunk = newFruit => {
       const {data} = await axios.get('/api/fruit')
       dispatch(gotAllFruit(data))
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 }
@@ -67,7 +67,7 @@ export const deleteFruitThunk = id => {
       const {data} = await axios.get('/api/fruit')
       dispatch(gotAllFruit(data))
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 }
@@ -75,12 +75,11 @@ export const deleteFruitThunk = id => {
 export const updateFruitThunk = (id, updatedFruit) => {
   return async dispatch => {
     try {
-      console.log('thunk', id, updatedFruit)
       await axios.put(`/api/fruit/${id}`, updatedFruit)
       const {data} = await axios.get(`/api/fruit`)
       dispatch(gotAllFruit(data))
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 }

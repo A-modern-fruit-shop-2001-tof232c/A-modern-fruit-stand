@@ -15,10 +15,9 @@ const REMOVE_ITEM = 'REMOVE_ITEM'
 const CHECKOUT_CART = 'CHECKOUT_CART'
 
 //The rest of the action types are specific to guest vs. logged in user
-// const GET_GUEST_CART = 'GET_GUEST_CART'
-// const GET_GUEST_CART = 'GET_GUEST_CART'
-const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART ' // adding an item to cart from all fruits
-const ADJUST_GUEST_CART = 'ADJUST_GUEST_CART' //increment or decrement on cart page
+
+const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART '
+const ADJUST_GUEST_CART = 'ADJUST_GUEST_CART'
 
 // ACTION CREATORS
 const gotCart = cart => ({
@@ -136,12 +135,10 @@ export const incrOrDecrGuestCart = (incrOrDecr, fruitId) => {
   const oldStorage = JSON.parse(window.localStorage.getItem('guestCart'))
 
   let priceChange = 0
-  // console.log(oldStorage.fruits)
   const editedCart = oldStorage.fruits.map(el => {
     if (el.id === fruitId) {
       //if user decrements and item qty is 1, remove item completely
       if (el.orderFruit.quantity === '1' && changeQty === -1) {
-        console.log('removing last item')
         return removeGuestItem(fruitId)
       } else {
         //update the fruit total price and the qty
@@ -153,8 +150,8 @@ export const incrOrDecrGuestCart = (incrOrDecr, fruitId) => {
     }
     return el
   })
+
   const newTotal = oldStorage.orderTotal + priceChange
-  console.log('newTotal: ', newTotal)
   const newStorage = {orderTotal: newTotal, fruits: editedCart}
   //now filter thru cart to reduce/increase fruit, line total, and order total
   //return new storage item
@@ -175,12 +172,6 @@ export const updatedQuantity = cart => ({
   type: UPDATE_QUANTITY,
   cart
 })
-
-// export const updatedGuestCart = (fruitId, quantity) => ({
-//   type: UPDATE_GUEST_CART,
-//   fruitId,
-//   quantity
-// })
 
 const removedItem = cart => ({
   type: REMOVE_ITEM,
@@ -225,7 +216,7 @@ export const updateQuantity = (fruitId, isIncrement) => async dispatch => {
     const {data} = await axios.put(`/api/cart/${fruitId}/${isIncrement}`)
     dispatch(updatedQuantity(data))
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
 }
 
@@ -234,7 +225,7 @@ export const removeItem = fruitId => async dispatch => {
     const {data} = await axios.delete(`/api/cart/${fruitId}`)
     dispatch(removedItem(data))
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
 }
 
