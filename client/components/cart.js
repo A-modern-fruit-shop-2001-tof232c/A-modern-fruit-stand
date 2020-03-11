@@ -145,14 +145,17 @@ class Cart extends React.Component {
               })}
               <div>
                 {cart.fruits[0] ? (
-                  <h3>Subtotal: {convertPrice(cart.orderTotal)}</h3>
-                ) : null}
-
-                <ButtonCheckout
-                  orderTotal={cart.orderTotal}
-                  cartId={cart.id}
-                  props={this.props}
-                />
+                  <div>
+                    <h3>Subtotal: {convertPrice(cart.orderTotal)}</h3>
+                    <ButtonCheckout
+                      orderTotal={cart.orderTotal}
+                      cartId={cart.id}
+                      props={this.props}
+                    />
+                  </div>
+                ) : (
+                  <h3>Your fruit basket is empty!</h3>
+                )}
               </div>
               <div>
                 <Link to="/fruit">

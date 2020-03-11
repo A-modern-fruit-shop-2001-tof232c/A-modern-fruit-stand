@@ -15,8 +15,6 @@ const REMOVE_ITEM = 'REMOVE_ITEM'
 const CHECKOUT_CART = 'CHECKOUT_CART'
 
 //The rest of the action types are specific to guest vs. logged in user
-// const GET_GUEST_CART = 'GET_GUEST_CART'
-// const GET_GUEST_CART = 'GET_GUEST_CART'
 const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART ' // adding an item to cart from all fruits
 const ADJUST_GUEST_CART = 'ADJUST_GUEST_CART' //increment or decrement on cart page
 
@@ -46,6 +44,20 @@ export const getGuestCart = () => {
   return {
     type: GET_CART,
     cart
+  }
+}
+
+//--------------------- CHECKOUT GUEST CART ------------------------------
+export const checkoutGuestCart = () => {
+  window.localStorage.setItem(
+    'guestCart',
+    JSON.stringify({
+      orderTotal: 0,
+      fruits: []
+    })
+  )
+  return {
+    type: CHECKOUT_CART
   }
 }
 
@@ -136,25 +148,20 @@ export const incrOrDecrGuestCart = (incrOrDecr, fruitId) => {
   const oldStorage = JSON.parse(window.localStorage.getItem('guestCart'))
 
   let priceChange = 0
-  // console.log(oldStorage.fruits)
-  const editedCart = oldStorage.fruits.map(el => {
-    if (el.id === fruitId) {
-      //if user decrements and item qty is 1, remove item completely
-      if (el.orderFruit.quantity === '1' && changeQty === -1) {
-        console.log('removing last item')
-        return removeGuestItem(fruitId)
-      } else {
+  const editedCart = oldStorage.fruits
+    .map(el => {
+      if (el.id === fruitId) {
         //update the fruit total price and the qty
         priceChange = changeQty * el.price
         el.orderFruit.itemTotal += priceChange
         el.orderFruit.quantity =
-          Number(el.orderFruit.quantity) + Number(changeQty) //CHECK HERE!!!!!!!!:)
+          Number(el.orderFruit.quantity) + Number(changeQty)
       }
-    }
-    return el
-  })
+      return el
+    })
+    .filter(el => el.orderFruit.quantity !== 0)
+
   const newTotal = oldStorage.orderTotal + priceChange
-  console.log('newTotal: ', newTotal)
   const newStorage = {orderTotal: newTotal, fruits: editedCart}
   //now filter thru cart to reduce/increase fruit, line total, and order total
   //return new storage item
@@ -175,12 +182,6 @@ export const updatedQuantity = cart => ({
   type: UPDATE_QUANTITY,
   cart
 })
-
-// export const updatedGuestCart = (fruitId, quantity) => ({
-//   type: UPDATE_GUEST_CART,
-//   fruitId,
-//   quantity
-// })
 
 const removedItem = cart => ({
   type: REMOVE_ITEM,

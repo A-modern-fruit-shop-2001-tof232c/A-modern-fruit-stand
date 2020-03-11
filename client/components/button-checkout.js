@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {checkoutCart} from '../store/cart'
+import {checkoutCart, checkoutGuestCart} from '../store/cart'
 import Checkout from './checkout'
 
 class ButtonCheckout extends React.Component {
@@ -16,13 +16,20 @@ class ButtonCheckout extends React.Component {
 
   onCheckout(event) {
     event.preventDefault()
-    this.props.checkoutCart(this.props.cartId)
-    this.setState({
-      previousCartId: this.props.cartId,
-      previousTotal: this.props.orderTotal,
-      displayCheckOut: false
-    })
-    // this.props.props.history.push('/cart/confirmation')
+    if (this.props.isLoggedIn) {
+      this.props.checkoutCart(this.props.cartId)
+      this.setState({
+        previousCartId: this.props.cartId,
+        previousTotal: this.props.orderTotal,
+        displayCheckOut: false
+      })
+    } else {
+      this.props.checkoutGuestCart()
+      this.setState({
+        previousCartId: Math.ceil(Math.random() * 100),
+        displayCheckOut: false
+      })
+    }
   }
   render() {
     return this.state.displayCheckOut ? (
@@ -53,7 +60,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    checkoutCart: id => dispatch(checkoutCart(id))
+    checkoutCart: id => dispatch(checkoutCart(id)),
+    checkoutGuestCart: () => dispatch(checkoutGuestCart())
   }
 }
 
