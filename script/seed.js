@@ -22,6 +22,14 @@ faker.array = function(structure, count = 1) {
         ])
       else if (property === 'price')
         item[property] = item[property]({min: 20, max: 2003})
+      else if (property === 'imgURL')
+        item[property] = item[property]([
+          'https://sekiroshadowsdietwice.wiki.fextralife.com/file/Sekiro-Shadows-Die-Twice/persimmon-quick-item-sekiro-wiki-guide.png',
+          'https://smash-eliquid.com/wp-content/uploads/2019/10/blue-raspberry-e-liquid.jpg',
+          'https://icons.iconarchive.com/icons/fi3ur/fruitsalad/256/lime-icon.png',
+          'https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-12/256/green-apple.png',
+          'https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-12/256/cherries.png'
+        ])
       else item[property] = item[property]()
     })
 
@@ -44,7 +52,8 @@ let people = faker.array(
 let fruit = faker.array(
   {
     name: faker.random.arrayElement,
-    price: faker.random.number
+    price: faker.random.number,
+    imgURL: faker.random.arrayElement
   },
   100
 )

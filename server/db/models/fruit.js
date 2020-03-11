@@ -15,7 +15,8 @@ const Fruit = db.define('fruit', {
       'https://previews.123rf.com/images/olegdudko/olegdudko1809/olegdudko180907912/108668968-bitten-pear.jpg'
   },
   origin: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
+    defaultValue: "Wouldn't you like to know?"
   },
   price: {
     type: Sequelize.INTEGER,
