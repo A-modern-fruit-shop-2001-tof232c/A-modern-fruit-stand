@@ -16,7 +16,6 @@ import {convertPrice} from '../../util/util-intDeci'
 class Cart extends React.Component {
   constructor(props) {
     super(props)
-    // this.state = this.props.cart
 
     this.deleteItemHandler = this.deleteItemHandler.bind(this)
     this.incrementQuantityHandler = this.incrementQuantityHandler.bind(this)

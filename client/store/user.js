@@ -45,8 +45,6 @@ export const auth = (email, password, method) => async dispatch => {
   let res
   try {
     res = await axios.post(`/auth/${method}`, {email, password})
-    console.log('RED.DATA: ', res.data)
-    console.log('RED.DATA: ', res.error)
   } catch (authError) {
     return dispatch(getUser({error: authError}))
   }
@@ -74,7 +72,7 @@ export const gotAllUsersThunk = () => async dispatch => {
     const {data} = await axios.get('/api/users')
     dispatch(fetchAllUsers(data))
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 
@@ -84,7 +82,7 @@ export const deleteUserForeverThunk = id => async dispatch => {
     const {data} = await axios.get('/api/users')
     dispatch(fetchAllUsers(data))
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 export const updateUser = (id, userUpdates) => async dispatch => {
@@ -93,7 +91,7 @@ export const updateUser = (id, userUpdates) => async dispatch => {
     const {data} = await axios.get(`/api/users/${id}`)
     dispatch(fetchSingleUser(data))
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 
@@ -102,7 +100,7 @@ export const oneUserThunk = id => async dispatch => {
     const {data} = await axios.get(`/api/users/${id}`)
     dispatch(fetchSingleUser(data))
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 

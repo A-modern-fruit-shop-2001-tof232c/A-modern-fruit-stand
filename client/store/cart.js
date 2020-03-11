@@ -15,8 +15,9 @@ const REMOVE_ITEM = 'REMOVE_ITEM'
 const CHECKOUT_CART = 'CHECKOUT_CART'
 
 //The rest of the action types are specific to guest vs. logged in user
-const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART ' // adding an item to cart from all fruits
-const ADJUST_GUEST_CART = 'ADJUST_GUEST_CART' //increment or decrement on cart page
+
+const UPDATE_GUEST_CART = 'UPDATE_GUEST_CART '
+const ADJUST_GUEST_CART = 'ADJUST_GUEST_CART'
 
 // ACTION CREATORS
 const gotCart = cart => ({
@@ -226,7 +227,7 @@ export const updateQuantity = (fruitId, isIncrement) => async dispatch => {
     const {data} = await axios.put(`/api/cart/${fruitId}/${isIncrement}`)
     dispatch(updatedQuantity(data))
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
 }
 
@@ -235,7 +236,7 @@ export const removeItem = fruitId => async dispatch => {
     const {data} = await axios.delete(`/api/cart/${fruitId}`)
     dispatch(removedItem(data))
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
 }
 

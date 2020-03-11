@@ -21,7 +21,6 @@ class AdminContainer extends React.Component {
     //ADMIN SINGLE USER DISPLAY (Just view, can delete not edit)
     //ADMIN ALL ORDER DISPLAY
     //ADMIN SINGLE ORDER DISPLAY
-    console.log('Made it to container!')
     return (
       <div>
         <SearchBar typeSearch="user" />
