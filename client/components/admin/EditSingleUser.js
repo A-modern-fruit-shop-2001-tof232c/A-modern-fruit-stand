@@ -20,18 +20,14 @@ class EditSingleUser extends React.Component {
       lastName: this.state.newLastName,
       email: this.state.newEmail
     }
-    // console.log(updatedUser)
     this.props.updateUser(this.props.match.params.id, updatedUser)
   }
 
   handleChange(event) {
     const name = event.target.name
     this.setState({[name]: event.target.value})
-    console.log(this.state[name])
   }
   render() {
-    // console.log('In SingleUser Edit')
-    console.log(this.props.match)
     return (
       <form onSubmit={this.handleSubmit}>
         <label>

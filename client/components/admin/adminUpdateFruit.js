@@ -34,7 +34,6 @@ class AdminAllFruit extends React.Component {
       name: this.state.currFruitName,
       origin: this.state.currFruitOrigin
     }
-    //console.log(updatedFruit)
     this.props.updateFruitThunk(this.state.selectedFruitId, updatedFruit)
     this.setState({currFruitName: '', currFruitOrigin: ''})
   }
