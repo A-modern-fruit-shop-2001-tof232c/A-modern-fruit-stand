@@ -20,6 +20,8 @@ faker.array = function(structure, count = 1) {
           'Refreshing Lime',
           'Goji Berry'
         ])
+      else if (property === 'price')
+        item[property] = item[property]({min: 20, max: 2003})
       else item[property] = item[property]()
     })
 
